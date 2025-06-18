@@ -31,6 +31,7 @@ require_once "models/RentalMovieModel.php";
 require_once "models/ImageModel.php";
 
 /***--- Agregar todos los controladores*/
+require_once "controllers/RolController.php";
 require_once "controllers/UserController.php";
 require_once "controllers/DirectorController.php";
 require_once "controllers/ActorController.php";
