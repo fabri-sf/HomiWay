@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.10.2",
+    "nodemon": "^3.1.10",
+    "vite": "^6.3.5"
+  }
+}
