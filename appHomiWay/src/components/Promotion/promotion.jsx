@@ -11,8 +11,9 @@ import Container from '@mui/material/Container';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import PromocionService from "../../services/PromocionService";
 
-const Promociones = () => {
+const Promotion = () => {
   const [promociones, setPromociones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,22 +34,40 @@ const Promociones = () => {
   const fetchPromociones = async () => {
     try {
       setLoading(true);
-      // Reemplaza esta URL con la URL de tu API
-      const response = await fetch('/api/promociones');
-      if (!response.ok) {
-        throw new Error('Error al cargar las promociones');
-      }
-      const data = await response.json();
-      setPromociones(data);
+      setError(null);
+      
+      // Usar el PromocionService en lugar de fetch
+      const response = await PromocionService.getPromotions();
+      console.log('Respuesta del servicio:', response.data);
+      setPromociones(response.data);
+      
     } catch (err) {
-      setError(err.message);
+      console.error('Error al cargar promociones:', err);
+      let errorMessage = 'Error al cargar las promociones';
+      
+      if (err.response) {
+        // Error de respuesta del servidor
+        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || 'Error del servidor'}`;
+      } else if (err.request) {
+        // Error de red
+        errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
+      } else {
+        // Otro tipo de error
+        errorMessage = err.message || 'Error desconocido';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'No especificada';
+    
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Fecha inválida';
+    
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
@@ -57,18 +76,28 @@ const Promociones = () => {
   };
 
   const formatValue = (tipo, valor) => {
+    if (!valor) return 'No especificado';
+    
     if (tipo === 'porcentaje') {
       return `${valor}% OFF`;
     } else if (tipo === 'monto') {
-      return `₡${valor.toLocaleString()}`;
+      return `₡${Number(valor).toLocaleString()}`;
     }
     return valor;
   };
 
   const isPromocionActiva = (inicio, fin) => {
+    if (!inicio || !fin) return false;
+    
     const now = new Date();
     const fechaInicio = new Date(inicio);
     const fechaFin = new Date(fin);
+    
+    // Verificar que las fechas sean válidas
+    if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
+      return false;
+    }
+    
     return now >= fechaInicio && now <= fechaFin;
   };
 
@@ -76,6 +105,11 @@ const Promociones = () => {
     // Aquí puedes implementar la lógica para aplicar el descuento
     console.log('Aplicar descuento:', promocion);
     // Por ejemplo, podrías abrir un modal o redirigir a otra página
+    alert(`Promoción aplicada: ${promocion.Codigo}\nDescuento: ${formatValue(promocion.Tipo, promocion.Valor)}`);
+  };
+
+  const handleRetry = () => {
+    fetchPromociones();
   };
 
   if (loading) {
@@ -87,6 +121,9 @@ const Promociones = () => {
         minHeight="50vh"
       >
         <CircularProgress sx={{ color: colors.primary }} />
+        <Typography variant="body1" sx={{ ml: 2, color: colors.text }}>
+          Cargando promociones...
+        </Typography>
       </Box>
     );
   }
@@ -94,7 +131,16 @@ const Promociones = () => {
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert severity="error">{error}</Alert>
+        <Alert 
+          severity="error" 
+          action={
+            <Button color="inherit" size="small" onClick={handleRetry}>
+              Reintentar
+            </Button>
+          }
+        >
+          {error}
+        </Alert>
       </Container>
     );
   }
@@ -120,6 +166,13 @@ const Promociones = () => {
           <Typography variant="h6" color="text.secondary">
             No hay promociones disponibles en este momento
           </Typography>
+          <Button 
+            variant="outlined" 
+            onClick={handleRetry}
+            sx={{ mt: 2, color: colors.primary, borderColor: colors.primary }}
+          >
+            Actualizar
+          </Button>
         </Box>
       ) : (
         <Grid container spacing={3}>
@@ -152,7 +205,7 @@ const Promociones = () => {
                         textTransform: 'uppercase'
                       }}
                     >
-                      Código: {promocion.Codigo}
+                      Código: {promocion.Codigo || 'N/A'}
                     </Typography>
                     <Chip
                       label={promocion.Estado ? 'Activa' : 'Inactiva'}
@@ -185,7 +238,7 @@ const Promociones = () => {
                       lineHeight: 1.4
                     }}
                   >
-                    {promocion.Descripcion}
+                    {promocion.Descripcion || 'Sin descripción disponible'}
                   </Typography>
 
                   <Box sx={{ mb: 2 }}>
@@ -238,7 +291,7 @@ const Promociones = () => {
                     }}
                   >
                     {promocion.Estado && isPromocionActiva(promocion.Inicio, promocion.Fin)
-                      ? 'Cómo Aplicar Descuento'
+                      ? 'Aplicar Descuento'
                       : 'No Disponible'
                     }
                   </Button>
@@ -252,4 +305,4 @@ const Promociones = () => {
   );
 };
 
-export default Promociones;
+export default Promotion;
