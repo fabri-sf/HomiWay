@@ -31,6 +31,7 @@ const rutas=createBrowserRouter(
       element: <App />,
       children:[
         {
+          //Para que sea lo primero en mostrarse
           path:'/',
           element: <ListAlojamiento />
         },
