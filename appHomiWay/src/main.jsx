@@ -7,15 +7,11 @@ import { createBrowserRouter } from "react-router-dom";
 import { Home } from "./components/Home/Home";
 import { RouterProvider } from "react-router";
 import { PageNotFound } from "./components/Home/PageNotFound";
-import { ListMovies } from "./components/Movie/ListMovies";
-import { DetailMovie } from "./components/Movie/DetailMovie";
 import ListRentals from "./components/Rental/ListRentals";
 import DetailRental from "./components/Rental/DetailRental";
-import TableMovies from "./components/Movie/TableMovies";
-import { CreateMovie } from "./components/Movie/CreateMovie";
-import { UpdateMovie } from "./components/Movie/UpdateMovie";
-import { CatalogMovies } from "./components/Movie/CatalogMovies";
-import { MovieUploadImage } from "./components/Movie/MovieUploadImage";
+import TableMovies from "./components/Alojamiento/TableAlojamiento";
+import { CreateMovie } from "./components/Alojamiento/CreateMovie";
+import { UpdateMovie } from "./components/Alojamiento/UpdateMovie";
 import { CreateMovieRental } from "./components/Rental/CreateMovieRental";
 import { GraphRetal } from "./components/Rental/GraphRental";
 import UserProvider from "./components/User/UserProvider";
@@ -24,14 +20,20 @@ import { Login } from "./components/User/Login";
 import { Logout } from "./components/User/Logout";
 import { Signup } from "./components/User/Signup";
 import { Auth } from "./components/User/Auth";
+
+
+import { ListAlojamiento } from './components/Alojamiento/ListAlojamiento';
+import { DetailAlojamiento } from './components/Alojamiento/DetailAlojamiento';
+
 const rutas=createBrowserRouter(
   [
     {
       element: <App />,
       children:[
         {
+          //Para que sea lo primero en mostrarse
           path:'/',
-          element: <Home />
+          element: <ListAlojamiento />
         },
         {
           path: '*',
@@ -61,20 +63,12 @@ const rutas=createBrowserRouter(
           ]
         },
         {
-          path:'/movie/',
-          element: <ListMovies />
+          path: '/alojamientos',
+          element: <ListAlojamiento />
         },
         {
-          path: '/catalog-movies/',
-          element: <CatalogMovies />,
-        },
-        {
-          path:'/movie/:id',
-          element: <DetailMovie />
-        },
-        {
-          path: 'movie/image/',
-          element: <MovieUploadImage />
+          path: '/alojamiento/:id',
+          element: <DetailAlojamiento />
         },
         
         {
