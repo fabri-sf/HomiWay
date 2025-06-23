@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import MovieService from '../../services/MovieService';
 import { useEffect } from 'react';
-import { ListCardMovies } from './ListCardMovies';
+import { ListCardMovies } from './ListCardAlojamientos';
 
 export function CatalogMovies() {
   //Resultado de consumo del API, respuesta

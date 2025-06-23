@@ -2,7 +2,7 @@
 
 use Firebase\JWT\JWT;
 
-class UserModel
+class UsuarioModel
 {
 	public $enlace;
 	public function __construct()
