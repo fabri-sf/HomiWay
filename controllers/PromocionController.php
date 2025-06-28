@@ -26,14 +26,38 @@ class Promocion
             handleException($e);
         }
     }
-    public function getActorMovie($id)
+   
+     public function promocionesPorCategoria($categoria)
     {
         try {
             $response = new Response();
-            $genero = new ActorModel();
-            $result = $genero->getActorMovie($id);
-            //Dar respuesta
+            $promocion = new PromocionModel();
+            $result = $promocion->obtenerPromocionesPorCategoria($categoria);
             $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+    public function alojamientosConPromociones()
+    {
+        try {
+            $response = new Response();
+            $promocion = new PromocionModel();
+            $result = $promocion->obtenerAlojamientosConPromociones();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+    public function calcularPrecio($precioOriginal, $promocionID)
+    {
+        try {
+            $response = new Response();
+            $promocion = new PromocionModel();
+            $result = $promocion->calcularPrecioConDescuento($precioOriginal, $promocionID);
+            $response->toJSON(['precioDescuento' => $result]);
         } catch (Exception $e) {
             handleException($e);
         }

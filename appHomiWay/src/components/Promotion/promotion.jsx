@@ -11,21 +11,14 @@ import Container from '@mui/material/Container';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import { useTheme } from '@mui/material/styles';
 import PromocionService from "../../services/PromocionService";
 
 const Promotion = () => {
+  const theme = useTheme();
   const [promociones, setPromociones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Colores basados en el logo de HomiWay
-  const colors = {
-    primary: '#2E7D32', // Verde del logo
-    secondary: '#4CAF50', // Verde más claro
-    accent: '#1B5E20', // Verde oscuro
-    background: '#F1F8E9', // Verde muy claro para fondo
-    text: '#263238'
-  };
 
   useEffect(() => {
     fetchPromociones();
@@ -86,8 +79,9 @@ const Promotion = () => {
     return valor;
   };
 
-  const isPromocionActiva = (inicio, fin) => {
-    if (!inicio || !fin) return false;
+  // Función para calcular el estado dinámico basado en fechas
+  const calcularEstadoDinamico = (inicio, fin) => {
+    if (!inicio || !fin) return { estado: 'Sin fechas', color: theme.palette.custom.aplicado };
     
     const now = new Date();
     const fechaInicio = new Date(inicio);
@@ -95,16 +89,34 @@ const Promotion = () => {
     
     // Verificar que las fechas sean válidas
     if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
-      return false;
+      return { estado: 'Fechas inválidas', color: theme.palette.custom.aplicado };
     }
     
-    return now >= fechaInicio && now <= fechaFin;
+    // Establecer la hora al final del día para fechaFin para incluir todo el día
+    fechaFin.setHours(23, 59, 59, 999);
+    
+    if (now < fechaInicio) {
+      // La promoción aún no ha comenzado
+      return { estado: 'Pendiente', color: theme.palette.custom.pendiente };
+    } else if (now >= fechaInicio && now <= fechaFin) {
+      // La promoción está actualmente activa
+      return { estado: 'Vigente', color: theme.palette.custom.vigente };
+    } else {
+      // La promoción ya ha finalizado
+      return { estado: 'Aplicado', color: theme.palette.custom.aplicado };
+    }
   };
 
   const handleAplicarDescuento = (promocion) => {
+    const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
+    
+    if (estadoDinamico.estado !== 'Vigente') {
+      alert(`Esta promoción no está disponible. Estado: ${estadoDinamico.estado}`);
+      return;
+    }
+    
     // Aquí puedes implementar la lógica para aplicar el descuento
     console.log('Aplicar descuento:', promocion);
-    // Por ejemplo, podrías abrir un modal o redirigir a otra página
     alert(`Promoción aplicada: ${promocion.Codigo}\nDescuento: ${formatValue(promocion.Tipo, promocion.Valor)}`);
   };
 
@@ -120,8 +132,8 @@ const Promotion = () => {
         alignItems="center"
         minHeight="50vh"
       >
-        <CircularProgress sx={{ color: colors.primary }} />
-        <Typography variant="body1" sx={{ ml: 2, color: colors.text }}>
+        <CircularProgress sx={{ color: theme.palette.primary.main }} />
+        <Typography variant="body1" sx={{ ml: 2, color: theme.palette.text.primary }}>
           Cargando promociones...
         </Typography>
       </Box>
@@ -152,7 +164,7 @@ const Promotion = () => {
         component="h1"
         gutterBottom
         sx={{
-          color: colors.primary,
+          color: theme.palette.primary.main,
           fontWeight: 'bold',
           textAlign: 'center',
           mb: 4
@@ -169,136 +181,159 @@ const Promotion = () => {
           <Button 
             variant="outlined" 
             onClick={handleRetry}
-            sx={{ mt: 2, color: colors.primary, borderColor: colors.primary }}
+            sx={{ 
+              mt: 2, 
+              color: theme.palette.primary.main, 
+              borderColor: theme.palette.primary.main 
+            }}
           >
             Actualizar
           </Button>
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {promociones.map((promocion) => (
-            <Grid item xs={12} sm={6} md={4} key={promocion.ID}>
-              <Card
-                sx={{
-                  minWidth: 275,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  border: `2px solid ${colors.secondary}`,
-                  borderRadius: 2,
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: `0 8px 25px rgba(46, 125, 50, 0.15)`,
-                    borderColor: colors.primary
-                  }
-                }}
-              >
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography
-                      gutterBottom
-                      sx={{
-                        color: colors.accent,
-                        fontSize: 12,
-                        fontWeight: 'bold',
-                        textTransform: 'uppercase'
-                      }}
-                    >
-                      Código: {promocion.Codigo || 'N/A'}
-                    </Typography>
-                    <Chip
-                      label={promocion.Estado ? 'Activa' : 'Inactiva'}
-                      size="small"
-                      sx={{
-                        backgroundColor: promocion.Estado ? colors.secondary : '#757575',
-                        color: 'white',
-                        fontWeight: 'bold'
-                      }}
-                    />
-                  </Box>
-
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{
-                      color: colors.primary,
-                      fontWeight: 'bold',
-                      mb: 1
-                    }}
-                  >
-                    {formatValue(promocion.Tipo, promocion.Valor)}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      color: colors.text,
-                      mb: 2,
-                      fontSize: 14,
-                      lineHeight: 1.4
-                    }}
-                  >
-                    {promocion.Descripcion || 'Sin descripción disponible'}
-                  </Typography>
-
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                      <strong>Válido desde:</strong> {formatDate(promocion.Inicio)}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                      <strong>Válido hasta:</strong> {formatDate(promocion.Fin)}
-                    </Typography>
-                  </Box>
-
-                  {promocion.Requisitos && (
-                    <Box
-                      sx={{
-                        backgroundColor: colors.background,
-                        padding: 1.5,
-                        borderRadius: 1,
-                        mt: 2
-                      }}
-                    >
-                      <Typography variant="caption" sx={{ color: colors.accent, fontWeight: 'bold' }}>
-                        Requisitos:
+          {promociones.map((promocion) => {
+            const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
+            
+            return (
+              <Grid item xs={12} sm={6} md={4} key={promocion.ID}>
+                <Card
+                  sx={{
+                    minWidth: 275,
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    border: `2px solid ${theme.palette.secondary.main}`,
+                    borderRadius: 2,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: `0 8px 25px rgba(46, 125, 50, 0.15)`,
+                      borderColor: theme.palette.primary.main
+                    }
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    {/* Campo 1: Código */}
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                      <Typography
+                        gutterBottom
+                        sx={{
+                          color: theme.palette.primary.dark,
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        Código: {promocion.Codigo || 'N/A'}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: colors.text, fontSize: 12, mt: 0.5 }}>
-                        {promocion.Requisitos}
+                      {/* Estado dinámico calculado */}
+                      <Chip
+                        label={estadoDinamico.estado}
+                        size="small"
+                        sx={{
+                          backgroundColor: estadoDinamico.color,
+                          color: estadoDinamico.estado === 'Aplicado' ? '#666' : 'white',
+                          fontWeight: 'bold'
+                        }}
+                      />
+                    </Box>
+
+                    {/* Campo 2: Valor/Descuento */}
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{
+                        color: theme.palette.primary.main,
+                        fontWeight: 'bold',
+                        mb: 1
+                      }}
+                    >
+                      {formatValue(promocion.Tipo, promocion.Valor)}
+                    </Typography>
+
+                    {/* Campo 3: Descripción */}
+                    <Typography
+                      sx={{
+                        color: theme.palette.text.primary,
+                        mb: 2,
+                        fontSize: 14,
+                        lineHeight: 1.4
+                      }}
+                    >
+                      {promocion.Descripcion || 'Sin descripción disponible'}
+                    </Typography>
+
+                    {/* Campo 4: Fechas de vigencia */}
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
+                        <strong>Válido desde:</strong> {formatDate(promocion.Inicio)}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
+                        <strong>Válido hasta:</strong> {formatDate(promocion.Fin)}
                       </Typography>
                     </Box>
-                  )}
-                </CardContent>
 
-                <CardActions sx={{ padding: 2, pt: 0 }}>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    fullWidth
-                    disabled={!promocion.Estado || !isPromocionActiva(promocion.Inicio, promocion.Fin)}
-                    onClick={() => handleAplicarDescuento(promocion)}
-                    sx={{
-                      backgroundColor: colors.primary,
-                      color: 'white',
-                      fontWeight: 'bold',
-                      textTransform: 'none',
-                      '&:hover': {
-                        backgroundColor: colors.accent
-                      },
-                      '&:disabled': {
-                        backgroundColor: '#BDBDBD',
-                        color: '#757575'
+                    {/* Campo adicional: Requisitos (si existe) */}
+                    {promocion.Requisitos && (
+                      <Box
+                        sx={{
+                          backgroundColor: theme.palette.background.default,
+                          padding: 1.5,
+                          borderRadius: 1,
+                          mt: 2
+                        }}
+                      >
+                        <Typography variant="caption" sx={{ 
+                          color: theme.palette.primary.dark, 
+                          fontWeight: 'bold' 
+                        }}>
+                          Requisitos:
+                        </Typography>
+                        <Typography variant="body2" sx={{ 
+                          color: theme.palette.text.primary, 
+                          fontSize: 12, 
+                          mt: 0.5 
+                        }}>
+                          {promocion.Requisitos}
+                        </Typography>
+                      </Box>
+                    )}
+                  </CardContent>
+
+                  <CardActions sx={{ padding: 2, pt: 0 }}>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      fullWidth
+                      disabled={estadoDinamico.estado !== 'Vigente'}
+                      onClick={() => handleAplicarDescuento(promocion)}
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        color: 'white',
+                        fontWeight: 'bold',
+                        textTransform: 'none',
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.dark
+                        },
+                        '&:disabled': {
+                          backgroundColor: '#BDBDBD',
+                          color: '#757575'
+                        }
+                      }}
+                    >
+                      {estadoDinamico.estado === 'Vigente'
+                        ? 'Aplicar Descuento'
+                        : estadoDinamico.estado === 'Pendiente'
+                        ? 'Próximamente'
+                        : 'No Disponible'
                       }
-                    }}
-                  >
-                    {promocion.Estado && isPromocionActiva(promocion.Inicio, promocion.Fin)
-                      ? 'Aplicar Descuento'
-                      : 'No Disponible'
-                    }
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            );
+          })}
         </Grid>
       )}
     </Container>
