@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter } from "react-router-dom";
-import Promotion from "./components/Promotion/Promotion";
-import ProductosConPromociones from "./components/Promotion/ListProductPromotion";
+//import Promotion from "./components/Promotion/Promotion";
+//import ProductosConPromociones from "./components/Promotion/ListProductPromotion";
 import { Home } from "./components/Home/Home";
 import { RouterProvider } from "react-router";
 import { PageNotFound } from "./components/Home/PageNotFound";
@@ -21,6 +21,8 @@ import { Login } from "./components/User/Login";
 import { Logout } from "./components/User/Logout";
 import { Signup } from "./components/User/Signup";
 import { Auth } from "./components/User/Auth";
+import {  GetUbicacion } from './components/Ubicacion/GetUbicacion';
+
 
 
 import { ListAlojamiento } from './components/Alojamiento/ListAlojamiento';
@@ -34,7 +36,7 @@ const rutas=createBrowserRouter(
         {
           //Para que sea lo primero en mostrarse
           path:'/',
-          element: <ProductosConPromociones />
+          element: <Home />
         },
         {
           path: '*',
@@ -72,10 +74,14 @@ const rutas=createBrowserRouter(
           element: <DetailAlojamiento />
         },
         
-        {
-          path:'/rental',
-          element: <ListRentals />
+        { path: '/ubicacion/:id',
+           element: <GetUbicacion /> 
         },
+           
+
+
+
+        
         {
           path:'/retal/:id',
           element: <DetailRental />

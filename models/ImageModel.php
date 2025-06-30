@@ -51,7 +51,7 @@ class ImageModel
     public function getImagesByAlojamientoId($idAlojamiento)
     {
         try {
-            $vSQL = "SELECT * FROM imagen_alojamiento WHERE ID_Alojamiento = $idAlojamiento";
+            $vSQL = "SELECT URL AS url FROM imagen_alojamiento WHERE ID_Alojamiento = $idAlojamiento";
             $vResultado = $this->enlace->ExecuteSQL($vSQL);
             return $vResultado;
         } catch (Exception $e) {

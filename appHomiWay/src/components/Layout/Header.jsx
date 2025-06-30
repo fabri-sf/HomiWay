@@ -66,10 +66,9 @@ export default function Header() {
   ];
   //Lista enlaces menu principal
   const navItems = [
-    { name: "Peliculas", link: "/movie",roles:null },
-    { name: "Cátalogo de Peliculas", link: "/catalog-movies/", roles:null },
-    { name: "Filtrar Peliculas", link: "/movie/filter", roles:null },
-    { name: "Mantenimiento Peliculas", link: "/movie-table/", roles:['Administrador'] },
+  { name: "Inicio", link: "/", roles: null },
+  { name: "Alojamientos", link: "/alojamientos", roles: null },
+  { name: "Administración", link: "/admin/dashboard", roles: ["Administrador"] },
   ];
   //Identificador menu principal
   const menuIdPrincipal = "menu-appbar";
@@ -257,16 +256,17 @@ export default function Header() {
             {menuPrincipalMobile}
           </Menu>
           {/* Enlace página inicio */}
-          <Tooltip title="Alquiler peliculas">
+         <Tooltip title="HomiWay – Vive la experiencia">
             <IconButton
               size="large"
               edge="end"
               component="a"
               href="/"
-              aria-label="Alquiler peliculas"
+              aria-label="Inicio HomiWay"
               color="primary"
             >
-              <LiveTvIcon />
+              {/* logo */}
+              < img src="/src/assets/logo.png" alt="HomiWay" style={{ width: 30, height: 30 }} />
             </IconButton>
           </Tooltip>
           {/* Enlace página inicio */}

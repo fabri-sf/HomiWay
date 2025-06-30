@@ -1,10 +1,14 @@
 import React from 'react';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import PropTypes from 'prop-types';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  CardHeader,
+  Typography,
+  Button
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 ListCardAlojamientos.propTypes = {
@@ -12,27 +16,55 @@ ListCardAlojamientos.propTypes = {
 };
 
 export function ListCardAlojamientos({ data }) {
-  const BASE_URL = import.meta.env.VITE_BASE_URL + 'uploads';
+  const BASE_URL = import.meta.env.VITE_BASE_URL + 'uploads/';
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-      {data.map((item) => (
-        <Card key={item.id} style={{ width: 300 }}>
-          <CardHeader title={item.nombre} subheader={item.descripcion_corta} />
-          <CardMedia
-            component="img"
-            height="140"
-            image={`${BASE_URL}/${item.imagen}`}
-            alt={item.nombre}
-          />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary" noWrap>
-              {item.descripcion_corta}
-            </Typography>
-          </CardContent>
-          <Link to={`/alojamiento/${item.id}`}>Ver más</Link>
-        </Card>
-      ))}
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: 16,
+        padding: 16,
+      }}
+    >
+      {data.map((item) => {
+        const imagenRuta =
+          Array.isArray(item.imagenes) && item.imagenes.length > 0
+            ? `${BASE_URL}${item.imagenes[0].url}`
+            : '/monteVerde.jpg';
+
+        return (
+          <Card key={item.id} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <CardMedia
+              sx={{ height: 140 }}
+              image={imagenRuta}
+              title={item.nombre}
+            />
+            <CardHeader title={item.nombre} />
+            <CardContent sx={{ flexGrow: 1 }}>
+              <Typography variant="body2" color="text.secondary" noWrap>
+                {item.descripcion}
+              </Typography>
+            </CardContent>
+            <CardActions>
+            <Button
+              size="small"
+              component={Link}
+              to={`/alojamiento/${item.id}`}
+              sx={{
+                backgroundColor: '#2e7d32',
+                color: '#ffffff',
+                '&:hover': {
+                  backgroundColor: '#1b5e20',
+                },
+              }}
+            >
+              Ver más
+            </Button>
+            </CardActions>
+          </Card>
+        );
+      })}
     </div>
   );
 }
