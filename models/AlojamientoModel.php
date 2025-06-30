@@ -9,20 +9,23 @@ class AlojamientoModel
     }
 
     // Obtener lista minimal de alojamientos (solo id, nombre, desc corta e imagen principal)
- public function allMinimal()
+public function allMinimal()
 {
     try {
-        $sql = "SELECT a.id, a.nombre, a.descripcion, i.URL AS imagen
-                FROM alojamiento a
-                LEFT JOIN imagen_alojamiento i ON a.id = i.ID_Alojamiento
-                GROUP BY a.id, a.nombre, a.descripcion";
+        $sql = "SELECT a.id, a.nombre, a.descripcion FROM alojamiento a";
         $result = $this->enlace->ExecuteSQL($sql);
+
+        // Asociar imágenes a cada alojamiento
+        $imagenM = new ImageModel();
+        foreach ($result as &$alojamiento) {
+        $alojamiento->imagenes = $imagenM->getImagesByAlojamientoId($alojamiento->id); // ❗ ¡minúscula!
+        }
+
         return $result;
     } catch (Exception $e) {
         handleException($e);
     }
 }
-
 
     // Obtener un alojamiento con todos sus detalles
     public function get($id)
@@ -30,8 +33,8 @@ class AlojamientoModel
         try {
             $imagenM = new ImageModel();
             $ubicacionM = new UbicacionModel();
-            $usuarioM = new UsuarioModel();
-            $etiquetaM = new EtiquetaModel();
+            //$usuarioM = new UsuarioModel();
+            //$etiquetaM = new EtiquetaModel();
             $servicioM = new ServicioModel();
 
             $sql = "SELECT * FROM alojamiento WHERE ID = $id";
@@ -42,9 +45,9 @@ class AlojamientoModel
 
                 $alojamiento->imagenes = $imagenM->getImagesByAlojamientoId($alojamiento->ID);
                 $alojamiento->ubicacion = $ubicacionM->get($alojamiento->ID_Ubicacion);
-                $alojamiento->usuario = $usuarioM->get($alojamiento->ID_Usuario);
-                $alojamiento->etiquetas = $etiquetaM->getByAlojamiento($alojamiento->ID);
-                $alojamiento->servicios = $servicioM->getByAlojamiento($alojamiento->ID);
+                //$alojamiento->usuario = $usuarioM->get($alojamiento->ID_Usuario);
+                //$alojamiento->etiquetas = $etiquetaM->getByAlojamiento($alojamiento->ID);
+               $alojamiento->servicios = $servicioM->getByAlojamiento($alojamiento->ID);
 
                 return $alojamiento;
             }

@@ -12,7 +12,7 @@ class Ubicacion
        public function get($id)
     {
         try {
-            $response = new Response();
+            require_once 'UbicacionModel.php'; 
             $ubicacionM = new UbicacionModel();
             $result = $ubicacionM->get($id);
             $response->toJSON($result);
