@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AlojamientoService from '../../services/AlojamientoService';
-import { ListServicios } from '../Servicios/ListServicios';
+import ReviewsIcon from '@mui/icons-material/Reviews';
+import { ListServicios } from '../Servicios/ListServicio';
+import Resena from '../Resena/Resena';;
+
 
 export function DetailAlojamiento() {
   const { id } = useParams();
@@ -70,10 +73,15 @@ export function DetailAlojamiento() {
         <p><strong>Código Postal:</strong> {data.ubicacion?.CodigoPostal || '—'}</p>
         <p><strong>Descripción:</strong></p>
         <p style={{ textAlign: 'justify' }}>{data.Descripcion}</p>
-      </div>
 
-      <hr style={{ margin: '2rem 0' }} />
-      <ListServicios alojamientoId={parseInt(data.ID)} />
+      </div>
+          
+        <hr style={{ margin: '2rem 0' }} />
+        <ListServicios alojamientoId={parseInt(data.ID)} />
+
+        <Resena alojamientoId={parseInt(data.ID)} />
     </div>
+
+    
   );
 }

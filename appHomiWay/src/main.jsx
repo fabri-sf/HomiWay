@@ -21,7 +21,7 @@ import { Login } from "./components/User/Login";
 import { Logout } from "./components/User/Logout";
 import { Signup } from "./components/User/Signup";
 import { Auth } from "./components/User/Auth";
-import {  GetUbicacion } from './components/Ubicacion/GetUbicacion';
+import {  GetUbicacion } from './components/Ubicacion/Ubicacion';
 
 
 
