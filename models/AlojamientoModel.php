@@ -8,8 +8,7 @@ class AlojamientoModel
         $this->enlace = new MySqlConnect();
     }
 
-    // Obtener lista minimal de alojamientos (solo id, nombre, desc corta e imagen principal)
-public function allMinimal()
+  public function allMinimal()
 {
     try {
         $sql = "SELECT a.id, a.nombre, a.descripcion FROM alojamiento a";
@@ -18,7 +17,7 @@ public function allMinimal()
         // Asociar imágenes a cada alojamiento
         $imagenM = new ImageModel();
         foreach ($result as &$alojamiento) {
-        $alojamiento->imagenes = $imagenM->getImagesByAlojamientoId($alojamiento->id); // ❗ ¡minúscula!
+        $alojamiento->imagenes = $imagenM->getImagesByAlojamientoId($alojamiento->id); 
         }
 
         return $result;
@@ -34,7 +33,6 @@ public function allMinimal()
             $imagenM = new ImageModel();
             $ubicacionM = new UbicacionModel();
             //$usuarioM = new UsuarioModel();
-            //$etiquetaM = new EtiquetaModel();
             $servicioM = new ServicioModel();
 
             $sql = "SELECT * FROM alojamiento WHERE ID = $id";
@@ -46,7 +44,6 @@ public function allMinimal()
                 $alojamiento->imagenes = $imagenM->getImagesByAlojamientoId($alojamiento->ID);
                 $alojamiento->ubicacion = $ubicacionM->get($alojamiento->ID_Ubicacion);
                 //$alojamiento->usuario = $usuarioM->get($alojamiento->ID_Usuario);
-                //$alojamiento->etiquetas = $etiquetaM->getByAlojamiento($alojamiento->ID);
                $alojamiento->servicios = $servicioM->getByAlojamiento($alojamiento->ID);
 
                 return $alojamiento;
