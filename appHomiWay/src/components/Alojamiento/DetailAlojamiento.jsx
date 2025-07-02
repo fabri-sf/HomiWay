@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import AlojamientoService from '../../services/AlojamientoService';
-import ReviewsIcon from '@mui/icons-material/Reviews';
 import { ListServicios } from '../Servicios/ListServicio';
-import Resena from '../Resena/Resena';;
-
+import Resena from '../Resena/Resena';
+import { Button } from '@mui/material';
 
 export function DetailAlojamiento() {
   const { id } = useParams();
@@ -30,32 +29,54 @@ export function DetailAlojamiento() {
   if (error) return <p style={{ padding: '2rem' }}>Error: {error}</p>;
 
   return (
-    <div style={{ maxWidth: '900px', margin: '2rem auto', padding: '1rem' }}>
-      <h1 style={{ marginBottom: '1rem' }}>{data.Nombre}</h1>
+    <div style={{ maxWidth: '1000px', margin: '2rem auto', padding: '1rem' }}>
+      <h1 className="text-center mb-4">{data.Nombre}</h1>
 
       {Array.isArray(data.imagenes) && data.imagenes.length > 0 ? (
-        <div
-          style={{
-            display: 'flex',
-            overflowX: 'auto',
-            gap: '1rem',
-            marginBottom: '2rem',
-            scrollSnapType: 'x mandatory',
-          }}
-        >
-          {data.imagenes.map((img, i) => (
-            <img
-              key={i}
-              src={`${BASE_URL}/${img.url}`}
-              alt={`Imagen ${i + 1}`}
-              style={{
-                height: 240,
-                borderRadius: 8,
-                scrollSnapAlign: 'start',
-                flexShrink: 0,
-              }}
-            />
-          ))}
+        <div id="carouselAlojamiento" className="carousel slide mb-4" data-bs-ride="carousel">
+          <div className="carousel-indicators">
+            {data.imagenes.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                data-bs-target="#carouselAlojamiento"
+                data-bs-slide-to={i}
+                className={i === 0 ? 'active' : ''}
+                aria-current={i === 0 ? 'true' : undefined}
+                aria-label={`Slide ${i + 1}`}
+              ></button>
+            ))}
+          </div>
+          <div className="carousel-inner">
+            {data.imagenes.map((img, i) => (
+              <div key={i} className={`carousel-item ${i === 0 ? 'active' : ''}`}>
+                <img
+                  src={`${BASE_URL}/${img.url}`}
+                  className="d-block w-100"
+                  alt={`Imagen ${i + 1}`}
+                  style={{ height: '400px', objectFit: 'cover', borderRadius: '8px' }}
+                />
+              </div>
+            ))}
+          </div>
+          <button
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselAlojamiento"
+            data-bs-slide="prev"
+          >
+            <span className="carousel-control-prev-icon" aria-hidden="true" />
+            <span className="visually-hidden">Anterior</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselAlojamiento"
+            data-bs-slide="next"
+          >
+            <span className="carousel-control-next-icon" aria-hidden="true" />
+            <span className="visually-hidden">Siguiente</span>
+          </button>
         </div>
       ) : (
         <p><em>No hay imágenes disponibles para este alojamiento.</em></p>
@@ -73,15 +94,25 @@ export function DetailAlojamiento() {
         <p><strong>Código Postal:</strong> {data.ubicacion?.CodigoPostal || '—'}</p>
         <p><strong>Descripción:</strong></p>
         <p style={{ textAlign: 'justify' }}>{data.Descripcion}</p>
-
       </div>
-          
-        <hr style={{ margin: '2rem 0' }} />
-        <ListServicios alojamientoId={parseInt(data.ID)} />
 
-        <Resena alojamientoId={parseInt(data.ID)} />
+      <Button
+        size="small"
+        component={Link}
+        to={`/rental/crear`}
+        sx={{
+          backgroundColor: '#2e7d32',
+          color: '#ffffff',
+          '&:hover': { backgroundColor: '#1b5e20' },
+          marginTop: '1rem',
+        }}
+      >
+        Reservar
+      </Button>
+
+      <hr style={{ margin: '2rem 0' }} />
+      <ListServicios alojamientoId={parseInt(data.ID)} />
+      <Resena alojamientoId={parseInt(data.ID)} />
     </div>
-
-    
   );
 }
