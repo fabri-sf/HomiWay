@@ -21,7 +21,7 @@ class ResenaModel
             handleException($e);
         }
     }
-    /*Obtener */
+    /*Obtener, MODIFICAR PARA QUE OBTENGA LA FOTO */ 
     public function getByAlojamiento($idAlojamiento) {
         try {
             $idAlojamiento = intval($idAlojamiento); 
