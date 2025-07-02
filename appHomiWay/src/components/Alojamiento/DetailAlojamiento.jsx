@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import AlojamientoService from '../../services/AlojamientoService';
+
 import { ListServicios } from '../Servicios/ListServicio';
 import Resena from '../Resena/Resena';
 import { Button } from '@mui/material';
@@ -94,7 +95,11 @@ export function DetailAlojamiento() {
         <p><strong>Código Postal:</strong> {data.ubicacion?.CodigoPostal || '—'}</p>
         <p><strong>Descripción:</strong></p>
         <p style={{ textAlign: 'justify' }}>{data.Descripcion}</p>
+
       </div>
+          
+        <hr style={{ margin: '2rem 0' }} />
+        <ListServicios alojamientoId={parseInt(data.ID)} />
 
       <Button
         size="small"
@@ -113,6 +118,7 @@ export function DetailAlojamiento() {
       <hr style={{ margin: '2rem 0' }} />
       <ListServicios alojamientoId={parseInt(data.ID)} />
       <Resena alojamientoId={parseInt(data.ID)} />
+
     </div>
   );
 }
