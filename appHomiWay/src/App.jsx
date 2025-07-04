@@ -4,6 +4,7 @@ import { Layout } from "./components/Layout/Layout";
 import { Outlet } from 'react-router-dom'
 import { CartProvider } from "./context/CartContext";
 
+
 export default function App() { 
   return ( 
     //Provider CartContext

@@ -1,10 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter } from "react-router-dom";
-import Promotion from "./components/Promotion/Promotion";
-import ProductosConPromociones from "./components/Promotion/ListProductPromotion";
+
 import { Home } from "./components/Home/Home";
 import { RouterProvider } from "react-router";
 import { PageNotFound } from "./components/Home/PageNotFound";
@@ -21,10 +22,19 @@ import { Login } from "./components/User/Login";
 import { Logout } from "./components/User/Logout";
 import { Signup } from "./components/User/Signup";
 import { Auth } from "./components/User/Auth";
+import {  GetUbicacion } from './components/Ubicacion/Ubicacion';
+
+import Promotion from "./components/Promotion/Promotion";
+import ProductosConPromociones from "./components/Promotion/ListProductPromotion";
 
 
 import { ListAlojamiento } from './components/Alojamiento/ListAlojamiento';
 import { DetailAlojamiento } from './components/Alojamiento/DetailAlojamiento';
+
+
+import  ListPedido  from './components/Pedido/ListPedido';
+import  DetailPedido  from './components/Pedido/DetailPedido'; 
+
 
 const rutas=createBrowserRouter(
   [
@@ -34,7 +44,7 @@ const rutas=createBrowserRouter(
         {
           //Para que sea lo primero en mostrarse
           path:'/',
-          element: <ProductosConPromociones />
+          element: <Home />
         },
         {
           path: '*',
@@ -71,11 +81,31 @@ const rutas=createBrowserRouter(
           path: '/alojamiento/:id',
           element: <DetailAlojamiento />
         },
-        
         {
-          path:'/rental',
-          element: <ListRentals />
+          path: '/promociones',
+          element: <Promotion />
         },
+        {
+          path: '/promocionesDis',
+          element: <ProductosConPromociones />
+        },
+         {
+          path: '/pedidos',
+          element: <ListPedido />
+        },
+        {
+          path: '/pedido/:id', 
+          element: <DetailPedido />
+        },
+        
+        { path: '/ubicacion/:id',
+           element: <GetUbicacion /> 
+        },
+           
+
+
+
+        
         {
           path:'/retal/:id',
           element: <DetailRental />
