@@ -115,8 +115,6 @@ export function DetailAlojamiento() {
         Reservar
       </Button>
 
-      <hr style={{ margin: '2rem 0' }} />
-      <ListServicios alojamientoId={parseInt(data.ID)} />
       <Resena alojamientoId={parseInt(data.ID)} />
 
     </div>
