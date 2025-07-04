@@ -68,6 +68,9 @@ export default function Header() {
   const navItems = [
   { name: "Inicio", link: "/", roles: null },
   { name: "Alojamientos", link: "/alojamientos", roles: null },
+  { name: "Promociones", link: "/promociones", roles: null },
+  { name: "Promociones Disponibles", link: "/promocionesDis", roles: null },
+  { name: "Pedidos", link: "/pedidos", roles: null },
   { name: "Administración", link: "/admin/dashboard", roles: ["Administrador"] },
   ];
   //Identificador menu principal

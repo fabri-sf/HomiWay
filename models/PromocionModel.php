@@ -43,41 +43,41 @@ class PromocionModel
     {
         try {
             //Consulta SQL
-            $vSQL = "SELECT a.ID as AlojamientoID,
-                           a.Nombre as AlojamientoNombre,
-                           a.Descripcion,
-                           a.PrecioNoche,
-                           a.Capacidad,
-                           a.Categoria,
-                           a.Estado as AlojamientoEstado,
-                           p.ID as PromocionID,
-                           p.Codigo,
-                           p.Descripcion as PromocionDescripcion,
-                           p.Tipo,
-                           p.Valor,
-                           p.Inicio,
-                           p.Fin,
-                           p.Requisitos,
-                           e.Nombre as EtiquetaNombre,
-                           e.Descripcion as EtiquetaDescripcion,
-                           CASE 
-                               WHEN p.Tipo = 'Porcentaje' THEN 
-                                   ROUND(a.PrecioNoche * (1 - p.Valor/100), 2)
-                               WHEN p.Tipo = 'Monto' THEN 
-                                   ROUND(a.PrecioNoche - p.Valor, 2)
-                               ELSE a.PrecioNoche
-                           END as PrecioConDescuento,
-                           CASE 
-                               WHEN CURDATE() BETWEEN p.Inicio AND p.Fin THEN 'Vigente'
-                               WHEN CURDATE() > p.Fin THEN 'Aplicado'
-                               WHEN CURDATE() < p.Inicio THEN 'Pendiente'
-                               ELSE 'Sin promoción'
-                           END AS EstadoPromocion
-                    FROM Alojamiento a
-                    LEFT JOIN Etiqueta e ON a.ID = e.ID_Alojamiento
-                    LEFT JOIN Promocion p ON e.ID_Promocion = p.ID
-                    WHERE a.Estado = 1
-                    ORDER BY a.ID;";
+              $vSQL = "SELECT a.ID as AlojamientoID,
+                       a.Nombre as AlojamientoNombre,
+                       a.Descripcion,
+                       a.PrecioNoche,
+                       a.Capacidad,
+                       a.Categoria,
+                       a.Estado as AlojamientoEstado,
+                       p.ID as PromocionID,
+                       p.Codigo,
+                       p.Descripcion as PromocionDescripcion,
+                       p.Tipo,
+                       p.Valor,
+                       p.Inicio,
+                       p.Fin,
+                       p.Requisitos,
+                       e.Nombre as EtiquetaNombre,
+                       e.Descripcion as EtiquetaDescripcion,
+                       CASE 
+                           WHEN p.Tipo = 'Porcentaje' THEN 
+                               ROUND(a.PrecioNoche * (1 - p.Valor/100), 2)
+                           WHEN p.Tipo = 'Monto' THEN 
+                               ROUND(a.PrecioNoche - p.Valor, 2)
+                           ELSE a.PrecioNoche
+                       END as PrecioConDescuento,
+                       CASE 
+                           WHEN CURDATE() BETWEEN p.Inicio AND p.Fin THEN 'Vigente'
+                           WHEN CURDATE() > p.Fin THEN 'Aplicado'
+                           WHEN CURDATE() < p.Inicio THEN 'Pendiente'
+                           ELSE 'Sin promoción'
+                       END AS EstadoPromocion
+                FROM Alojamiento a
+                INNER JOIN Etiqueta e ON a.ID = e.ID_Alojamiento
+                INNER JOIN Promocion p ON e.ID_Promocion = p.ID
+                WHERE a.Estado = 1
+                ORDER BY a.ID;";
 
             //Ejecutar la consulta
             $vResultado = $this->enlace->executeSQL($vSQL);
