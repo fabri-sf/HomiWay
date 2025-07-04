@@ -27,7 +27,6 @@ export default function Resena({ alojamientoId }) {
     return <p><em>No hay reseñas para este alojamiento.</em></p>;
   }
 
-  
   return (
     <div style={{ marginTop: '2rem' }}>
       <Typography variant="h5" gutterBottom>Reseñas</Typography>

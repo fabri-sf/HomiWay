@@ -22,6 +22,7 @@ class ResenaModel
         }
     }
     /*Obtener, MODIFICAR PARA QUE OBTENGA LA FOTO */ 
+
     public function getByAlojamiento($idAlojamiento) {
         try {
             $idAlojamiento = intval($idAlojamiento); 
