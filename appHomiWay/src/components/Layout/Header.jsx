@@ -18,110 +18,116 @@ import Tooltip from "@mui/material/Tooltip";
 import { useCart } from "../../hooks/useCart";
 import { UserContext } from "../../context/UserContext";
 
+// Imports para el Drawer lateral
+import Drawer from "@mui/material/Drawer";
+import MenuList from "@mui/material/MenuList";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+
 export default function Header() {
-  //Obtener usuario
-  const {user, decodeToken,autorize}= useContext(UserContext)
-  const [userData,setUserData]=useState(decodeToken())
-  useEffect(()=>{setUserData(decodeToken())},[user])
-  
-  const {cart, getCountItems}=useCart()
-  //Gestión menu usuario
+  // Contexto de usuario
+  const { user, decodeToken, autorize } = useContext(UserContext);
+  const [userData, setUserData] = useState(decodeToken());
+  useEffect(() => {
+    setUserData(decodeToken());
+  }, [user]);
+
+  // Carrito
+  const { cart, getCountItems } = useCart();
+
+  // Menú usuario
   const [anchorElUser, setAnchorEl] = useState(null);
-  //Gestión menu opciones
-  const [mobileOpcionesAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  //Booleano Menu opciones responsivo
-  const isMobileOpcionesMenuOpen = Boolean(mobileOpcionesAnchorEl);
-  //Gestión menu principal
-  const [anchorElPrincipal, setAnchorElPrincipal] = useState(null);
-  //Abierto menu usuario
-  const handleUserMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  //Cerrado menu usuario
+  const userMenuId = "user-menu";
+  const handleUserMenuOpen = (e) => setAnchorEl(e.currentTarget);
   const handleUserMenuClose = () => {
     setAnchorEl(null);
     handleOpcionesMenuClose();
   };
-  //Abierto menu principal
-  const handleOpenPrincipalMenu = (event) => {
-    setAnchorElPrincipal(event.currentTarget);
-  };
-  //Cerrado menu principal
-  const handleClosePrincipalMenu = () => {
-    setAnchorElPrincipal(null);
-  };
-  //Abierto menu opciones
-  const handleOpcionesMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-  //Cerrado menu opciones
-  const handleOpcionesMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-  //Lista enlaces menu usuario
+
+  // Menú “más opciones” (mobile)
+  const [mobileOpcionesAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const isMobileOpcionesMenuOpen = Boolean(mobileOpcionesAnchorEl);
+  const menuOpcionesId = "badge-menu-mobile";
+  const handleOpcionesMenuOpen = (e) => setMobileMoreAnchorEl(e.currentTarget);
+  const handleOpcionesMenuClose = () => setMobileMoreAnchorEl(null);
+
+  // Menú principal (desktop)
+  const [anchorElPrincipal, setAnchorElPrincipal] = useState(null);
+  const menuIdPrincipal = "menu-appbar";
+  const handleOpenPrincipalMenu = (e) => setAnchorElPrincipal(e.currentTarget);
+  const handleClosePrincipalMenu = () => setAnchorElPrincipal(null);
+
   const userItems = [
     { name: "Login", link: "/user/login", login: false },
     { name: "Registrarse", link: "/user/create", login: false },
     { name: "Logout", link: "/user/logout", login: true },
   ];
-  //Lista enlaces menu principal
   const navItems = [
-  { name: "Inicio", link: "/", roles: null },
-  { name: "Alojamientos", link: "/alojamientos", roles: null },
-  { name: "Promociones", link: "/promociones", roles: null },
-  { name: "Promociones Disponibles", link: "/promocionesDis", roles: null },
-  { name: "Pedidos", link: "/pedidos", roles: null },
-  { name: "Administración", link: "/admin/dashboard", roles: ["Administrador"] },
+    { name: "Inicio", link: "/", roles: null },
+    { name: "Alojamientos", link: "/alojamientos", roles: null },
+    { name: "Promociones", link: "/promociones", roles: null },
+    { name: "Promociones Disponibles", link: "/promocionesDis", roles: null },
+    { name: "Pedidos", link: "/pedidos", roles: null },
+    { name: "Administración", link: "/admin/dashboard", roles: ["Administrador"] },
+    { name: "Reseñas", link: "/resenas", roles: null },
   ];
-  //Identificador menu principal
-  const menuIdPrincipal = "menu-appbar";
-  //Menu Principal
+
+  // Drawer lateral y submenú “Mantenimientos”
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [submenuOpen, setSubmenuOpen] = useState(false);
+  const theme = useTheme();
+  const isMobileDrawer = useMediaQuery(theme.breakpoints.down("sm"));
+  const toggleDrawer = () => setDrawerOpen((prev) => !prev);
+  const toggleSubmenu = () => setSubmenuOpen((prev) => !prev);
+
+  // Menú principal desktop
   const menuPrincipal = (
     <Box sx={{ display: { xs: "none", sm: "block" } }}>
-      {navItems &&
-        navItems.map((item, index) => {
-          //if(autorize(requiredRoles:['Administrador']))
-        if(userData && item.roles){
-          //Verificar rol
-          if(autorize({requiredRoles:item.roles})){
-            //Rutas con restricción
-            return (<Button
-              key={index}
-              component={Link}
-              to={item.link}
-              color="secondary"
-            >
-              <Typography textAlign="center">{item.name}</Typography>
-            </Button>)
+      {navItems.map((item, i) => {
+        if (item.roles) {
+          if (userData && autorize({ requiredRoles: item.roles })) {
+            return (
+              <Button key={i} component={Link} to={item.link} color="secondary">
+                <Typography textAlign="center">{item.name}</Typography>
+              </Button>
+            );
           }
-        }else{
-          if(item.roles==null){
-            //Rutas sin restricción
-            return (<Button
-              key={index}
-              component={Link}
-              to={item.link}
-              color="secondary"
-            >
+        } else {
+          return (
+            <Button key={i} component={Link} to={item.link} color="secondary">
               <Typography textAlign="center">{item.name}</Typography>
-            </Button>)
-          }
+            </Button>
+          );
         }
-                
-            
-         
-})}
+        return null;
+      })}
     </Box>
   );
-  //Menu Principal responsivo
-  const menuPrincipalMobile = navItems.map((page, index) => (
-    <MenuItem key={index} component={Link} to={page.link}>
-      <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
-    </MenuItem>
-  ));
-  //Identificador menu usuario
-  const userMenuId = "user-menu";
-  //Menu Usuario
+
+  // Menú principal mobile
+  const menuPrincipalMobile = (
+    <Menu
+      id={menuIdPrincipal}
+      anchorEl={anchorElPrincipal}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "left" }}
+      open={Boolean(anchorElPrincipal)}
+      onClose={handleClosePrincipalMenu}
+      sx={{ display: { xs: "block", md: "none" } }}
+    >
+      {navItems.map((page, i) => (
+        <MenuItem key={i} component={Link} to={page.link} onClick={handleClosePrincipalMenu}>
+          <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
+        </MenuItem>
+      ))}
+    </Menu>
+  );
+
+  // Menú de usuario
   const userMenu = (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton
@@ -135,81 +141,61 @@ export default function Header() {
       >
         <AccountCircle />
       </IconButton>
-
       <Menu
         sx={{ mt: "45px" }}
-        id="menu-appbar"
+        id={userMenuId}
         anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
         keepMounted
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={Boolean(anchorElUser)}
         onClose={handleUserMenuClose}
       >
-        {userData &&(
+        {userData && (
           <MenuItem>
             <Typography variant="subtitle1" gutterBottom>
-              {userData?.email}
+              {userData.email}
             </Typography>
           </MenuItem>
-       )}
-
-        {userItems.map((setting, index) =>  {
-          //Verificar las opciones del usuario 
-          if(setting.login && userData && Object.keys(userData).length >0){
-            return (<MenuItem key={index} component={Link} to={setting.link}>
-              <Typography sx={{ textAlign: 'center' }}>
-                {setting.name}
-              </Typography>
-            </MenuItem>)
-          }else if(!setting.login && Object.keys(userData).length==0){
-            return (<MenuItem key={index} component={Link} to={setting.link}>
-              <Typography sx={{ textAlign: 'center' }}>
-                {setting.name}
-              </Typography>
-            </MenuItem>)
-          }          
+        )}
+        {userItems.map((setting, i) => {
+          if (setting.login && userData && Object.keys(userData).length > 0) {
+            return (
+              <MenuItem key={i} component={Link} to={setting.link} onClick={handleUserMenuClose}>
+                <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
+              </MenuItem>
+            );
+          } else if (!setting.login && Object.keys(userData).length === 0) {
+            return (
+              <MenuItem key={i} component={Link} to={setting.link} onClick={handleUserMenuClose}>
+                <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
+              </MenuItem>
+            );
+          }
+          return null;
         })}
       </Menu>
     </Box>
   );
-  //Identificador menu opciones
-  const menuOpcionesId = "badge-menu-mobile";
-  //Menu opciones responsivo
+
+  // Menú de opciones mobile (carrito / notificaciones)
   const menuOpcionesMobile = (
     <Menu
       anchorEl={mobileOpcionesAnchorEl}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       id={menuOpcionesId}
       keepMounted
       open={isMobileOpcionesMenuOpen}
       onClose={handleOpcionesMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" color="inherit">
-          <Badge
-            badgeContent={getCountItems(cart)}
-            color="primary"
-            component={Link}
-            to="/rental/crear/"
-          >
+        <IconButton size="large" color="inherit" component={Link} to="/rental/crear/">
+          <Badge badgeContent={getCountItems(cart)} color="primary">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <p>Compras</p>
+        <Typography sx={{ ml: 1 }}>Compras</Typography>
       </MenuItem>
       <MenuItem>
         <IconButton size="large" color="inherit">
@@ -217,72 +203,39 @@ export default function Header() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notificaciones</p>
+        <Typography sx={{ ml: 1 }}>Notificaciones</Typography>
       </MenuItem>
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="static"
-        color="primaryLight"
-        sx={{ backgroundColor: "primaryLight.main" }}
-      >
+      <AppBar position="static" color="primaryLight" sx={{ backgroundColor: "primaryLight.main" }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            color="inherit"
-            aria-controls={menuIdPrincipal}
-            aria-haspopup="true"
-            sx={{ mr: 2 }}
-            onClick={handleOpenPrincipalMenu}
-          >
+          {/* Botón hamburguesa abre el Drawer */}
+          <IconButton size="large" color="inherit" sx={{ mr: 2 }} onClick={toggleDrawer}>
             <MenuIcon />
           </IconButton>
-          <Menu
-            id={menuIdPrincipal}
-            anchorEl={anchorElPrincipal}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            open={Boolean(anchorElPrincipal)}
-            onClose={handleClosePrincipalMenu}
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
-            {menuPrincipalMobile}
-          </Menu>
-          {/* Enlace página inicio */}
-         <Tooltip title="HomiWay – Vive la experiencia">
-            <IconButton
-              size="large"
-              edge="end"
-              component="a"
-              href="/"
-              aria-label="Inicio HomiWay"
-              color="primary"
-            >
-              {/* logo */}
-              < img src="/src/assets/logo.png" alt="HomiWay" style={{ width: 30, height: 30 }} />
+
+          {/* Menú principal mobile (opcional, se mantiene) */}
+          {menuPrincipalMobile}
+
+          {/* Logo / enlace a home */}
+          <Tooltip title="HomiWay – Vive la experiencia">
+            <IconButton size="large" edge="end" component="a" href="/" color="primary">
+              <img src="/src/assets/logo.png" alt="HomiWay" style={{ width: 30, height: 30 }} />
             </IconButton>
           </Tooltip>
-          {/* Enlace página inicio */}
+
+          {/* Menú principal desktop */}
           {menuPrincipal}
+
           <Box sx={{ flexGrow: 1 }} />
+
+          {/* Iconos carrito y notificaciones en desktop */}
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton size="large" color="inherit">
-              <Badge
-                badgeContent={getCountItems(cart)}
-                color="primary"
-                component={Link}
-                to="/rental/crear/"
-              >
+            <IconButton size="large" color="inherit" component={Link} to="/rental/crear/">
+              <Badge badgeContent={getCountItems(cart)} color="primary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
@@ -292,7 +245,11 @@ export default function Header() {
               </Badge>
             </IconButton>
           </Box>
-          <div>{userMenu}</div>
+
+          {/* Menú usuario */}
+          {userMenu}
+
+          {/* Botón “más” en mobile */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -307,7 +264,97 @@ export default function Header() {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* Menú opciones mobile */}
       {menuOpcionesMobile}
+
+      {/* Drawer lateral / inferior con sección Mantenimientos */}
+      <Drawer
+        anchor={isMobileDrawer ? "bottom" : "left"}
+        open={drawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: isMobileDrawer ? "100%" : 260,
+            borderTopLeftRadius: isMobileDrawer ? 12 : 0,
+            borderTopRightRadius: isMobileDrawer ? 12 : 0,
+            p: 2,
+            backgroundColor: "primaryLight.main",
+          },
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2, color: "text.primary" }}>
+          Navegación
+        </Typography>
+        <MenuList>
+          {navItems.map((item, i) => {
+            if (item.roles) {
+              if (userData && autorize({ requiredRoles: item.roles })) {
+                return (
+                  <MenuItem
+                    key={i}
+                    component={Link}
+                    to={item.link}
+                    onClick={toggleDrawer}
+                  >
+                    {item.name}
+                  </MenuItem>
+                );
+              }
+            } else {
+              return (
+                <MenuItem
+                  key={i}
+                  component={Link}
+                  to={item.link}
+                  onClick={toggleDrawer}
+                >
+                  {item.name}
+                </MenuItem>
+              );
+            }
+            return null;
+          })}
+
+          {/* Submenu: Mantenimientos */}
+          <ListItemButton onClick={toggleSubmenu}>
+            <ListItemText
+              primary="Mantenimientos"
+              primaryTypographyProps={{ color: "text.primary" }}
+            />
+            {submenuOpen ? "▲" : "▼"}
+          </ListItemButton>
+          <Collapse in={submenuOpen} timeout="auto" unmountOnExit>
+            <MenuList sx={{ pl: 2 }}>
+              <MenuItem
+               component={Link}
+                to="/alojamiento"      
+                onClick={() => {
+                  toggleDrawer();
+                  setSubmenuOpen(false);
+                }}
+              >
+                Lista Alojamientos
+              </MenuItem>
+
+              <MenuItem
+                component={Link}
+                to="/servicio/crear"
+                onClick={toggleDrawer}
+              >
+                Servicio
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/usuario/crear"
+                onClick={toggleDrawer}
+              >
+                Usuario
+              </MenuItem>
+            </MenuList>
+          </Collapse>
+        </MenuList>
+      </Drawer>
     </Box>
   );
 }

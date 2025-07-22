@@ -1,53 +1,40 @@
 <?php
-class RolModel{
+class RolModel {
     public $enlace;
+
     public function __construct() {
-        
-        $this->enlace=new MySqlConnect();
-       
-    }
-    public function all(){
-        try {
-            //Consulta sql
-			$vSql = "SELECT * FROM rol;";
-			
-            //Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL ( $vSql);
-				
-			// Retornar el objeto
-			return $vResultado;
-		} catch ( Exception $e ) {
-			die ( $e->getMessage () );
-		}
+        $this->enlace = new MySqlConnect();
     }
 
-    public function get($id){
+    public function all() {
         try {
-            //Consulta sql
-			$vSql = "SELECT * FROM rol where id=$id";
-			
-            //Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL ( $vSql);
-			// Retornar el objeto
-			return $vResultado[0];
-		} catch ( Exception $e ) {
-			die ( $e->getMessage () );
-		}
+            $vSql = "SELECT * FROM rol;";
+            return $this->enlace->ExecuteSQL($vSql);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
-    public function getRolUser($idUser){
+
+    public function get($id) {
         try {
-            //Consulta sql
-			$vSql = "SELECT r.id,r.name
-            FROM rol r,user u 
-            where r.id=u.rol_id and u.id=$idUser";
-			
-            //Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL ( $vSql);
-			// Retornar el objeto
-			return $vResultado[0];
-		} catch ( Exception $e ) {
-			die ( $e->getMessage () );
-		}
+            $vSql = "SELECT * FROM rol WHERE ID = $id;";
+            $vResultado = $this->enlace->ExecuteSQL($vSql);
+            return $vResultado[0];
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
-	
+
+    public function getRolUser($idUsuario) {
+        try {
+            $vSql = "SELECT r.ID, r.Rol
+                     FROM rol r
+                     INNER JOIN usuario u ON r.ID = u.ID_Rol
+                     WHERE u.ID = $idUsuario;";
+            $vResultado = $this->enlace->ExecuteSQL($vSql);
+            return $vResultado[0];
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
 }

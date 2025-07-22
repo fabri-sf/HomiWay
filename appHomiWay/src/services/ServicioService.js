@@ -1,15 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL + 'servicio';
+const BASE_URL = import.meta.env.VITE_BASE_URL + "servicio";
 
 class ServicioService {
-  getByAlojamiento(idAlojamiento) {
-    const user = localStorage.getItem('user');
-    const token = user ? user.replace(/^"|"$/g, '') : '';
-    return axios.get(`${BASE_URL}/getByAlojamiento/${idAlojamiento}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+
+  getAll() {
+    const token = localStorage.getItem("user")?.replace(/^"|"$/g, "");
+    return axios.get(BASE_URL, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+
+  getByAlojamiento(id) {
+    const token = localStorage.getItem("user")?.replace(/^"|"$/g, "");
+    return axios.get(`${BASE_URL}/getByAlojamiento/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
   }
 }

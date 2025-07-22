@@ -1,138 +1,67 @@
 <?php
 
-use Firebase\JWT\JWT;
 
-class UsuarioModel
-{
-	public $enlace;
-	public function __construct()
-	{
+class UsuarioModel {
+  private $enlace;
 
-		$this->enlace = new MySqlConnect();
-	}
-	public function all()
-	{
-		try {
-			//Consulta sql
-			$vSql = "SELECT * FROM user;";
+  public function __construct() {
+    $this->enlace = new MySqlConnect();
+  }
 
-			//Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL($vSql);
+  public function all() {
+    return $this->enlace->ExecuteSQL("SELECT * FROM usuario;");
+  }
 
-			// Retornar el objeto
-			return $vResultado;
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
+  public function get($id) {
+    $rolM = new RolModel();
+    $sql = "SELECT * FROM usuario WHERE ID = $id;";
+    $result = $this->enlace->ExecuteSQL($sql);
 
-	public function get($id)
-	{
-		try {
-			$rolM = new RolModel();
+    if ($result) {
+      $user = $result[0];
+      $user->rol = $rolM->getRolUser($id);
+      return $user;
+    }
+    return null;
+  }
 
-			//Consulta sql
-			$vSql = "SELECT * FROM user where id=$id";
-			//Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL($vSql);
-			if ($vResultado) {
-				$vResultado = $vResultado[0];
-				$rol = $rolM->getRolUser($id);
-				$vResultado->rol = $rol;
-				// Retornar el objeto
-				return $vResultado;
-			} else {
-				return null;
-			}
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
-	public function allCustomer()
-	{
-		try {
-			//Consulta sql
-			$vSql = "SELECT * FROM movie_rental.user
-					where rol_id=2;";
+  public function login($objeto) {
+    $sql = "SELECT * FROM usuario WHERE Correo = '$objeto->Correo';";
+    $result = $this->enlace->ExecuteSQL($sql);
 
-			//Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL($vSql);
+    if (is_object($result[0])) {
+      $user = $result[0];
+      if ($user->Estado == 1 && $user->Contrasena == $objeto->Contrasena) {
+        $usuario = $this->get($user->ID);
+        if (!empty($usuario)) {
+          $data = [
+            'id' => $usuario->ID,
+            'correo' => $usuario->Correo,
+            'rol' => $usuario->rol,
+            'iat' => time(),
+            'exp' => time() + 3600
+          ];
+          return JWT::encode($data, config::get('SECRET_KEY'), 'HS256');
+        }
+      }
+    }
+    return false;
+  }
 
-			// Retornar el objeto
-			return $vResultado;
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
-	public function customerbyShopRental($idShopRental)
-	{
-		try {
-			//Consulta sql
-			$vSql = "SELECT * FROM movie_rental.user
-					where rol_id=2 and shop_id=$idShopRental;";
+  public function create($objeto) {
+    $sql = "INSERT INTO usuario 
+      (ID_Rol, Username, Contrasena, Estado, Nombre, Apellido, Correo) 
+      VALUES (
+        $objeto->ID_Rol,
+        '$objeto->Username',
+        '$objeto->Contrasena',
+        1,
+        '$objeto->Nombre',
+        '$objeto->Apellido',
+        '$objeto->Correo'
+      );";
 
-			//Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL($vSql);
-
-			// Retornar el objeto
-			return $vResultado;
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
-	public function login($objeto)
-	{
-		try {
-
-			$vSql = "SELECT * from User where email='$objeto->email'";
-
-			//Ejecutar la consulta
-			$vResultado = $this->enlace->ExecuteSQL($vSql);
-			if (is_object($vResultado[0])) {
-				$user = $vResultado[0];
-				if (password_verify($objeto->password, $user->password)) {
-					$usuario = $this->get($user->id);
-					if (!empty($usuario)) {
-						// Datos para el token JWT
-						$data = [
-							'id' => $usuario->id,
-							'email' => $usuario->email,
-							'rol' => $usuario->rol,
-							'iat' => time(),  // Hora de emisión
-							'exp' => time() + 3600 // Expiración en 1 hora
-						];
-
-						// Generar el token JWT
-						$jwt_token = JWT::encode($data, config::get('SECRET_KEY'), 'HS256');
-
-						// Enviar el token como respuesta
-						return $jwt_token;
-					}
-				}
-			} else {
-				return false;
-			}
-		} catch (Exception $e) {
-			handleException($e);
-		}
-	}
-	public function create($objeto)
-	{
-		try {
-			if (isset($objeto->password) && $objeto->password != null) {
-				$crypt = password_hash($objeto->password, PASSWORD_BCRYPT);
-				$objeto->password = $crypt;
-			}
-			//Consulta sql            
-			$vSql = "Insert into user (name,email,password,rol_id)" .
-				" Values ('$objeto->name','$objeto->email','$objeto->password',$objeto->rol_id)";
-
-			//Ejecutar la consulta
-			$vResultado = $this->enlace->executeSQL_DML_last($vSql);
-			// Retornar el objeto creado
-			return $this->get($vResultado);
-		} catch (Exception $e) {
-			handleException($e);
-		}
-	}
+    $newID = $this->enlace->executeSQL_DML_last($sql);
+    return $this->get($newID);
+  }
 }
