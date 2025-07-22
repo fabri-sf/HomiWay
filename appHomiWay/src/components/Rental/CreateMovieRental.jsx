@@ -17,7 +17,7 @@ import ShopRentalService from '../../services/ShopRentalService';
 import { Cart } from './Cart';
 import RentalService from '../../services/RentalService';
 import { format, parse } from 'date-fns';
-import UserService from '../../services/UserService';
+import UserService from '../../services/UsuarioService';
 import { useCart } from '../../hooks/useCart';
 //https://www.npmjs.com/package/@hookform/resolvers
 

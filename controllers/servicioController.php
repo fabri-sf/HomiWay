@@ -1,8 +1,17 @@
 
 <?php
-//class G
 class Servicio{
-    //POST Crear
+
+       public function index() {
+        try {
+            $response = new Response();
+            $model = new ServicioModel();
+            $data  = $model->all();
+            $response->toJSON($data);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
     public function getByAlojamiento($idAlojamiento)
     {
         try {

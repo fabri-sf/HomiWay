@@ -4,7 +4,12 @@ import AlojamientoService from '../../services/AlojamientoService';
 
 import { ListServicios } from '../Servicios/ListServicio';
 import Resena from '../Resena/Resena';
-import { Button } from '@mui/material';
+import {
+  Button,
+  Typography,
+  CircularProgress,
+  Box
+} from '@mui/material';
 
 export function DetailAlojamiento() {
   const { id } = useParams();
@@ -26,8 +31,32 @@ export function DetailAlojamiento() {
       });
   }, [id]);
 
-  if (!loaded) return <p style={{ padding: '2rem' }}>Cargando alojamiento...</p>;
-  if (error) return <p style={{ padding: '2rem' }}>Error: {error}</p>;
+  if (!loaded) {
+    return (
+      <Box
+        sx={{
+          minHeight: '60vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#fafaf7',
+          color: '#2E7D32',
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: '#2E7D32', mb: 2 }} />
+        <Typography variant="h6">Cargando datos...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ padding: '2rem' }}>
+        <Typography color="error">Error: {error}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <div style={{ maxWidth: '1000px', margin: '2rem auto', padding: '1rem' }}>
@@ -95,11 +124,10 @@ export function DetailAlojamiento() {
         <p><strong>Código Postal:</strong> {data.ubicacion?.CodigoPostal || '—'}</p>
         <p><strong>Descripción:</strong></p>
         <p style={{ textAlign: 'justify' }}>{data.Descripcion}</p>
-
       </div>
-          
-        <hr style={{ margin: '2rem 0' }} />
-        <ListServicios alojamientoId={parseInt(data.ID)} />
+
+      <hr style={{ margin: '2rem 0' }} />
+      <ListServicios alojamientoId={parseInt(data.ID)} />
 
       <Button
         size="small"
@@ -117,6 +145,19 @@ export function DetailAlojamiento() {
 
       <Resena alojamientoId={parseInt(data.ID)} />
 
+      <Button
+        size="small"
+        component={Link}
+        to={`/resena/crear/${data.ID}`}
+        sx={{
+          backgroundColor: '#2e7d32',
+          color: '#ffffff',
+          '&:hover': { backgroundColor: '#1b5e20' },
+          marginTop: '1rem',
+        }}
+      >
+        Valorar Alojamiento
+      </Button>
     </div>
   );
 }

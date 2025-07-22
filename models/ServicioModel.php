@@ -16,4 +16,15 @@ class ServicioModel {
             handleException($e);
         }
     }
+
+      public function all() {
+        try {
+            $sql = "SELECT ID, Nombre, Tipo, Precio, Descripcion
+                      FROM servicio";
+            return $this->enlace->ExecuteSQL($sql);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
 }
