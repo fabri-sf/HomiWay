@@ -1,6 +1,7 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+
 export function Unauthorized() {
   return (
     <Container sx={{ p: 2 }} maxWidth="sm">
@@ -11,7 +12,7 @@ export function Unauthorized() {
         color="text.primary"
         gutterBottom
       >
-        Autorizacion
+        Autorización
       </Typography>
       <Typography variant="h5" align="center" color="text.secondary" paragraph>
         Usuario no autorizado

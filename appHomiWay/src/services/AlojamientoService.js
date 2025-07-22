@@ -22,6 +22,29 @@ class AlojamientoService {
       }
     });
   }
+
+  createAlojamiento(data) {
+  const user = localStorage.getItem('user');
+  const token = user ? user.replace(/^"|"$/g, '') : '';
+  return axios.post(`${BASE_URL}`, JSON.stringify(data), {
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+  });
+  }
+
+  updateAlojamiento(id, data) {
+    const user = localStorage.getItem('user');
+    const token = user ? user.replace(/^"|"$/g, '') : '';
+    return axios.put(`${BASE_URL}/${id}`, JSON.stringify(data), {
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    });
+  }
+
+  deleteLogicoAlojamiento(id) {
+  const token = localStorage.getItem('user')?.replace(/^"|"$/g, '');
+  return axios.get(`${BASE_URL}/logico/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
 }
 
 export default new AlojamientoService();

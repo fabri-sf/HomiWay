@@ -5,8 +5,9 @@ import { UserContext } from '../../context/UserContext';
 export function Auth(requiredRoles) {
   const location = useLocation();
   const { user, autorize } = useContext(UserContext);
+
   let render = null;
-  // Especificar el render si el usuario esta autorizado
+
   if (user && autorize(requiredRoles)) {
     render = <Outlet />;
   } else {

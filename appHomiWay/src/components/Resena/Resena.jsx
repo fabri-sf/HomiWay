@@ -8,21 +8,20 @@ export default function Resena({ alojamientoId }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
 
- useEffect(() => {
-  ResenaService.getByAlojamiento(alojamientoId)
-    .then((res) => {
-      console.log('Reseñas recibidas:', res.data);
-      setResenas(res.data);
-      setLoaded(true);
-    })
+  useEffect(() => {
+    ResenaService.getByAlojamiento(alojamientoId)
+      .then((res) => {
+        const ordenadas = res.data.sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+        setResenas(ordenadas.slice(0, 5));
+        setLoaded(true);
+      })
       .catch((err) => {
         setError(err.message || 'Error al cargar reseñas');
         setLoaded(false);
       });
-  }, [alojamientoId]);
 
+}, [alojamientoId]);
   if (!loaded) return null;
-
   if (error || resenas.length === 0) {
     return <p><em>No hay reseñas para este alojamiento.</em></p>;
   }
@@ -35,9 +34,9 @@ export default function Resena({ alojamientoId }) {
           <Grid item xs={12} md={6} key={i}>
             <Card variant="outlined">
               <CardContent>
-                <Typography variant="subtitle1">
-                  {r.UsuarioNombre || 'Usuario anónimo'}
-                </Typography>
+               <Typography variant="subtitle1">
+                {r.UsuarioNombre}
+              </Typography>
                 <Rating value={Number(r.Calificacion)} readOnly precision={0.5} />
                 <Typography variant="body2" color="textSecondary">
                   {new Date(r.Fecha).toLocaleDateString('es-CR')}

@@ -35,6 +35,8 @@ require_once "models/UbicacionModel.php";
 require_once "models/ServicioModel.php";
 require_once "models/ResenaModel.php";
 require_once "models/PedidoModel.php";
+require_once "models/UsuarioModel.php";
+require_once "models/ServicioAlojamientoModel.php";
 /***--- Agregar todos los controladores*/
 
 
@@ -54,6 +56,8 @@ require_once "controllers/UbicacionController.php";
 require_once "controllers/servicioController.php";
 require_once "controllers/ResenaController.php";
 require_once "controllers/PedidoController.php";
+require_once "controllers/UsuarioController.php";
+require_once "controllers/ServicioAlojamientoController.php";
 //require_once "controllers/ImageController.php"; arreglar el porque no funciona al activarlo
 
 //Enrutador

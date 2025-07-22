@@ -1,8 +1,6 @@
 <?php
-class Rol
-{
-    public function index()
-    {
+class Rol {
+    public function index() {
         try {
             $response = new Response();
             $rolModel = new RolModel();
@@ -13,8 +11,7 @@ class Rol
         }
     }
 
-    public function get($id)
-    {
+    public function get($id) {
         try {
             $response = new Response();
             $rolModel = new RolModel();
@@ -24,17 +21,12 @@ class Rol
             handleException($e);
         }
     }
-    /**
-     * /
-     * @param mixed $idUser
-     * @return void
-     */
-    public function getRolUser($idUser)
-    {
+
+    public function getRolUser($idUsuario) {
         try {
             $response = new Response();
             $rolModel = new RolModel();
-            $result = $rolModel->getRolUser($idUser);
+            $result = $rolModel->getRolUser($idUsuario);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);

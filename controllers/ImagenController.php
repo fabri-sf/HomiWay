@@ -1,34 +1,36 @@
 <?php
-//class Genre
-class imagen{
-    //POST Crear
-  public function create()
-{
-    try {
-        $file = $_FILES;
-        $alojamiento_id = $_POST['alojamiento_id'];
+class Imagen {
+    public function create() {
+        $response         = new Response();
+        $file             = $_FILES['file'] ?? null;
+        $alojamiento_id   = $_POST['alojamiento_id'] ?? null;
 
-        $imageModel = new ImageModel();
-        $result = $imageModel->uploadFile([
-            'file' => $file['file'],
-            'alojamiento_id' => $alojamiento_id
-        ]);
-
-        $response = new Response();
-        $response->toJSON($result);
-    } catch (Exception $e) {
-        handleException($e);
-    }
-}
-      public function getByAlojamiento($idAlojamiento)
-    {
-        try {
-            $response = new Response();
-            $imagenM = new ImageModel();
-            $result = $imagenM->getImagesByAlojamientoId($idAlojamiento);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
+        if (!$file || !$alojamiento_id) {
+            $response->toJSON(['status'=>'error','message'=>'Faltan datos']);
+            return;
         }
+
+        $model = new ImageModel();
+        $url   = $model->uploadFile($file, (int)$alojamiento_id);
+
+        if ($url) {
+            $response->toJSON(['status'=>'success','url'=>$url]);
+        } else {
+            $response->toJSON(['status'=>'error','message'=>'Upload fallido']);
+        }
+    }
+
+    public function getByAlojamiento($idAloj) {
+        $response = new Response();
+        $model    = new ImageModel();
+        $imgs     = $model->getImagesByAlojamientoId((int)$idAloj);
+        $response->toJSON($imgs);
+    }
+
+    public function getFirst($idAloj) {
+        $response = new Response();
+        $model    = new ImageModel();
+        $img      = $model->getFirstImage((int)$idAloj);
+        $response->toJSON($img);
     }
 }

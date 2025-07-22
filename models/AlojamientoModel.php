@@ -11,7 +11,8 @@ class AlojamientoModel
   public function allMinimal()
 {
     try {
-        $sql = "SELECT a.id, a.nombre, a.descripcion FROM alojamiento a";
+        $sql = "SELECT a.id, a.nombre, a.descripcion, a.categoria FROM alojamiento a  WHERE a.Estado = 1
+";
         $result = $this->enlace->ExecuteSQL($sql);
 
         // Asociar imágenes a cada alojamiento
@@ -26,7 +27,6 @@ class AlojamientoModel
     }
 }
 
-    // Obtener un alojamiento con todos sus detalles
     public function get($id)
     {
         try {
@@ -53,4 +53,36 @@ class AlojamientoModel
             handleException($e);
         }
     }
+
+    public function create($objeto) {
+    $sql = "INSERT INTO alojamiento (ID_Usuario, ID_Ubicacion, Nombre, Descripcion, PrecioNoche, Capacidad, Caracteristicas, Estado, Categoria)
+            VALUES ($objeto->ID_Usuario, $objeto->ID_Ubicacion, '$objeto->Nombre', '$objeto->Descripcion',
+                    $objeto->PrecioNoche, $objeto->Capacidad, '$objeto->Caracteristicas', $objeto->Estado, '$objeto->Categoria')";
+    $newId = $this->enlace->executeSQL_DML_last($sql);
+    return $this->get($newId);
+}
+
+    public function update($obj, $id) {
+    $sql = "UPDATE alojamiento SET
+                Nombre = '$obj->Nombre',
+                Descripcion = '$obj->Descripcion',
+                PrecioNoche = $obj->PrecioNoche,
+                Capacidad = $obj->Capacidad,
+                Caracteristicas = '$obj->Caracteristicas',
+                Estado = $obj->Estado,
+                Categoria = '$obj->Categoria',
+                ID_Ubicacion = $obj->ID_Ubicacion
+            WHERE ID = $id";
+    $this->enlace->executeSQL_DML($sql);
+    return $this->get($id);
+    }
+
+   public function deleteLogico(int $id) {
+    $sql = "UPDATE alojamiento SET Estado = 0 WHERE ID = $id";
+    $this->enlace->executeSQL_DML($sql);
+    return ['success' => true];
+    }
+
+
+    
 }
