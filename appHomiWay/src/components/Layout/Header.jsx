@@ -13,7 +13,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import LiveTvIcon from "@mui/icons-material/LiveTv";
 import Tooltip from "@mui/material/Tooltip";
 import { useCart } from "../../hooks/useCart";
 import { UserContext } from "../../context/UserContext";
@@ -47,7 +46,7 @@ export default function Header() {
     handleOpcionesMenuClose();
   };
 
-  // Menú “más opciones” (mobile)
+  // Menú "más opciones" (mobile)
   const [mobileOpcionesAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMobileOpcionesMenuOpen = Boolean(mobileOpcionesAnchorEl);
   const menuOpcionesId = "badge-menu-mobile";
@@ -57,7 +56,7 @@ export default function Header() {
   // Menú principal (desktop)
   const [anchorElPrincipal, setAnchorElPrincipal] = useState(null);
   const menuIdPrincipal = "menu-appbar";
-  const handleOpenPrincipalMenu = (e) => setAnchorElPrincipal(e.currentTarget);
+
   const handleClosePrincipalMenu = () => setAnchorElPrincipal(null);
 
   const userItems = [
@@ -65,17 +64,17 @@ export default function Header() {
     { name: "Registrarse", link: "/user/create", login: false },
     { name: "Logout", link: "/user/logout", login: true },
   ];
+  
+  // Elementos del menú principal
   const navItems = [
     { name: "Inicio", link: "/", roles: null },
     { name: "Alojamientos", link: "/alojamientos", roles: null },
-    { name: "Promociones", link: "/promociones", roles: null },
     { name: "Promociones Disponibles", link: "/promocionesDis", roles: null },
     { name: "Pedidos", link: "/pedidos", roles: null },
     { name: "Administración", link: "/admin/dashboard", roles: ["Administrador"] },
-    { name: "Reseñas", link: "/resenas", roles: null },
   ];
 
-  // Drawer lateral y submenú “Mantenimientos”
+  // Drawer lateral y submenú "Mantenimientos"
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const theme = useTheme();
@@ -249,7 +248,7 @@ export default function Header() {
           {/* Menú usuario */}
           {userMenu}
 
-          {/* Botón “más” en mobile */}
+          {/* Botón "más" en mobile */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -287,34 +286,14 @@ export default function Header() {
           Navegación
         </Typography>
         <MenuList>
-          {navItems.map((item, i) => {
-            if (item.roles) {
-              if (userData && autorize({ requiredRoles: item.roles })) {
-                return (
-                  <MenuItem
-                    key={i}
-                    component={Link}
-                    to={item.link}
-                    onClick={toggleDrawer}
-                  >
-                    {item.name}
-                  </MenuItem>
-                );
-              }
-            } else {
-              return (
-                <MenuItem
-                  key={i}
-                  component={Link}
-                  to={item.link}
-                  onClick={toggleDrawer}
-                >
-                  {item.name}
-                </MenuItem>
-              );
-            }
-            return null;
-          })}
+          {/* Elementos principales del drawer */}
+          <MenuItem component={Link} to="/resenas" onClick={toggleDrawer}>
+            Reseñas
+          </MenuItem>
+          
+          <MenuItem component={Link} to="/promociones" onClick={toggleDrawer}>
+            Promociones
+          </MenuItem>
 
           {/* Submenu: Mantenimientos */}
           <ListItemButton onClick={toggleSubmenu}>
@@ -327,7 +306,7 @@ export default function Header() {
           <Collapse in={submenuOpen} timeout="auto" unmountOnExit>
             <MenuList sx={{ pl: 2 }}>
               <MenuItem
-               component={Link}
+                component={Link}
                 to="/alojamiento"      
                 onClick={() => {
                   toggleDrawer();
@@ -340,14 +319,21 @@ export default function Header() {
               <MenuItem
                 component={Link}
                 to="/servicio/crear"
-                onClick={toggleDrawer}
+                onClick={() => {
+                  toggleDrawer();
+                  setSubmenuOpen(false);
+                }}
               >
                 Servicio
               </MenuItem>
+              
               <MenuItem
                 component={Link}
                 to="/usuario/crear"
-                onClick={toggleDrawer}
+                onClick={() => {
+                  toggleDrawer();
+                  setSubmenuOpen(false);
+                }}
               >
                 Usuario
               </MenuItem>

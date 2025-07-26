@@ -147,5 +147,70 @@ class PromocionModel
         }
     }
 
+public function create($objeto)
+{
+    try {
+        // Insertar la promoción
+        $vSql = "INSERT INTO Promocion (Codigo, Descripcion, Tipo, Valor, Inicio, Fin, Requisitos) 
+                 VALUES ('$objeto->Codigo', '$objeto->Descripcion', '$objeto->Tipo', $objeto->Valor, 
+                         '$objeto->Inicio', '$objeto->Fin', '$objeto->Requisitos')";
+
+        // Ejecutar la consulta y obtener el ID insertado
+        $vResultado = $this->enlace->executeSQL_DML_last($vSql);
+
+        // Retornar la promoción recién creada
+        return $this->get($vResultado);
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
+public function eliminarAsociaciones($promocionID)
+{
+    try {
+        $vSql = "DELETE FROM Etiqueta WHERE ID_Promocion = $promocionID";
+        $this->enlace->executeSQL_DML($vSql);
+        return true;
+    } catch (Exception $e) {
+        handleException($e);
+        return false;
+    }
+}
+
+
+public function update($objeto)
+{
+    try {
+        // Actualizar la promoción
+        $vSql = "UPDATE Promocion 
+                 SET Codigo = '$objeto->Codigo',
+                     Descripcion = '$objeto->Descripcion',
+                     Tipo = '$objeto->Tipo',
+                     Valor = $objeto->Valor,
+                     Inicio = '$objeto->Inicio',
+                     Fin = '$objeto->Fin',
+                     Requisitos = '$objeto->Requisitos'
+                 WHERE ID = $objeto->ID";
+
+        // Ejecutar la consulta
+        $this->enlace->executeSQL_DML($vSql);
+
+        // Si se está cambiando el tipo de aplicación, eliminar asociaciones anteriores
+        if (isset($objeto->EliminarAsociaciones) && $objeto->EliminarAsociaciones === true) {
+            $this->eliminarAsociaciones($objeto->ID);
+        }
+
+        // Retornar la promoción actualizada
+        return $this->get($objeto->ID);
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
+
+
+
+
+
 }
 
