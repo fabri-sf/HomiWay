@@ -15,12 +15,16 @@ import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddIcon from '@mui/icons-material/Add';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import PromocionService from "../../services/PromocionService";
-
-
-
-
 import PromotionDetail from './PromotionDetail';
+import CreatePromotion from './CreatePromotion';
+import EditPromotion from './EditPromotion';
+
 
 const Promotion = () => {
   const theme = useTheme();
@@ -29,8 +33,10 @@ const Promotion = () => {
   const [error, setError] = useState(null);
   const [selectedPromotion, setSelectedPromotion] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-
-
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [promotionToEdit, setPromotionToEdit] = useState(null);
+  const [filtroEstado, setFiltroEstado] = useState('todos');
 
   useEffect(() => {
     fetchPromociones();
@@ -64,17 +70,26 @@ const Promotion = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'No especificada';
+  if (!dateString) return 'No especificada';
+  
+  try {
+    // Separar la fecha en sus componentes para evitar problemas de zona horaria
+    const [year, month, day] = dateString.split('T')[0].split('-');
     
-    const date = new Date(dateString);
+    // Crear la fecha usando los componentes individuales (mes - 1 porque JavaScript cuenta desde 0)
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    
     if (isNaN(date.getTime())) return 'Fecha inválida';
     
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
-      month: 'long',
+      month: 'long', 
       day: 'numeric'
     });
-  };
+  } catch {
+    return 'Fecha inválida';
+  }
+};
 
   const formatValue = (tipo, valor) => {
     if (!valor) return 'No especificado';
@@ -87,41 +102,43 @@ const Promotion = () => {
     return valor;
   };
 
-  const calcularEstadoDinamico = (inicio, fin) => {
-    if (!inicio || !fin) return { estado: 'Sin fechas', color: theme.palette.custom.aplicado };
-    
+ // También necesitas corregir la función calcularEstadoDinamico
+const calcularEstadoDinamico = (inicio, fin) => {
+  if (!inicio || !fin) return { estado: 'Sin fechas', color: theme.palette.custom.aplicado };
+  
+  try {
     const now = new Date();
-    const fechaInicio = new Date(inicio);
-    const fechaFin = new Date(fin);
+    
+    // Separar las fechas en componentes para evitar problemas de zona horaria
+    const [yearInicio, monthInicio, dayInicio] = inicio.split('T')[0].split('-');
+    const [yearFin, monthFin, dayFin] = fin.split('T')[0].split('-');
+    
+    // Crear las fechas usando componentes individuales
+    const fechaInicio = new Date(parseInt(yearInicio), parseInt(monthInicio) - 1, parseInt(dayInicio));
+    const fechaFin = new Date(parseInt(yearFin), parseInt(monthFin) - 1, parseInt(dayFin));
     
     if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
       return { estado: 'Fechas inválidas', color: theme.palette.custom.aplicado };
     }
     
+    // Establecer la hora final del día para la fecha de fin
     fechaFin.setHours(23, 59, 59, 999);
     
-    if (now < fechaInicio) {
+    // Comparar solo las fechas (sin horas) para el inicio
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const inicioDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate());
+    
+    if (nowDate < inicioDate) {
       return { estado: 'Pendiente', color: theme.palette.custom.pendiente };
     } else if (now >= fechaInicio && now <= fechaFin) {
       return { estado: 'Vigente', color: theme.palette.custom.vigente };
     } else {
       return { estado: 'Aplicado', color: theme.palette.custom.aplicado };
     }
-  };
-
-  const handleAplicarDescuento = (promocion) => {
-    const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
-    
-    if (estadoDinamico.estado !== 'Vigente') {
-      alert(`Esta promoción no está disponible. Estado: ${estadoDinamico.estado}`);
-      return;
-    }
-    
-    console.log('Aplicar descuento:', promocion);
-    alert(`Promoción aplicada: ${promocion.Codigo}\nDescuento: ${formatValue(promocion.Tipo, promocion.Valor)}`);
-  };
-
-  
+  } catch {
+    return { estado: 'Error en fechas', color: theme.palette.custom.aplicado };
+  }
+};
 
   const handleVerDetalles = (promocion) => {
     setSelectedPromotion(promocion);
@@ -134,14 +151,39 @@ const Promotion = () => {
   };
 
   const handleEditar = (promocion) => {
-    console.log('Editar promoción:', promocion);
-    // Aquí puedes implementar la lógica para editar la promoción
-    alert(`Editando promoción: ${promocion.Descripcion}`);
+    setPromotionToEdit(promocion);
+    setShowEditModal(true);
+  };
+
+  const handlePromotionCreated = () => {
+    
+    console.log('Promoción creada exitosamente');
+      // Recargar la lista de promociones
+  fetchPromociones();
+  // Cerrar el modal de creación
+  setShowCreateModal(false);
+  };
+
+  const handleCrearPromocion = () => {
+    setShowCreateModal(true);
+    // Aquí puedes implementar la lógica para abrir un formulario de creación
+    // alert('Funcionalidad de crear nueva promoción');
   };
 
   const handleRetry = () => {
     fetchPromociones();
   };
+
+  const handleFiltroChange = (event) => {
+    setFiltroEstado(event.target.value);
+  };
+
+  // Filtrar promociones según el estado seleccionado
+  const promocionesFiltradas = promociones.filter((promocion) => {
+    if (filtroEstado === 'todos') return true;
+    const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
+    return estadoDinamico.estado.toLowerCase() === filtroEstado;
+  });
 
   if (loading) {
     return (
@@ -178,40 +220,109 @@ const Promotion = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
-        sx={{
-          color: theme.palette.primary.main,
-          fontWeight: 'bold',
-          textAlign: 'center',
-          mb: 4
-        }}
-      >
-        Promociones Disponibles
-      </Typography>
+      {/* Sección del título con botón de crear */}
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        mb: 4,
+        flexWrap: 'wrap',
+        gap: 2
+      }}>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{
+            color: theme.palette.primary.main,
+            fontWeight: 'bold',
+          }}
+        >
+          Promociones Disponibles
+        </Typography>
+        
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleCrearPromocion}
+          sx={{
+            backgroundColor: theme.palette.success.main,
+            color: 'white',
+            fontWeight: 'bold',
+            textTransform: 'none',
+            '&:hover': {
+              backgroundColor: theme.palette.success.dark,
+            },
+            minWidth: '200px',
+            height: '48px'
+          }}
+        >
+          Crear Promoción
+        </Button>
 
-      {promociones.length === 0 ? (
+        <CreatePromotion
+          open={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onPromotionCreated={handlePromotionCreated}
+        />
+      </Box>
+
+      {/* Filtro por estado */}
+      <Box sx={{ mb: 3 }}>
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel id="filtro-estado-label">Filtrar por Estado</InputLabel>
+          <Select
+            labelId="filtro-estado-label"
+            id="filtro-estado"
+            value={filtroEstado}
+            label="Filtrar por Estado"
+            onChange={handleFiltroChange}
+          >
+            <MenuItem value="todos">Todos</MenuItem>
+            <MenuItem value="vigente">Vigente</MenuItem>
+            <MenuItem value="pendiente">Pendiente</MenuItem>
+            <MenuItem value="aplicado">Aplicado</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      {promocionesFiltradas.length === 0 ? (
         <Box textAlign="center" sx={{ mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
-            No hay promociones disponibles en este momento
+            {filtroEstado === 'todos' 
+              ? 'No hay promociones disponibles en este momento'
+              : `No hay promociones con estado "${filtroEstado}"`
+            }
           </Typography>
-          <Button 
-            variant="outlined" 
-            onClick={handleRetry}
-            sx={{ 
-              mt: 2, 
-              color: theme.palette.primary.main, 
-              borderColor: theme.palette.primary.main 
-            }}
-          >
-            Actualizar
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+            <Button 
+              variant="outlined" 
+              onClick={handleRetry}
+              sx={{ 
+                color: theme.palette.primary.main, 
+                borderColor: theme.palette.primary.main 
+              }}
+            >
+              Actualizar
+            </Button>
+            <Button 
+              variant="contained" 
+              startIcon={<AddIcon />}
+              onClick={handleCrearPromocion}
+              sx={{ 
+                backgroundColor: theme.palette.success.main,
+                '&:hover': {
+                  backgroundColor: theme.palette.success.dark,
+                }
+              }}
+            >
+              Crear Promoción
+            </Button>
+          </Box>
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {promociones.map((promocion) => {
+          {promocionesFiltradas.map((promocion) => {
             const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
             
             return (
@@ -285,20 +396,21 @@ const Promotion = () => {
                   </CardContent>
 
                   <CardActions sx={{ padding: 2, pt: 0 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                      <Box>
-                        <IconButton 
-                          aria-label="ver detalles" 
-                          onClick={() => handleVerDetalles(promocion)}
-                          sx={{
-                            color: theme.palette.primary.main,
-                            '&:hover': {
-                              backgroundColor: theme.palette.primary.light
-                            }
-                          }}
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                      <IconButton 
+                        aria-label="ver detalles" 
+                        onClick={() => handleVerDetalles(promocion)}
+                        sx={{
+                          color: theme.palette.primary.main,
+                          '&:hover': {
+                            backgroundColor: theme.palette.primary.light
+                          }
+                        }}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                      {/* Solo mostrar el botón de editar si el estado no es 'Aplicado' */}
+                      {estadoDinamico.estado !== 'Aplicado' && (
                         <IconButton 
                           aria-label="editar" 
                           onClick={() => handleEditar(promocion)}
@@ -311,33 +423,7 @@ const Promotion = () => {
                         >
                           <EditIcon />
                         </IconButton>
-                      </Box>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        disabled={estadoDinamico.estado !== 'Vigente'}
-                        onClick={() => handleAplicarDescuento(promocion)}
-                        sx={{
-                          backgroundColor: theme.palette.primary.main,
-                          color: 'white',
-                          fontWeight: 'bold',
-                          textTransform: 'none',
-                          '&:hover': {
-                            backgroundColor: theme.palette.primary.dark
-                          },
-                          '&:disabled': {
-                            backgroundColor: '#BDBDBD',
-                            color: '#757575'
-                          }
-                        }}
-                      >
-                        {estadoDinamico.estado === 'Vigente'
-                          ? 'Activar'
-                          : estadoDinamico.estado === 'Pendiente'
-                          ? 'Próximamente'
-                          : 'No Disponible'
-                        }
-                      </Button>
+                      )}
                     </Box>
                   </CardActions>
                 </Card>
@@ -346,6 +432,19 @@ const Promotion = () => {
           })}
         </Grid>
       )}
+
+      {showEditModal && (
+        <EditPromotion
+          open={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          promotion={promotionToEdit}
+          onPromotionUpdated={() => {
+            fetchPromociones(); // Recargar la lista
+            setShowEditModal(false);
+          }}
+        />
+      )}
+      
       <PromotionDetail
         open={modalOpen}
         onClose={handleCloseModal}

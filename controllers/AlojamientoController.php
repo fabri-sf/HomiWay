@@ -64,4 +64,16 @@ class alojamiento
         handleException($e);
     }
     }
+
+public function categorias() {
+    try {
+        $response = new Response();
+        $model = new AlojamientoModel();
+        $categorias = $model->getCategorias();
+        $response->toJSON($categorias); // Debe enviar: ["Hotel", "Casa", ...]
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
 }

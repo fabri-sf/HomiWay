@@ -5,16 +5,16 @@ class PromocionService {
     
   getPromotions() {
     const user = localStorage.getItem('user')
-    const token =user? user.replace(/^"|"$/g,''):''
+    const token = user ? user.replace(/^"|"$/g,'') : ''
     console.log("Token", token)
-    return axios.get(BASE_URL,{
-      headers:{
+    return axios.get(BASE_URL, {
+      headers: {
         Authorization: `Bearer ${token}`
       }
     });
   }
 
-    getToken() {
+  getToken() {
     const user = localStorage.getItem('user');
     return user ? user.replace(/^"|"$/g, '') : '';
   }
@@ -22,7 +22,8 @@ class PromocionService {
   getActorById(PromocionId) {
     return axios.get(BASE_URL + '/' + PromocionId);
   }
- // Obtener promociones por categoría de alojamiento
+
+  // Obtener promociones por categoría de alojamiento
   getPromotionsByCategoria(categoria) {
     const token = this.getToken();
     return axios.get(`${BASE_URL}/promocionesPorCategoria/${categoria}`, {
@@ -38,7 +39,6 @@ class PromocionService {
     });
   }
 
-  // (Opcional) Calcular el precio con descuento usando la API
   calcularPrecio(precioOriginal, promocionID) {
     const token = this.getToken();
     return axios.post(`${BASE_URL}/calcularPrecio`, {
@@ -49,7 +49,28 @@ class PromocionService {
     });
   }
 
+  createPromocion(promocion) {
+    const token = this.getToken();
+    return axios.post(`${BASE_URL}/create`, promocion, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
 
+  // Método update actualizado - mantiene la misma estructura
+  updatePromocion(id, promocion) {
+    const token = this.getToken();
+    return axios.put(`${BASE_URL}/update/${id}`, promocion, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  // Método nuevo para eliminar asociaciones
+  eliminarAsociaciones(id) {
+    const token = this.getToken();
+    return axios.delete(`${BASE_URL}/eliminarAsociaciones/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
 }
 
 export default new PromocionService();

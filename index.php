@@ -37,6 +37,7 @@ require_once "models/ResenaModel.php";
 require_once "models/PedidoModel.php";
 require_once "models/UsuarioModel.php";
 require_once "models/ServicioAlojamientoModel.php";
+require_once "models/EtiquetaModel.php";
 /***--- Agregar todos los controladores*/
 
 
@@ -58,7 +59,8 @@ require_once "controllers/ResenaController.php";
 require_once "controllers/PedidoController.php";
 require_once "controllers/UsuarioController.php";
 require_once "controllers/ServicioAlojamientoController.php";
-//require_once "controllers/ImageController.php"; arreglar el porque no funciona al activarlo
+require_once "controllers/etiquetaController.php";
+//require_once "controllers/ImageController.php";
 
 //Enrutador
 require_once "routes/RoutesController.php";

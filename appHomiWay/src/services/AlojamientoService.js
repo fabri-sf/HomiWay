@@ -45,6 +45,23 @@ class AlojamientoService {
     headers: { Authorization: `Bearer ${token}` }
   });
 }
+
+getCategorias() {
+    const user = localStorage.getItem('user');
+    const token = user ? user.replace(/^"|"$/g, '') : '';
+
+    return axios.get(`${BASE_URL}/categorias`, {
+        headers: { Authorization: `Bearer ${token}` }
+    }).then(response => { 
+        if (Array.isArray(response.data)) {
+            return response.data;
+        }
+        else {
+            return response.data.map(item => item.Categoria || item);
+        }
+    });
+}
+
 }
 
 export default new AlojamientoService();
