@@ -83,6 +83,17 @@ class AlojamientoModel
     return ['success' => true];
     }
 
-
-    
+public function getCategorias() {
+    try {
+        $sql = "SELECT DISTINCT Categoria FROM alojamiento WHERE Estado = 1 AND Categoria IS NOT NULL";
+        $result = $this->enlace->ExecuteSQL($sql);
+        
+        return array_map(function($item) {
+            return $item->Categoria; // ← corrección aquí
+        }, $result);
+        
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
 }

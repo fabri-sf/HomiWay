@@ -40,8 +40,14 @@ const ProductosConPromociones = () => {
       setError(null);
       
       const response = await PromocionService.getAlojamientosConPromociones();
-      setAlojamientos(response.data);
-      await calcularPreciosConPromociones(response.data);
+      
+      // Filtrar para excluir promociones finalizadas/aplicadas
+      const alojamientosFiltrados = response.data.filter(alojamiento => 
+        alojamiento.EstadoPromocion !== 'Aplicado'
+      );
+      
+      setAlojamientos(alojamientosFiltrados);
+      await calcularPreciosConPromociones(alojamientosFiltrados);
       
     } catch (err) {
       console.error('Error al cargar alojamientos con promociones:', err);
@@ -139,14 +145,6 @@ const ProductosConPromociones = () => {
           botonColor: 'success',
           activo: true
         };
-      case 'Aplicado':
-        return { 
-          color: theme.palette.grey[500], 
-          texto: 'Finalizado',
-          botonTexto: 'Finalizado',
-          botonColor: 'inherit',
-          activo: false
-        };
       case 'Pendiente':
         return { 
           color: theme.palette.warning.main, 
@@ -171,10 +169,9 @@ const ProductosConPromociones = () => {
   };
 
   const handleVerDetalles = (alojamiento) => {
-  setSelectedAlojamiento(alojamiento);
-  setModalOpen(true);
-};
-
+    setSelectedAlojamiento(alojamiento);
+    setModalOpen(true);
+  };
 
   const handleUtilizarPromocion = (alojamiento) => {
     console.log('Utilizando promoción para:', alojamiento);
@@ -387,7 +384,7 @@ const ProductosConPromociones = () => {
                         <VisibilityIcon />
                       </IconButton>
                       
-                      {/* Botón principal (Utilizar/Finalizado/Próximamente) */}
+                      {/* Botón principal (Utilizar/Próximamente) */}
                       {tienePromocion && (
                         <Button
                           fullWidth
@@ -417,10 +414,10 @@ const ProductosConPromociones = () => {
         </Grid>
       )}
       <PromotionProductDetail
-  open={modalOpen}
-  onClose={() => setModalOpen(false)}
-  alojamiento={selectedAlojamiento}
-/>
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        alojamiento={selectedAlojamiento}
+      />
 
     </Container>
   );

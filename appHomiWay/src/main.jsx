@@ -24,7 +24,6 @@ import CreateAlojamiento from "./components/Alojamiento/CreateAlojamiento";
 import TableAlojamiento from "./components/Alojamiento/TableAlojamiento";
 import GetAlojamiento from "./components/Alojamiento/GetAlojamiento";
 
-
 import DetailRental from "./components/Rental/DetailRental";
 import { CreateMovieRental } from "./components/Rental/CreateMovieRental";
 import { GraphRetal } from "./components/Rental/GraphRental";
@@ -33,6 +32,8 @@ import { GetUbicacion } from "./components/Ubicacion/Ubicacion";
 
 import Promotion from "./components/Promotion/Promotion";
 import ProductosConPromociones from "./components/Promotion/ListProductPromotion";
+import CreatePromotion from "./components/Promotion/CreatePromotion"; // Nuevo componente
+import PromotionDetail from "./components/Promotion/PromotionDetail"; // Asumo que existe
 
 import ListResena from "./components/Resena/ListResena";
 import ListPedido from "./components/Pedido/ListPedido";
@@ -59,6 +60,10 @@ const rutas = createBrowserRouter([
           {
             path: '/movie-table',
             element: <TableAlojamiento />
+          },
+          {
+            path: '/promociones/crear',
+            element: <CreatePromotion /> // Ruta protegida para crear promociones
           }
         ]
       },
@@ -66,17 +71,25 @@ const rutas = createBrowserRouter([
         path: '/alojamientos',
         element: <ListAlojamiento />
       },
-      { path: "/alojamiento",            
-        element: <GetAlojamiento /> },
+      { 
+        path: "/alojamiento",            
+        element: <GetAlojamiento /> 
+      },
       {
         path: '/alojamiento/:id',
         element: <DetailAlojamiento />
       },
-      { path: "/alojamiento/crear", 
-        element: <CreateAlojamiento /> },
+      { 
+        path: "/alojamiento/crear", 
+        element: <CreateAlojamiento /> 
+      },
       {
         path: '/promociones',
         element: <Promotion />
+      },
+      {
+        path: '/promociones/:id',
+        element: <PromotionDetail /> // Ruta para detalle de promoción
       },
       {
         path: '/promocionesDis',

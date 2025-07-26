@@ -1,6 +1,6 @@
-<?php
-class Promocion
-{
+<?php 
+class Promocion {
+    
     public function index()
     {
         try {
@@ -14,6 +14,7 @@ class Promocion
             handleException($e);
         }
     }
+    
     public function get($param)
     {
         try {
@@ -26,8 +27,8 @@ class Promocion
             handleException($e);
         }
     }
-   
-     public function promocionesPorCategoria($categoria)
+    
+    public function promocionesPorCategoria($categoria)
     {
         try {
             $response = new Response();
@@ -38,7 +39,7 @@ class Promocion
             handleException($e);
         }
     }
-
+    
     public function alojamientosConPromociones()
     {
         try {
@@ -50,7 +51,7 @@ class Promocion
             handleException($e);
         }
     }
-
+    
     public function calcularPrecio($precioOriginal, $promocionID)
     {
         try {
@@ -62,4 +63,66 @@ class Promocion
             handleException($e);
         }
     }
+    
+    public function create() 
+    {
+        try {
+            $response = new Response();
+            $request = new Request();
+            $data = $request->getJSON();
+            
+            if (!$data->Descripcion || !$data->Tipo || !$data->Valor || !$data->Inicio || !$data->Fin) {
+                throw new Exception("Campos incompletos");
+            }
+            
+            $model = new PromocionModel();
+            $result = $model->create($data);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+    
+  
+    public function update($idPromocion) 
+    {
+        try {
+            $response = new Response();
+            $request = new Request();
+            $data = $request->getJSON();
+            
+            if (!$data->Codigo || !$data->Descripcion || !$data->Tipo || !$data->Valor || !$data->Inicio || !$data->Fin) {
+                throw new Exception("Campos incompletos");
+            }
+
+            $data->ID = $idPromocion;
+
+            $model = new PromocionModel();
+            $result = $model->update($data);
+
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+    
+    // Método nuevo para eliminar asociaciones
+    public function eliminarAsociaciones($idPromocion) 
+    {
+        try {
+            $response = new Response();
+            $model = new PromocionModel();
+            $result = $model->eliminarAsociaciones($idPromocion);
+            
+            if ($result) {
+                $response->toJSON(['success' => true, 'mensaje' => 'Asociaciones eliminadas correctamente']);
+            } else {
+                $response->toJSON(['success' => false, 'mensaje' => 'Error al eliminar asociaciones']);
+            }
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+    
+  
 }
