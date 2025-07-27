@@ -33,4 +33,13 @@ class Imagen {
         $img      = $model->getFirstImage((int)$idAloj);
         $response->toJSON($img);
     }
+  public function delete($id) {
+    $response = new Response();
+    try {
+        (new ImageModel())->deleteImage((int)$id);
+        $response->toJSON(['status'=>'success']);
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
 }

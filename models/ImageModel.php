@@ -33,17 +33,18 @@ class ImageModel {
     }
 
     public function getImagesByAlojamientoId($idAloj) {
-        $sql = "
-          SELECT URL AS url
-          FROM imagen_alojamiento
-          WHERE ID_Alojamiento = $idAloj
-        ";
+         $sql = "
+         SELECT ID, URL AS url
+         FROM imagen_alojamiento
+         WHERE ID_Alojamiento = $idAloj
+         ";
+
         return $this->enlace->ExecuteSQL($sql);
     }
 
     public function getFirstImage($idAloj) {
         $sql = "
-          SELECT URL AS url
+          SELECT ID, URL AS url
           FROM imagen_alojamiento
           WHERE ID_Alojamiento = $idAloj
           LIMIT 1
@@ -51,4 +52,14 @@ class ImageModel {
         $res = $this->enlace->ExecuteSQL($sql);
         return !empty($res) ? $res[0] : null;
     }
+      public function deleteImage(int $id) {
+          $sql = "SELECT URL FROM imagen_alojamiento WHERE ID = $id";
+          $res = $this->enlace->ExecuteSQL($sql);
+          if (!empty($res)) {
+              $file = $this->upload_path . $res[0]->URL;
+              if (file_exists($file)) unlink($file);
+          }
+          $sql = "DELETE FROM imagen_alojamiento WHERE ID = $id";
+          $this->enlace->executeSQL_DML($sql);
+      }
 }
