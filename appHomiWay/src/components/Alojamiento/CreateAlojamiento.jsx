@@ -1,3 +1,4 @@
+// CreateAlojamiento.jsx
 import React, { useEffect, useState } from "react";
 import {
   Box, Typography, Grid, TextField, Button, CircularProgress,
@@ -9,13 +10,14 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DeleteIcon from "@mui/icons-material/Delete";
 import toast from "react-hot-toast";
 
-import AlojamientoService         from "../../services/AlojamientoService";
-import UbicacionService           from "../../services/UbicacionService";
-import UsuarioService             from "../../services/UsuarioService";
-import ImageService               from "../../services/ImageService";
-import ServicioService            from "../../services/ServicioService";
+import AlojamientoService from "../../services/AlojamientoService";
+import UbicacionService from "../../services/UbicacionService";
+import UsuarioService from "../../services/UsuarioService";
+import ImageService from "../../services/ImageService";
+import ServicioService from "../../services/ServicioService";
 import ServicioAlojamientoService from "../../services/ServicioAlojamientoService";
 
 const provinciasCR = ["San José","Alajuela","Cartago","Heredia","Guanacaste","Puntarenas","Limón"];
@@ -37,11 +39,14 @@ export default function CreateAlojamiento() {
 
   const [loading, setLoading]          = useState(false);
   const [users, setUsers]              = useState([]);
-  const [imagenes, setImagenes]        = useState([]);
   const [servicios, setServicios]      = useState([]);
   const [dialogOpen, setDialogOpen]    = useState(false);
   const [tempSelectedIds, setTempIds]  = useState([]);
   const [selectedServices, setSelServ] = useState([]);
+
+  // imágenes nuevas + sus previsualizaciones
+  const [imagenes, setImagenes]             = useState([]);
+  const [imagePreviews, setImagePreviews]   = useState([]);
 
   useEffect(() => {
     UsuarioService.getUsuarios()
@@ -53,9 +58,19 @@ export default function CreateAlojamiento() {
   }, []);
 
   const onFileChange = e => {
-    if (e.target.files) setImagenes(p => [...p, ...Array.from(e.target.files)]);
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    setImagenes(prev => [...prev, ...files]);
+    const previews = files.map(f => URL.createObjectURL(f));
+    setImagePreviews(prev => [...prev, ...previews]);
   };
 
+  const removeNewImage = index => {
+    setImagenes(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // servicios
   const openDialog   = () => { setTempIds(selectedServices.map(s=>s.ID)); setDialogOpen(true); };
   const closeDialog  = () => setDialogOpen(false);
   const toggleSelect = id => setTempIds(p => p.includes(id) ? p.filter(x=>x!==id) : [...p,id]);
@@ -66,8 +81,8 @@ export default function CreateAlojamiento() {
     try {
       const ubRes = await UbicacionService.create({
         Provincia: data.Provincia,
-        Canton: data.Canton,
-        Distrito: data.Distrito,
+        Canton:    data.Canton,
+        Distrito:  data.Distrito,
         Direccion: data.Direccion,
         CodigoPostal: data.CodigoPostal,
         API: null
@@ -87,12 +102,14 @@ export default function CreateAlojamiento() {
       });
       const idA = alRes.data.ID;
 
+      // subir imágenes
       await Promise.all(imagenes.map(file => ImageService.upload(idA, file)));
 
+      // asociar servicios
       if (selectedServices.length)
-        await Promise.all(selectedServices.map(s =>
-          ServicioAlojamientoService.createAssociation(idA, s.ID)
-        ));
+        await Promise.all(
+          selectedServices.map(s => ServicioAlojamientoService.createAssociation(idA, s.ID))
+        );
 
       toast.success("Alojamiento creado exitosamente");
       navigate("/alojamientos");
@@ -116,98 +133,27 @@ export default function CreateAlojamiento() {
   return (
     <Box sx={{ maxWidth:900, mx:"auto", mt:3, p:2 }}>
       <Box display="flex" alignItems="center" mb={2}>
-        <IconButton component={Link} to="/alojamientos"><ArrowBackIcon/></IconButton>
+        <IconButton component={Link} to="/alojamientos">
+          <ArrowBackIcon/>
+        </IconButton>
         <Typography variant="h5" ml={1}>Crear Alojamiento</Typography>
       </Box>
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           {/* Usuario */}
           <Grid item xs={12} sm={6}>
-            <Controller name="ID_Usuario" control={control} defaultValue="" rules={{ required:"Selecciona un usuario" }}
+            <Controller
+              name="ID_Usuario"
+              control={control}
+              defaultValue=""
+              rules={{ required:"Selecciona un usuario" }}
               render={({ field, fieldState:{error} })=>(
                 <FormControl fullWidth error={!!error}>
                   <InputLabel>Usuario</InputLabel>
                   <Select {...field} label="Usuario">
-                    {users.map(u=><MenuItem key={u.ID} value={u.ID}>{u.Nombre} {u.Apellido}</MenuItem>)}
-                  </Select>
-                  <FormHelperText>{error?.message}</FormHelperText>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          {/* Provincia */}
-          <Grid item xs={12} sm={6}>
-            <Controller name="Provincia" control={control} defaultValue="" rules={{ required:"Selecciona provincia" }}
-              render={({ field, fieldState:{error} })=>(
-                <FormControl fullWidth error={!!error}>
-                  <InputLabel>Provincia</InputLabel>
-                  <Select {...field} label="Provincia">
-                    {provinciasCR.map(p=><MenuItem key={p} value={p}>{p}</MenuItem>)}
-                  </Select>
-                  <FormHelperText>{error?.message}</FormHelperText>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          {/* Código Postal */}
-          <Grid item xs={12} sm={6}>
-            <Controller name="CodigoPostal" control={control} defaultValue="" rules={{ required:"Selecciona código postal" }}
-              render={({ field, fieldState:{error} })=>(
-                <FormControl fullWidth error={!!error}>
-                  <InputLabel>Código Postal</InputLabel>
-                  <Select {...field} label="Código Postal">
-                    {postalCodes.map(cp=><MenuItem key={cp} value={cp}>{cp}</MenuItem>)}
-                  </Select>
-                  <FormHelperText>{error?.message}</FormHelperText>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          {/* Cantón, Distrito, Dirección */}
-          {["Canton","Distrito","Direccion"].map(name=>(
-            <Grid item xs={12} sm={6} key={name}>
-              <Controller name={name} control={control} defaultValue="" rules={{ required:`${name} obligatorio` }}
-                render={({ field, fieldState:{error} })=>(
-                  <TextField {...field} label={name==="Direccion"?"Dirección":name} fullWidth error={!!error} helperText={error?.message}/>
-                )}
-              />
-            </Grid>
-          ))}
-          {/* Nombre, Descripción, Precio, Capacidad */}
-          {[{n:"Nombre",l:"Nombre"},{n:"Descripcion",l:"Descripción",multi:true,rows:3},{n:"PrecioNoche",l:"Precio por noche",type:"number"},{n:"Capacidad",l:"Capacidad",type:"number"}].map(f=>(
-            <Grid item xs={12} sm={f.multi?12:6} key={f.n}>
-              <Controller name={f.n} control={control} defaultValue="" rules={{ required:`${f.l} obligatorio` }}
-                render={({ field, fieldState:{error} })=>(
-                  <TextField {...field} label={f.l} type={f.type||"text"} fullWidth multiline={!!f.multi} rows={f.rows||1} error={!!error} helperText={error?.message}/>
-                )}
-              />
-            </Grid>
-          ))}
-          {/* Categoría */}
-          <Grid item xs={12} sm={6}>
-            <Controller name="Categoria" control={control} defaultValue="" rules={{ required:"Selecciona categoría" }}
-              render={({ field, fieldState:{error} })=>(
-                <FormControl fullWidth error={!!error}>
-                  <InputLabel>Categoría</InputLabel>
-                  <Select {...field} label="Categoría">
-                    {["Hotel","Casa","Apartamento","Hostal"].map(c=><MenuItem key={c} value={c}>{c}</MenuItem>)}
-                  </Select>
-                  <FormHelperText>{error?.message}</FormHelperText>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          {/* Características */}
-          <Grid item xs={12}>
-            <Controller name="Caracteristicas" control={control} defaultValue={[]} rules={{ required:"Selecciona al menos una característica" }}
-              render={({ field, fieldState:{error} })=>(
-                <FormControl fullWidth error={!!error}>
-                  <InputLabel>Características</InputLabel>
-                  <Select multiple value={field.value} onChange={e=>field.onChange(e.target.value)} label="Características" renderValue={v=>v.join(", ")}>
-                    {característica.map(opt=>(
-                      <MenuItem key={opt} value={opt}>
-                        <Checkbox checked={field.value.includes(opt)}/>
-                        <ListItemText primary={opt}/>
+                    {users.map(u=>(
+                      <MenuItem key={u.ID} value={u.ID}>
+                        {u.Nombre} {u.Apellido}
                       </MenuItem>
                     ))}
                   </Select>
@@ -216,22 +162,205 @@ export default function CreateAlojamiento() {
               )}
             />
           </Grid>
-          {/* Imágenes */}
+
+          {/* Provincia */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="Provincia"
+              control={control}
+              defaultValue=""
+              rules={{ required:"Selecciona provincia" }}
+              render={({ field, fieldState:{error} })=>(
+                <FormControl fullWidth error={!!error}>
+                  <InputLabel>Provincia</InputLabel>
+                  <Select {...field} label="Provincia">
+                    {provinciasCR.map(p=>(
+                      <MenuItem key={p} value={p}>{p}</MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          {/* Código Postal */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="CodigoPostal"
+              control={control}
+              defaultValue=""
+              rules={{ required:"Selecciona código postal" }}
+              render={({ field, fieldState:{error} })=>(
+                <FormControl fullWidth error={!!error}>
+                  <InputLabel>Código Postal</InputLabel>
+                  <Select {...field} label="Código Postal">
+                    {postalCodes.map(cp=>(
+                      <MenuItem key={cp} value={cp}>{cp}</MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          {/* Cantón, Distrito, Dirección */}
+          {["Canton","Distrito","Direccion"].map(name=>(
+            <Grid item xs={12} sm={6} key={name}>
+              <Controller
+                name={name}
+                control={control}
+                defaultValue=""
+                rules={{ required:`${name} obligatorio` }}
+                render={({ field, fieldState:{error} })=>(
+                  <TextField
+                    {...field}
+                    label={name==="Direccion" ? "Dirección" : name}
+                    fullWidth
+                    error={!!error}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            </Grid>
+          ))}
+
+          {/* Nombre, Descripción, Precio, Capacidad */}
+          {[
+            {n:"Nombre",      l:"Nombre"},
+            {n:"Descripcion", l:"Descripción", multi:true, rows:3},
+            {n:"PrecioNoche", l:"Precio por noche", type:"number"},
+            {n:"Capacidad",   l:"Capacidad", type:"number"}
+          ].map(f=>(
+            <Grid item xs={12} sm={f.multi?12:6} key={f.n}>
+              <Controller
+                name={f.n}
+                control={control}
+                defaultValue=""
+                rules={{ required:`${f.l} obligatorio` }}
+                render={({ field, fieldState:{error} })=>(
+                  <TextField
+                    {...field}
+                    label={f.l}
+                    type={f.type || "text"}
+                    fullWidth
+                    multiline={!!f.multi}
+                    rows={f.rows || 1}
+                    error={!!error}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            </Grid>
+          ))}
+
+          {/* Categoría */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="Categoria"
+              control={control}
+              defaultValue=""
+              rules={{ required:"Selecciona categoría" }}
+              render={({ field, fieldState:{error} })=>(
+                <FormControl fullWidth error={!!error}>
+                  <InputLabel>Categoría</InputLabel>
+                  <Select {...field} label="Categoría">
+                    {["Hotel","Casa","Apartamento","Hostal"].map(c=>(
+                      <MenuItem key={c} value={c}>{c}</MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          {/* Características */}
+          <Grid item xs={12}>
+            <Controller
+              name="Caracteristicas"
+              control={control}
+              defaultValue={[]}
+              rules={{ required:"Selecciona al menos una característica" }}
+              render={({ field, fieldState:{error} })=>(
+                <FormControl fullWidth error={!!error}>
+                  <InputLabel>Características</InputLabel>
+                  <Select
+                    multiple
+                    value={field.value}
+                    onChange={e => field.onChange(e.target.value)}
+                    label="Características"
+                    renderValue={v => v.join(", ")}
+                  >
+                    {característica.map(opt=>(
+                      <MenuItem key={opt} value={opt}>
+                        <Checkbox checked={field.value.includes(opt)} />
+                        <ListItemText primary={opt} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          {/* Imágenes con miniaturas + eliminación */}
           <Grid item xs={12}>
             <Typography variant="subtitle1">Imágenes</Typography>
-            <input type="file" multiple accept="image/*" onChange={onFileChange}/>
-            <Box sx={{mt:1}}>{imagenes.map((f,i)=><Typography key={i} variant="body2">{f.name}</Typography>)}</Box>
+            <input type="file" multiple accept="image/*" onChange={onFileChange} />
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              {imagePreviews.map((src, i) => (
+                <Grid item xs={4} sm={3} md={2} key={i}>
+                  <Box sx={{ position: "relative" }}>
+                    <img
+                      src={src}
+                      alt={`preview-${i}`}
+                      style={{ width: "100%", borderRadius: 4 }}
+                    />
+                    <IconButton
+                      size="small"
+                      onClick={() => removeNewImage(i)}
+                      sx={{
+                        position: "absolute",
+                        top: 4,
+                        right: 4,
+                        bgcolor: "rgba(0,0,0,0.6)"
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" htmlColor="#fff" />
+                    </IconButton>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
+
           {/* Servicios */}
           <Grid item xs={12}>
-            <Box sx={{display:"flex",alignItems:"center",justifyContent:"space-between",mb:1}}>
+            <Box sx={{ display:"flex", alignItems:"center", justifyContent:"space-between", mb:1 }}>
               <Typography variant="subtitle1">Servicios</Typography>
               <Button variant="outlined" onClick={openDialog}>Agregar servicios</Button>
             </Box>
-            <Box>{selectedServices.length?selectedServices.map(s=><Typography key={s.ID}>• {s.Nombre}</Typography>):<Typography color="text.secondary">Ningún servicio seleccionado</Typography>}</Box>
+            <Box>
+              {selectedServices.length
+                ? selectedServices.map(s=>(
+                    <Typography key={s.ID}>• {s.Nombre}</Typography>
+                  ))
+                : <Typography color="text.secondary">
+                    Ningún servicio seleccionado
+                  </Typography>
+              }
+            </Box>
           </Grid>
+
           {/* Guardar */}
-          <Grid item xs={12}><Button variant="contained" color="primary" fullWidth type="submit">Guardar alojamiento</Button></Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" fullWidth type="submit">
+              Guardar alojamiento
+            </Button>
+          </Grid>
         </Grid>
       </form>
 
@@ -240,25 +369,42 @@ export default function CreateAlojamiento() {
         <DialogTitle>Seleccionar servicios</DialogTitle>
         <DialogContent dividers>
           <Table size="small">
-            <TableHead><TableRow><TableCell/><TableCell>Nombre</TableCell><TableCell>Tipo</TableCell><TableCell>Precio</TableCell></TableRow></TableHead>
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Nombre</TableCell>
+                <TableCell>Tipo</TableCell>
+                <TableCell>Precio</TableCell>
+              </TableRow>
+            </TableHead>
             <TableBody>
-              {!servicios.length
-                ? <TableRow><TableCell colSpan={4} align="center">No hay servicios disponibles</TableCell></TableRow>
-                : servicios.map(s=>(
-                    <TableRow key={s.ID} hover>
-                      <TableCell padding="checkbox"><Checkbox checked={tempSelectedIds.includes(s.ID)} onChange={()=>toggleSelect(s.ID)}/></TableCell>
-                      <TableCell>{s.Nombre}</TableCell>
-                      <TableCell>{s.Tipo}</TableCell>
-                      <TableCell>₡{s.Precio}</TableCell>
-                    </TableRow>
-                  ))
-              }
+              {!servicios.length ? (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No hay servicios disponibles
+                  </TableCell>
+                </TableRow>
+              ) : servicios.map(s=>(
+                <TableRow key={s.ID} hover>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={tempSelectedIds.includes(s.ID)}
+                      onChange={() => toggleSelect(s.ID)}
+                    />
+                  </TableCell>
+                  <TableCell>{s.Nombre}</TableCell>
+                  <TableCell>{s.Tipo}</TableCell>
+                  <TableCell>₡{s.Precio}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </DialogContent>
-        <DialogActions><Button onClick={closeDialog}>Cancelar</Button><Button onClick={confirmSel} variant="contained">Confirmar</Button></DialogActions>
+        <DialogActions>
+          <Button onClick={closeDialog}>Cancelar</Button>
+          <Button onClick={confirmSel} variant="contained">Confirmar</Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );
 }
-//yaaaaaaaaaaaaa
