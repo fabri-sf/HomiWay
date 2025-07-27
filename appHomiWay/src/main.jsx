@@ -39,6 +39,7 @@ import PromotionDetail from "./components/Promotion/PromotionDetail"; // Asumo q
 import ListResena from "./components/Resena/ListResena";
 import ResenaAlojamiento from './components/Resena/ResenaAlojamiento';
 
+
 import ListPedido from "./components/Pedido/ListPedido";
 import DetailPedido from "./components/Pedido/DetailPedido";
 

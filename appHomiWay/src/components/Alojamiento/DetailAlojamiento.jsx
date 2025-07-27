@@ -18,7 +18,7 @@ export function DetailAlojamiento() {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [showAll, setShowAll] = useState(false); 
+  const [showAll] = useState(false); 
   const BASE_URL = import.meta.env.VITE_BASE_URL + 'uploads';
 
   useEffect(() => {

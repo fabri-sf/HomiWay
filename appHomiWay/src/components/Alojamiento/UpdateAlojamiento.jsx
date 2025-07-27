@@ -64,11 +64,11 @@ export default function UpdateAlojamiento() {
         const idUb  = data.ID_Ubicacion;
         setUbicacionId(idUb);
 
-        // 1.a) Ubicación
+        // 1. Ubicación
         const ubi = await UbicacionService.getById(idUb);
         const ub   = ubi.data;
 
-        // 1.b) Servicios asignados
+        // 1. Servicios asignados
         const asRes = await ServicioAlojamientoService.getByAlojamiento(id);
         const asIds = asRes.data.map(s => s.ID);
 
@@ -76,7 +76,7 @@ export default function UpdateAlojamiento() {
         setTempIds(asIds);
         setSelServ(servRes.data.filter(s => asIds.includes(s.ID)));
 
-        // 1.c) Llenar formulario
+        // 1.Llenar formulario
         reset({
           Provincia:       ub.Provincia || "",
           CodigoPostal:    ub.CodigoPostal || "",
@@ -121,7 +121,7 @@ export default function UpdateAlojamiento() {
     setDialogOpen(false);
   };
 
- const onSubmit = async data => {
+const onSubmit = async data => {
   setSaving(true);
 
   try {
@@ -136,6 +136,17 @@ export default function UpdateAlojamiento() {
       Categoria:       data.Categoria
     });
 
+    if (imagenes.length > 0) {
+      const uploads = imagenes.map(file =>
+        ImageService.upload(id, file)
+          .catch(err => {
+            console.error("Error subiendo imagen:", err);
+            toast.error(`Error subiendo imagen: ${file.name}`);
+          })
+      );
+      await Promise.all(uploads);
+    }
+
     toast.success("Alojamiento actualizado");
     navigate("/alojamientos");
   } catch (err) {
@@ -145,23 +156,6 @@ export default function UpdateAlojamiento() {
     setSaving(false);
   }
 };
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          minHeight:  "50vh",
-          display:    "flex",
-          flexDirection:"column",
-          justifyContent:"center",
-          alignItems: "center"
-        }}
-      >
-        <CircularProgress />
-        <Typography mt={2}>Cargando alojamiento...</Typography>
-      </Box>
-    );
-  }
 
   return (
     <Box sx={{ maxWidth: 900, mx: "auto", mt: 3, p: 2 }}>
