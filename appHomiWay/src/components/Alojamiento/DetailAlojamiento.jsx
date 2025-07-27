@@ -4,6 +4,8 @@ import AlojamientoService from '../../services/AlojamientoService';
 
 import { ListServicios } from '../Servicios/ListServicio';
 import Resena from '../Resena/Resena';
+import ResenaAlojamiento from '../Resena/ResenaAlojamiento';
+
 import {
   Button,
   Typography,
@@ -16,6 +18,7 @@ export function DetailAlojamiento() {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [showAll] = useState(false); 
   const BASE_URL = import.meta.env.VITE_BASE_URL + 'uploads';
 
   useEffect(() => {
@@ -153,11 +156,29 @@ export function DetailAlojamiento() {
           backgroundColor: '#2e7d32',
           color: '#ffffff',
           '&:hover': { backgroundColor: '#1b5e20' },
-          marginTop: '1rem',
+          margin: '1rem',
         }}
       >
         Valorar Alojamiento
       </Button>
+
+      <Button
+      size="small"
+      component={Link}
+      to={`/resena/alojamiento/${data.ID}`} 
+      sx={{
+        backgroundColor: '#388e3c',
+        color: '#ffffff',
+        '&:hover': { backgroundColor: '#2e7d32' },
+
+        margin: '1rem', 
+        
+      }}
+    >
+      Ver todas las reseñas
+    </Button>
+
+      {showAll && <ResenaAlojamiento alojamientoId={parseInt(data.ID)} />}
     </div>
   );
 }

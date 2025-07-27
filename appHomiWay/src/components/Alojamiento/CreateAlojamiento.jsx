@@ -19,7 +19,7 @@ import ServicioService            from "../../services/ServicioService";
 import ServicioAlojamientoService from "../../services/ServicioAlojamientoService";
 
 const provinciasCR = ["San José","Alajuela","Cartago","Heredia","Guanacaste","Puntarenas","Limón"];
-const postalCodesByProvince = {
+const postalCode = {
   "San José":["10101","10102","10103","10104","10105"],
   "Alajuela":["20101","20102","20103","20104","20105"],
   "Cartago":["30101","30102","30103","30104","30105"],
@@ -28,7 +28,7 @@ const postalCodesByProvince = {
   "Puntarenas":["60101","60102","60103","60104","60105"],
   "Limón":["70101","70102","70103","70104","70105"]
 };
-const featureOptions = ["Wifi","Jacuzzi","Piscina","Aire acondicionado","Estacionamiento","TV","Lavadora","Cocina"];
+const característica = ["Wifi","Jacuzzi","Piscina","Aire acondicionado","Estacionamiento","TV","Lavadora","Cocina"];
 
 export default function CreateAlojamiento() {
   const navigate = useNavigate();
@@ -111,7 +111,7 @@ export default function CreateAlojamiento() {
       </Box>
     );
 
-  const postalCodes = postalCodesByProvince[selectedProv] || [];
+  const postalCodes = postalCode[selectedProv] || [];
 
   return (
     <Box sx={{ maxWidth:900, mx:"auto", mt:3, p:2 }}>
@@ -204,7 +204,7 @@ export default function CreateAlojamiento() {
                 <FormControl fullWidth error={!!error}>
                   <InputLabel>Características</InputLabel>
                   <Select multiple value={field.value} onChange={e=>field.onChange(e.target.value)} label="Características" renderValue={v=>v.join(", ")}>
-                    {featureOptions.map(opt=>(
+                    {característica.map(opt=>(
                       <MenuItem key={opt} value={opt}>
                         <Checkbox checked={field.value.includes(opt)}/>
                         <ListItemText primary={opt}/>
@@ -261,3 +261,4 @@ export default function CreateAlojamiento() {
     </Box>
   );
 }
+//yaaaaaaaaaaaaa

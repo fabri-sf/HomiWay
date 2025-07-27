@@ -61,6 +61,8 @@ require_once "controllers/UsuarioController.php";
 require_once "controllers/ServicioAlojamientoController.php";
 require_once "controllers/etiquetaController.php";
 //require_once "controllers/ImageController.php";
+require_once "controllers/ImagenController.php";
+
 
 //Enrutador
 require_once "routes/RoutesController.php";

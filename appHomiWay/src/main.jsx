@@ -23,6 +23,7 @@ import { DetailAlojamiento } from "./components/Alojamiento/DetailAlojamiento";
 import CreateAlojamiento from "./components/Alojamiento/CreateAlojamiento"; 
 import TableAlojamiento from "./components/Alojamiento/TableAlojamiento";
 import GetAlojamiento from "./components/Alojamiento/GetAlojamiento";
+import UpdateAlojamiento from "./components/Alojamiento/UpdateAlojamiento";
 
 import DetailRental from "./components/Rental/DetailRental";
 import { CreateMovieRental } from "./components/Rental/CreateMovieRental";
@@ -36,6 +37,9 @@ import CreatePromotion from "./components/Promotion/CreatePromotion"; // Nuevo c
 import PromotionDetail from "./components/Promotion/PromotionDetail"; // Asumo que existe
 
 import ListResena from "./components/Resena/ListResena";
+import ResenaAlojamiento from './components/Resena/ResenaAlojamiento';
+
+
 import ListPedido from "./components/Pedido/ListPedido";
 import DetailPedido from "./components/Pedido/DetailPedido";
 
@@ -84,6 +88,10 @@ const rutas = createBrowserRouter([
         element: <CreateAlojamiento /> 
       },
       {
+       path: "/alojamiento/editar/:id",
+        element: <UpdateAlojamiento /> 
+      },
+      {
         path: '/promociones',
         element: <Promotion />
       },
@@ -107,6 +115,10 @@ const rutas = createBrowserRouter([
         path: '/resenas',
         element: <ListResena />
       },
+      { 
+        path:"/resena/alojamiento/:id",
+         element: <ResenaAlojamiento />},
+
       {
         path: '/ubicacion/:id',
         element: <GetUbicacion />
