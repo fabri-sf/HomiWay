@@ -327,7 +327,6 @@ export default function UpdateAlojamiento() {
         </Grid>
       </form>
 
-      {/* Modal eliminar imágenes existentes */}
       <Dialog
         open={dialogImgOpen}
         onClose={() => setDialogImgOpen(false)}
@@ -391,7 +390,6 @@ export default function UpdateAlojamiento() {
         </DialogActions>
       </Dialog>
 
-      {/* Modal seleccionar servicios */}
       <Dialog
         open={dialogServOpen}
         onClose={closeDialogServ}
