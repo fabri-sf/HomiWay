@@ -18,6 +18,14 @@ class ImageService {
   getFirst(idAloj) {
     return axios.get(`${BASE_URL}/getFirst/${idAloj}`);
   }
+  deleteImage(id) {
+      const token = localStorage.getItem('user')?.replace(/^"|"$/g, '');
+      return axios.delete(
+        `${BASE_URL}/delete/${id}`,
+        { headers: { Authorization: `Bearer ${token}` }}
+      );
+    }
+
 }
 
 export default new ImageService();

@@ -22,7 +22,6 @@ require_once "middleware/AuthMiddleware.php";
 require_once "models/RolModel.php";
 require_once "models/UsuarioModel.php";
 require_once "models/DirectorModel.php";
-require_once "models/ActorModel.php";
 require_once "models/GenreModel.php";
 require_once "models/ShopRentalModel.php";
 require_once "models/RentalModel.php";
@@ -43,7 +42,6 @@ require_once "models/EtiquetaModel.php";
 
 //require_once "controllers/UserController.php";
 require_once "controllers/DirectorController.php";
-require_once "controllers/ActorController.php";
 require_once "controllers/GenreController.php";
 require_once "controllers/ShopRentalController.php";
 require_once "controllers/InventoryController.php";
