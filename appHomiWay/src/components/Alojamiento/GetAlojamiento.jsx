@@ -1,5 +1,3 @@
-// src/components/Alojamiento/GetAlojamiento.jsx
-
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -130,7 +128,6 @@ export default function GetAlojamiento() {
           </TableHead>
           <TableBody>
             {alojamientos.map((a) => {
-              // Ajustá los campos según tu API: a.id / a.Nombre, etc.
               const id = a.ID ?? a.id;
               const nombre = a.Nombre ?? a.nombre;
               const desc = a.Descripcion ?? a.descripcion;
@@ -164,4 +161,4 @@ export default function GetAlojamiento() {
       </TableContainer>
     </Box>
   );
-}
+}//yaaaaaaaaaaaaaaaa
