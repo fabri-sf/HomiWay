@@ -47,10 +47,6 @@ export default function UserProvider({ children }) {
     );
   };
 
-  UserProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-  };
-
   return (
     <UserContext.Provider
       value={{
@@ -66,3 +62,7 @@ export default function UserProvider({ children }) {
     </UserContext.Provider>
   );
 }
+
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

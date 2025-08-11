@@ -10,15 +10,16 @@ import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import UsuarioService from '../../services/UsuarioService';
-
+import { useTranslation } from 'react-i18next';
 export function Signup() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const schema = yup.object({
-    Nombre: yup.string().required('El nombre es obligatorio'),
-    Apellido: yup.string().required('El apellido es obligatorio'),
-    Correo: yup.string().email('Formato inválido').required('El correo es obligatorio'),
-    Contrasena: yup.string().required('La contraseña es obligatoria'),
+    Nombre: yup.string().required(t('auth.signup.errors.required')),
+    Apellido: yup.string().required(t('auth.signup.errors.required')),
+    Correo: yup.string().email(t('auth.signup.errors.invalidEmail')).required(t('auth.signup.errors.required')),
+    Contrasena: yup.string().required(t('auth.signup.errors.required')),
   });
 
   const {
@@ -36,37 +37,35 @@ export function Signup() {
   });
 
   const [error, setError] = useState(null);
-
   const onSubmit = (dataForm) => {
     const payload = {
       ...dataForm,
-      ID_Rol: 2, // Rol Cliente asignado automáticamente
-      Estado: 1  // Activado por defecto
+      ID_Rol: 2,
+      Estado: 1
     };
 
     UsuarioService.registrarUsuario(payload)
       .then(() => {
-        toast.success('Usuario registrado correctamente');
+        toast.success(t('auth.signup.toast.success'));
         navigate('/user/login');
       })
       .catch(() => {
-        toast.error('Error al registrar usuario');
-        setError('Fallo la solicitud de registro');
+        toast.error(t('auth.signup.toast.error'));
+        setError(t('auth.signup.errors.registerFailed'));
       });
-  };
-
-  const onError = () => {
-    toast.error('Todos los campos son obligatorios');
   };
 
   return (
     <>
       <Toaster />
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
+      <form
+        onSubmit={handleSubmit(onSubmit, () => toast.error(t('auth.signup.errors.required')))}
+        noValidate
+      >
         <Grid container spacing={2}>
           <Grid size={12}>
-            <Typography variant="h5" gutterBottom>Registro de Usuario</Typography>
+            <Typography variant="h5" gutterBottom>{t('auth.signup.title')}</Typography>
           </Grid>
 
           <Grid size={12} sm={6}>
@@ -77,7 +76,7 @@ export function Signup() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Nombre"
+                    label={t('auth.signup.fields.name')}
                     error={!!errors.Nombre}
                     helperText={errors.Nombre?.message || ' '}
                   />
@@ -94,7 +93,7 @@ export function Signup() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Apellido"
+                    label={t('auth.signup.fields.surname')}
                     error={!!errors.Apellido}
                     helperText={errors.Apellido?.message || ' '}
                   />
@@ -111,7 +110,7 @@ export function Signup() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Correo"
+                    label={t('auth.signup.fields.email')}
                     error={!!errors.Correo}
                     helperText={errors.Correo?.message || ' '}
                   />
@@ -128,7 +127,7 @@ export function Signup() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Contraseña"
+                    label={t('auth.signup.fields.password')}
                     type="password"
                     error={!!errors.Contrasena}
                     helperText={errors.Contrasena?.message || ' '}
@@ -140,11 +139,11 @@ export function Signup() {
 
           <Grid size={12}>
             <Button type="submit" variant="contained" color="secondary">
-              Registrarse
+              {t('auth.signup.buttons.submit')}
             </Button>
           </Grid>
         </Grid>
       </form>
     </>
   );
-}
+};

@@ -4,6 +4,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next'; // Añadir esta importación
+
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   minHeight: '100vh',
@@ -100,12 +102,14 @@ const SubtitleText = styled(Typography)(({ theme }) => ({
 }));
 
 export function Home() {
+  const { t } = useTranslation(); // Hook para traducciones
+
   return (
     <StyledContainer maxWidth={false} disableGutters>
       <LogoContainer>
         <img
           src="/src/assets/logo.png"
-          alt="Logo HomiWay"
+          alt={t('homePage.logoAlt')} // Texto traducido
         />
       </LogoContainer>
       
@@ -115,11 +119,11 @@ export function Home() {
           variant="h2"
           gutterBottom
         >
-          HomiWay: Vive la experiencia
+          {t('homePage.title')} {/* Texto traducido */}
         </AnimatedTitle>
         
         <SubtitleText variant="h5">
-          Encuentra alojamientos únicos, explora tours increíbles y reserva servicios locales en Costa Rica.
+          {t('homePage.subtitle')} {/* Texto traducido */}
         </SubtitleText>
       </ContentBox>
     </StyledContainer>
