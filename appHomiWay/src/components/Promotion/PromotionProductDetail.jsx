@@ -13,9 +13,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import CategoryIcon from '@mui/icons-material/Category';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const AlojamientoDetailsModal = ({ open, onClose, alojamiento }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   if (!alojamiento) return null;
 
@@ -29,8 +31,8 @@ const AlojamientoDetailsModal = ({ open, onClose, alojamiento }) => {
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="alojamiento-details-modal"
-      aria-describedby="alojamiento-details-description"
+      aria-labelledby="alojamiento-promo-modal"
+      aria-describedby="alojamiento-promo-description"
     >
       <Box sx={{
         position: 'absolute',
@@ -49,7 +51,7 @@ const AlojamientoDetailsModal = ({ open, onClose, alojamiento }) => {
         {/* Header del Modal */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h5" component="h2" color={theme.palette.primary.main}>
-            Detalles del Alojamiento
+            {t('promo.title')}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -62,53 +64,53 @@ const AlojamientoDetailsModal = ({ open, onClose, alojamiento }) => {
         <Grid container spacing={3}>
           {/* Columna izquierda - Información del alojamiento */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" gutterBottom sx={{ 
+            <Typography variant="h6" gutterBottom sx={{
               color: theme.palette.primary.main,
               fontWeight: 'bold'
             }}>
-              {alojamiento.AlojamientoNombre || 'Alojamiento sin nombre'}
+              {alojamiento.AlojamientoNombre || t('promo.noName')}
             </Typography>
 
-            <DetailItem 
-              label="Descripción" 
-              value={alojamiento.Descripcion || 'Sin descripción disponible'} 
+            <DetailItem
+              label={t('promo.descriptionLabel')}
+              value={alojamiento.Descripcion || t('promo.noDescription')}
               multiline
             />
 
             <Box display="flex" alignItems="center" mb={2}>
               <PersonIcon sx={{ fontSize: 16, color: theme.palette.primary.dark, mr: 1 }} />
               <Typography variant="body1">
-                Capacidad: {alojamiento.Capacidad || 'N/A'} personas
+                {t('promo.capacity')}: {alojamiento.Capacidad || t('promo.na')} {t('promo.people')}
               </Typography>
             </Box>
 
             <Box display="flex" alignItems="center" mb={2}>
               <CategoryIcon sx={{ fontSize: 16, color: theme.palette.primary.dark, mr: 1 }} />
               <Typography variant="body1">
-                Categoría: {alojamiento.Categoria || 'Sin categoría'}
+                {t('promo.category')}: {alojamiento.Categoria || t('promo.noCategory')}
               </Typography>
             </Box>
 
             {alojamiento.EtiquetaNombre && (
-              <DetailItem 
-                label="Etiqueta" 
+              <DetailItem
+                label={t('promo.tagLabel')}
                 value={alojamiento.EtiquetaNombre}
               />
             )}
 
-            <DetailItem 
-              label="Precio por noche" 
+            <DetailItem
+              label={t('promo.priceNight')}
               value={formatPrice(alojamiento.PrecioNoche)}
             />
           </Grid>
 
           {/* Columna derecha - Información de la promoción */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" gutterBottom sx={{ 
+            <Typography variant="h6" gutterBottom sx={{
               color: theme.palette.secondary.main,
               fontWeight: 'bold'
             }}>
-              Información de la Promoción
+              {t('promo.infoTitle')}
             </Typography>
 
             {tienePromocion ? (
@@ -138,39 +140,39 @@ const AlojamientoDetailsModal = ({ open, onClose, alojamiento }) => {
                 </Box>
 
                 {alojamiento.Codigo && (
-                  <DetailItem 
-                    label="Código de promoción" 
+                  <DetailItem
+                    label={t('promo.codeLabel')}
                     value={alojamiento.Codigo}
                   />
                 )}
 
                 {alojamiento.PromocionDescripcion && (
-                  <DetailItem 
-                    label="Descripción de la promoción" 
+                  <DetailItem
+                    label={t('promo.descLabel')}
                     value={alojamiento.PromocionDescripcion}
                     multiline
                   />
                 )}
 
-                <DetailItem 
-                  label="Precio con descuento" 
+                <DetailItem
+                  label={t('promo.priceDiscountLabel')}
                   value={formatPrice(precioInfo?.precioConDescuento || alojamiento.PrecioConDescuento)}
                 />
 
-                <DetailItem 
-                  label="Fecha de inicio" 
+                <DetailItem
+                  label={t('promo.startDateLabel')}
                   value={formatDate(alojamiento.Inicio)}
                 />
 
-                <DetailItem 
-                  label="Fecha de fin" 
+                <DetailItem
+                  label={t('promo.endDateLabel')}
                   value={formatDate(alojamiento.Fin)}
                 />
 
               </>
             ) : (
               <Typography variant="body1" color="text.secondary">
-                Este alojamiento no tiene promociones activas.
+                {t('promo.noActive')}
               </Typography>
             )}
           </Grid>
@@ -180,7 +182,7 @@ const AlojamientoDetailsModal = ({ open, onClose, alojamiento }) => {
   );
 };
 
-// Componente auxiliar para mostrar cada campo (igual que en el otro modal)
+// Componente auxiliar para mostrar cada campo
 const DetailItem = ({ label, value, multiline = false }) => {
   return (
     <Box mb={2}>
@@ -188,9 +190,9 @@ const DetailItem = ({ label, value, multiline = false }) => {
         {label}:
       </Typography>
       {multiline ? (
-        <Typography 
-          variant="body1" 
-          sx={{ 
+        <Typography
+          variant="body1"
+          sx={{
             whiteSpace: 'pre-line',
             backgroundColor: 'action.hover',
             p: 1,
@@ -208,17 +210,17 @@ const DetailItem = ({ label, value, multiline = false }) => {
   );
 };
 
-// Funciones auxiliares (las mismas que en el componente principal)
+// Funciones auxiliares
 const formatPrice = (price) => {
   if (!price) return '₡0';
   return `₡${Number(price).toLocaleString('es-CR')}`;
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return 'No especificada';
+  if (!dateString) return t('promo.noDate');
   const date = new Date(dateString);
-  return isNaN(date.getTime()) 
-    ? 'Fecha inválida' 
+  return isNaN(date.getTime())
+    ? t('promo.invalidDate')
     : date.toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
@@ -227,14 +229,11 @@ const formatDate = (dateString) => {
 };
 
 const obtenerPrecioCalculado = (alojamiento) => {
-  // Esta función debería ser consistente con la del componente principal
-  // En un proyecto real, estas funciones deberían estar en un archivo de utilidades
   if (!alojamiento.PromocionID) return null;
-  
   return {
     precioConDescuento: alojamiento.PrecioConDescuento || alojamiento.PrecioNoche,
     porcentajeDescuento: calcularDescuentoLocal(alojamiento.PrecioNoche, alojamiento.PrecioConDescuento),
-    calculadoPorAPI: false // Asumimos cálculo local para el modal
+    calculadoPorAPI: false
   };
 };
 
@@ -247,23 +246,23 @@ const calcularDescuentoLocal = (precioOriginal, precioConDescuento) => {
 const determinarEstadoPromocion = (estadoPromocion) => {
   switch (estadoPromocion) {
     case 'Vigente':
-      return { 
-        color: 'success.main', 
+      return {
+        color: 'success.main',
         texto: 'Vigente'
       };
     case 'Aplicado':
-      return { 
-        color: 'grey.500', 
+      return {
+        color: 'grey.500',
         texto: 'Finalizado'
       };
     case 'Pendiente':
-      return { 
-        color: 'warning.main', 
+      return {
+        color: 'warning.main',
         texto: 'Pendiente'
       };
     default:
-      return { 
-        color: 'grey.500', 
+      return {
+        color: 'grey.500',
         texto: 'Sin promoción'
       };
   }

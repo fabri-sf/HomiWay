@@ -10,23 +10,24 @@ import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import toast, { Toaster } from 'react-hot-toast';
-
+import { useTranslation } from 'react-i18next';
 export function CreateResena() {
   const { idAlojamiento } = useParams();
   const alojamientoID = parseInt(idAlojamiento);
   const token = localStorage.getItem('user')?.replace(/^"|"$/g, '');
   const userData = token ? jwtDecode(token) : null;
-  
+
   const idUsuario = userData?.id;
+  const { t } = useTranslation();
 
   const schema = yup.object({
-    Comentario: yup.string().required('El comentario es obligatorio'),
+    Comentario: yup.string().required(t('reviews.form.errors.required')),
     Calificacion: yup
       .number()
-      .typeError('Debés escribir un número')
-      .required('La calificación es obligatoria')
-      .min(1, 'Mínimo 1')
-      .max(5, 'Máximo 5'),
+      .typeError(t('reviews.form.errors.type'))
+      .required(t('reviews.form.errors.required'))
+      .min(1, t('reviews.form.errors.min'))
+      .max(5, t('reviews.form.errors.max')),
   });
 
   const {
@@ -41,12 +42,11 @@ export function CreateResena() {
     },
     resolver: yupResolver(schema),
   });
-
-  if (!idUsuario || !alojamientoID) {
+    if (!idUsuario || !alojamientoID) {
     return (
       <div style={{ padding: '2rem' }}>
         <Typography variant="h6" color="error">
-          Debés iniciar sesión para dejar una reseña.
+          {t('reviews.form.errors.auth')}
         </Typography>
       </div>
     );
@@ -61,23 +61,24 @@ export function CreateResena() {
 
     ResenaService.createResena(payload)
       .then(() => {
-        toast.success('Reseña creada correctamente');
+        toast.success(t('reviews.form.toast.success'));
         reset();
       })
       .catch(() => {
-        toast.error('Error al crear la reseña');
+        toast.error(t('reviews.form.toast.error'));
       });
   };
 
-  const onError = () => toast.error('Completá todos los campos');
-
-  return (
+  const onError = () => toast.error(t('reviews.form.errors.incomplete'));
+    return (
     <>
       <Toaster />
       <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
         <Grid container spacing={2}>
           <Grid size={12}>
-            <Typography variant="h6" gutterBottom>Agregar Reseña</Typography>
+            <Typography variant="h6" gutterBottom>
+              {t('reviews.form.title')}
+            </Typography>
           </Grid>
 
           <Grid size={12}>
@@ -88,7 +89,7 @@ export function CreateResena() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Comentario"
+                    label={t('reviews.form.fields.comment')}
                     multiline
                     rows={3}
                     error={!!errors.Comentario}
@@ -107,7 +108,7 @@ export function CreateResena() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Calificación (1–5)"
+                    label={t('reviews.form.fields.rating')}
                     type="number"
                     inputProps={{ min: 1, max: 5 }}
                     error={!!errors.Calificacion}
@@ -120,7 +121,7 @@ export function CreateResena() {
 
           <Grid size={12}>
             <Button type="submit" variant="contained" color="secondary">
-              Guardar Reseña
+              {t('reviews.form.buttons.submit')}
             </Button>
           </Grid>
         </Grid>

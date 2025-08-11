@@ -28,12 +28,14 @@ import {
   CalendarToday as CalendarIcon
 } from '@mui/icons-material';
 import PedidoService from "../../services/PedidoService";
+import { useTranslation } from 'react-i18next';
 
 const DetailPedido = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [facturaData, setFacturaData] = useState({
     encabezado: {},
     cliente: {},
@@ -56,13 +58,13 @@ const DetailPedido = () => {
       const response = await PedidoService.getFacturaCompleta(id);
       setFacturaData(response.data);
     } catch (err) {
-      let errorMessage = 'Error al cargar el detalle de la factura';
+      let errorMessage = t("pedidos.detail.errors.fetch");
       if (err.response) {
-        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || 'Error del servidor'}`;
+        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || t("pedidos.detail.errors.server")}`;
       } else if (err.request) {
-        errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
+        errorMessage = t("pedidos.detail.errors.connection");
       } else {
-        errorMessage = err.message || 'Error desconocido';
+        errorMessage = err.message || t("pedidos.detail.errors.unknown");
       }
       setError(errorMessage);
     } finally {
@@ -71,9 +73,9 @@ const DetailPedido = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'No especificada';
+    if (!dateString) return t("common.noDate");
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'Fecha inválida';
+    if (isNaN(date.getTime())) return t("common.invalidDate");
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
@@ -115,7 +117,7 @@ const DetailPedido = () => {
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
         <CircularProgress sx={{ color: theme.palette.primary.main }} />
         <Typography variant="body1" sx={{ ml: 2, color: theme.palette.text.primary }}>
-          Cargando detalle de la factura...
+          {t("pedidos.detail.loading")}
         </Typography>
       </Box>
     );
@@ -124,11 +126,11 @@ const DetailPedido = () => {
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert 
-          severity="error" 
+        <Alert
+          severity="error"
           action={
             <Button color="inherit" size="small" onClick={handleVolver}>
-              Volver al listado
+              {t("pedidos.detail.buttons.back")}
             </Button>
           }
         >
@@ -137,7 +139,6 @@ const DetailPedido = () => {
       </Container>
     );
   }
-
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 3 }}>
@@ -150,7 +151,7 @@ const DetailPedido = () => {
             borderColor: theme.palette.primary.main
           }}
         >
-          Volver al listado
+          {t("pedidos.detail.buttons.back")}
         </Button>
       </Box>
 
@@ -159,7 +160,7 @@ const DetailPedido = () => {
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <ReceiptIcon sx={{ fontSize: 48, color: theme.palette.primary.main, mb: 2 }} />
             <Typography variant="h3" component="h1" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-              FACTURA
+              {t("pedidos.detail.title")}
             </Typography>
             <Typography variant="h5" sx={{ color: theme.palette.text.secondary }}>
               # {facturaData.encabezado.numero_pedido || 'N/A'}
@@ -174,18 +175,18 @@ const DetailPedido = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <CalendarIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    Información del Pedido
+                    {t("pedidos.detail.sections.orderInfo")}
                   </Typography>
                 </Box>
                 <Box sx={{ ml: 4 }}>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Número de Pedido:</strong> {facturaData.encabezado.numero_pedido || 'N/A'}
+                    <strong>{t("pedidos.detail.labels.orderNumber")}:</strong> {facturaData.encabezado.numero_pedido || 'N/A'}
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Fecha y Hora:</strong> {formatDate(facturaData.encabezado.fecha_emision)}
+                    <strong>{t("pedidos.detail.labels.dateTime")}:</strong> {formatDate(facturaData.encabezado.fecha_emision)}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <strong>Estado:</strong>
+                    <strong>{t("pedidos.detail.labels.status")}:</strong>
                     <Chip
                       label={facturaData.encabezado.estado || 'N/A'}
                       size="small"
@@ -206,18 +207,18 @@ const DetailPedido = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <PersonIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    Información del Cliente
+                    {t("pedidos.detail.sections.clientInfo")}
                   </Typography>
                 </Box>
                 <Box sx={{ ml: 4 }}>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Nombre:</strong> {facturaData.cliente.nombre_completo || 'N/A'}
+                    <strong>{t("pedidos.detail.labels.name")}:</strong> {facturaData.cliente.nombre_completo || 'N/A'}
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    <strong>Correo:</strong> {facturaData.cliente.correo || 'N/A'}
+                    <strong>{t("pedidos.detail.labels.email")}:</strong> {facturaData.cliente.correo || 'N/A'}
                   </Typography>
                   <Typography variant="body1">
-                    <strong>Teléfono:</strong> {facturaData.cliente.telefono || 'N/A'}
+                    <strong>{t("pedidos.detail.labels.phone")}:</strong> {facturaData.cliente.telefono || 'N/A'}
                   </Typography>
                 </Box>
               </Card>
@@ -226,7 +227,7 @@ const DetailPedido = () => {
 
           {/* Productos estándar */}
           <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, color: theme.palette.primary.main }}>
-            Detalle de Productos
+            {t("pedidos.detail.sections.products")}
           </Typography>
 
           {facturaData.productos.length > 0 ? (
@@ -234,17 +235,17 @@ const DetailPedido = () => {
               <Table>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: theme.palette.primary.light }}>
-                    <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>Producto</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>Cantidad</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>Precio Unitario</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>Subtotal</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.product")}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.quantity")}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.unitPrice")}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.subtotal")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {facturaData.productos.map((producto, index) => (
                     <TableRow key={`producto-${index}`}>
                       <TableCell>
-                        <Typography fontWeight="bold">{producto.nombre || 'Producto sin nombre'}</Typography>
+                        <Typography fontWeight="bold">{producto.nombre || t("pedidos.detail.fallback.noName")}</Typography>
                         {producto.descripcion && (
                           <Typography variant="body2" color="text.secondary">
                             {producto.descripcion}
@@ -261,7 +262,7 @@ const DetailPedido = () => {
             </TableContainer>
           ) : (
             <Typography variant="body1" sx={{ mb: 4 }}>
-              No hay productos registrados en este pedido.
+              {t("pedidos.detail.fallback.noProducts")}
             </Typography>
           )}
 
@@ -269,30 +270,30 @@ const DetailPedido = () => {
           {facturaData.productos_personalizados && facturaData.productos_personalizados.length > 0 ? (
             <>
               <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, color: theme.palette.primary.main }}>
-                Productos Personalizados (Servicios)
+                {t("pedidos.detail.sections.customProducts")}
               </Typography>
               <TableContainer component={Paper} sx={{ mb: 4 }}>
                 <Table>
                   <TableHead>
                     <TableRow sx={{ backgroundColor: theme.palette.secondary.light }}>
-                      <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>Servicio</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>Detalles</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>Total</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.service")}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.details")}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 'bold', color: 'white' }}>{t("pedidos.detail.table.total")}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {facturaData.productos_personalizados.map((servicio, index) => (
                       <TableRow key={`servicio-${index}`}>
                         <TableCell>
-                          <Typography fontWeight="bold">{servicio.Nombre || 'Servicio sin nombre'}</Typography>
+                          <Typography fontWeight="bold">{servicio.Nombre || t("pedidos.detail.fallback.noName")}</Typography>
                           <Typography variant="body2" color="text.secondary">
-                            {servicio.Descripcion || 'Sin descripción'}
+                            {servicio.Descripcion || t("pedidos.detail.fallback.noDescription")}
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2"><strong>Duración:</strong> {servicio.Duracion || 'No especificada'}</Typography>
-                          <Typography variant="body2"><strong>Idiomas:</strong> {servicio.Idiomas || 'No especificados'}</Typography>
-                          <Typography variant="body2"><strong>Tipo:</strong> {servicio.Tipo || 'No especificado'}</Typography>
+                          <Typography variant="body2"><strong>{t("pedidos.detail.labels.duration")}:</strong> {servicio.Duracion || t("common.noDate")}</Typography>
+                          <Typography variant="body2"><strong>{t("pedidos.detail.labels.languages")}:</strong> {servicio.Idiomas || t("pedidos.detail.fallback.noLanguages")}</Typography>
+                          <Typography variant="body2"><strong>{t("pedidos.detail.labels.type")}:</strong> {servicio.Tipo || t("pedidos.detail.fallback.noType")}</Typography>
                         </TableCell>
                         <TableCell align="right">{formatPrice(servicio.Total)}</TableCell>
                       </TableRow>
@@ -303,7 +304,7 @@ const DetailPedido = () => {
             </>
           ) : (
             <Typography variant="body1" sx={{ mb: 4 }}>
-              No hay productos personalizados en este pedido.
+              {t("pedidos.detail.fallback.noCustomProducts")}
             </Typography>
           )}
 
@@ -311,37 +312,37 @@ const DetailPedido = () => {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Card variant="outlined" sx={{ p: 3, width: '100%', maxWidth: 400 }}>
               <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center', color: theme.palette.primary.main }}>
-                Resumen del Pedido
+                {t("pedidos.detail.sections.summary")}
               </Typography>
               <Box sx={{ mb: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography>Subtotal:</Typography>
+                  <Typography>{t("pedidos.detail.labels.subtotal")}:</Typography>
                   <Typography>{formatPrice(facturaData.resumen.subtotal)}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography>Impuestos:</Typography>
+                  <Typography>{t("pedidos.detail.labels.taxes")}:</Typography>
                   <Typography>{formatPrice(facturaData.resumen.impuestos)}</Typography>
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="h6" fontWeight="bold">Total:</Typography>
+                  <Typography variant="h6" fontWeight="bold">{t("pedidos.detail.labels.total")}:</Typography>
                   <Typography variant="h6" fontWeight="bold">{formatPrice(facturaData.resumen.total)}</Typography>
                 </Box>
               </Box>
               <Divider sx={{ my: 2 }} />
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                 <Typography variant="body1">
-                  <strong>Método de Pago:</strong> {facturaData.metodo_pago.MetodoPago || 'No especificado'}
+                  <strong>{t("pedidos.detail.labels.paymentMethod")}:</strong> {facturaData.metodo_pago.MetodoPago || t("pedidos.detail.fallback.noPayment")}
                 </Typography>
               </Box>
               {facturaData.metodo_pago.banco && (
                 <Typography variant="body2" sx={{ mt: 1, ml: 4 }}>
-                  <strong>Banco:</strong> {facturaData.metodo_pago.banco}
+                  <strong>{t("pedidos.detail.labels.bank")}:</strong> {facturaData.metodo_pago.banco}
                 </Typography>
               )}
               {facturaData.metodo_pago.ultimos_digitos && (
                 <Typography variant="body2" sx={{ mt: 1, ml: 4 }}>
-                  <strong>Tarjeta terminada en:</strong> ****{facturaData.metodo_pago.ultimos_digitos}
+                  <strong>{t("pedidos.detail.labels.cardEnding")}:</strong> ****{facturaData.metodo_pago.ultimos_digitos}
                 </Typography>
               )}
             </Card>
@@ -349,10 +350,10 @@ const DetailPedido = () => {
 
           <Box sx={{ mt: 4, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              Gracias por su compra. Para cualquier consulta, contacte a nuestro servicio al cliente.
+              {t("pedidos.detail.footer.thankYou")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Factura generada el {formatDate(new Date().toISOString())}
+              {t("pedidos.detail.footer.generatedOn", { date: formatDate(new Date().toISOString()) })}
             </Typography>
           </Box>
         </CardContent>
@@ -360,5 +361,6 @@ const DetailPedido = () => {
     </Container>
   );
 };
+
 
 export default DetailPedido;

@@ -12,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm, Controller } from "react-hook-form";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import AlojamientoService from "../../services/AlojamientoService";
 import UbicacionService from "../../services/UbicacionService";
@@ -25,6 +26,7 @@ const caracteristica = [
 ];
 
 export default function UpdateAlojamiento() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { control, handleSubmit, watch, reset } = useForm({ mode: "onSubmit" });
@@ -39,15 +41,15 @@ export default function UpdateAlojamiento() {
   const [imagePreviews, setImagePreviews] = useState([]);
 
   // imágenes existentes + selección para eliminar
-  const [imagenesExistentes, setImagenesExistentes]         = useState([]);
-  const [seleccionadasEliminar, setSeleccionadasEliminar]   = useState([]);
-  const [dialogImgOpen, setDialogImgOpen]                   = useState(false);
+  const [imagenesExistentes, setImagenesExistentes]       = useState([]);
+  const [seleccionadasEliminar, setSeleccionadasEliminar] = useState([]);
+  const [dialogImgOpen, setDialogImgOpen]                 = useState(false);
 
   // servicios + selección
-  const [servicios, setServicios]        = useState([]);
-  const [dialogServOpen, setDialogServOpen]  = useState(false);
-  const [tempSelectedIds, setTempIds]        = useState([]);
-  const [selectedServices, setSelServ]       = useState([]);
+  const [servicios, setServicios]          = useState([]);
+  const [dialogServOpen, setDialogServOpen]     = useState(false);
+  const [tempSelectedIds, setTempIds]           = useState([]);
+  const [selectedServices, setSelServ]          = useState([]);
 
   useEffect(() => {
     Promise.all([
@@ -89,10 +91,10 @@ export default function UpdateAlojamiento() {
     })
     .catch(err => {
       console.error(err);
-      toast.error("Error cargando datos");
+      toast.error(t("alojamientos.create.errorLoadUsers"));
     })
     .finally(() => setLoading(false));
-  }, [id, reset]);
+  }, [id, reset, t]);
 
   const onFileChange = e => {
     if (!e.target.files) return;
@@ -140,11 +142,11 @@ export default function UpdateAlojamiento() {
         await Promise.all(imagenes.map(f => ImageService.upload(id, f)));
       }
 
-      toast.success("Alojamiento actualizado");
+      toast.success(t("alojamientos.create.success"));
       navigate("/alojamientos");
     } catch (err) {
       console.error(err);
-      toast.error("Error actualizando alojamiento");
+      toast.error(t("alojamientos.create.error"));
     } finally {
       setSaving(false);
     }
@@ -165,28 +167,28 @@ export default function UpdateAlojamiento() {
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h5" ml={1}>
-          Editar alojamiento: {nombreValue}
+          {t("alojamientos.get.buttons.edit")}: {nombreValue}
         </Typography>
       </Box>
 
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           {[
-            { n: "Nombre",      l: "Nombre" },
-            { n: "Descripcion", l: "Descripción", multi: true, rows: 3 },
-            { n: "PrecioNoche", l: "Precio por noche", type: "number" },
-            { n: "Capacidad",   l: "Capacidad", type: "number" }
+            { n: "Nombre",      l: "nombre" },
+            { n: "Descripcion", l: "descripcion", multi: true, rows: 3 },
+            { n: "PrecioNoche", l: "precioNoche", type: "number" },
+            { n: "Capacidad",   l: "capacidad",   type: "number" }
           ].map(f=>(
             <Grid item xs={12} sm={f.multi?12:6} key={f.n}>
               <Controller
                 name={f.n}
                 control={control}
                 defaultValue=""
-                rules={{ required: `${f.l} obligatorio` }}
+                rules={{ required: t(`alojamientos.create.errors.${f.l}Required`) }}
                 render={({ field, fieldState:{error} })=>(
                   <TextField
                     {...field}
-                    label={f.l}
+                    label={t(`alojamientos.create.labels.${f.l}`)}
                     type={f.type||"text"}
                     fullWidth
                     multiline={!!f.multi}
@@ -204,11 +206,11 @@ export default function UpdateAlojamiento() {
               name="Categoria"
               control={control}
               defaultValue=""
-              rules={{ required:"Selecciona categoría" }}
+              rules={{ required: t("alojamientos.create.errors.selectCategory") }}
               render={({ field, fieldState:{error} })=>(
                 <FormControl fullWidth error={!!error}>
-                  <InputLabel>Categoría</InputLabel>
-                  <Select {...field} label="Categoría">
+                  <InputLabel>{t("alojamientos.create.labels.category")}</InputLabel>
+                  <Select {...field} label={t("alojamientos.create.labels.category")}>
                     {["Hotel","Casa","Apartamento","Hostal"].map(c=>(
                       <MenuItem key={c} value={c}>{c}</MenuItem>
                     ))}
@@ -224,15 +226,15 @@ export default function UpdateAlojamiento() {
               name="Caracteristicas"
               control={control}
               defaultValue={[]}
-              rules={{ required:"Selecciona al menos una característica" }}
+              rules={{ required: t("alojamientos.create.errors.selectFeature") }}
               render={({ field, fieldState:{error} })=>(
                 <FormControl fullWidth error={!!error}>
-                  <InputLabel>Características</InputLabel>
+                  <InputLabel>{t("alojamientos.create.labels.features")}</InputLabel>
                   <Select
                     multiple
                     value={field.value}
                     onChange={e=>field.onChange(e.target.value)}
-                    label="Características"
+                    label={t("alojamientos.create.labels.features")}
                     renderValue={v=>v.join(", ")}
                   >
                     {caracteristica.map(opt=>(
@@ -247,10 +249,11 @@ export default function UpdateAlojamiento() {
               )}
             />
           </Grid>
-
-          {/* Nuevas imágenes con previsualización */}
+                    {/* Nuevas imágenes con previsualización */}
           <Grid item xs={12}>
-            <Typography variant="subtitle1">Agregar nuevas fotos</Typography>
+            <Typography variant="subtitle1">
+              {t("alojamientos.create.labels.images")}
+            </Typography>
             <input
               type="file"
               multiple
@@ -286,8 +289,12 @@ export default function UpdateAlojamiento() {
 
           {/* Administrar imágenes existentes */}
           <Grid item xs={12}>
-            <Typography variant="subtitle1">Imágenes actuales</Typography>
+            <Typography variant="subtitle1">
+              {/* no existe clave—se mantiene literal */}
+              Imágenes actuales
+            </Typography>
             <Button variant="outlined" onClick={() => setDialogImgOpen(true)}>
+              {/* no existe clave—se mantiene literal */}
               Administrar imágenes
             </Button>
           </Grid>
@@ -295,9 +302,12 @@ export default function UpdateAlojamiento() {
           {/* Servicios */}
           <Grid item xs={12}>
             <Box sx={{ display:"flex", alignItems:"center", justifyContent:"space-between", mb:1 }}>
-              <Typography variant="subtitle1">Servicios</Typography>
+              <Typography variant="subtitle1">
+                {/* no existe clave—se mantiene literal */}
+                Servicios
+              </Typography>
               <Button variant="outlined" onClick={openDialogServ}>
-                Agregar servicios
+                {t("alojamientos.create.buttons.addServices")}
               </Button>
             </Box>
             <Box>
@@ -306,7 +316,7 @@ export default function UpdateAlojamiento() {
                     <Typography key={s.ID}>• {s.Nombre}</Typography>
                   ))
                 : <Typography color="text.secondary">
-                    Ningún servicio seleccionado
+                    {t("alojamientos.create.noServiceSelected")}
                   </Typography>
               }
             </Box>
@@ -321,23 +331,31 @@ export default function UpdateAlojamiento() {
               type="submit"
               disabled={saving}
             >
-              {saving ? "Guardando..." : "Actualizar alojamiento"}
+              {saving
+                ? t("alojamientos.create.savingAccommodation")
+                : t("alojamientos.create.buttons.saveAccommodation")
+              }
             </Button>
           </Grid>
         </Grid>
       </form>
 
+      {/* Diálogo: Eliminar imágenes */}
       <Dialog
         open={dialogImgOpen}
         onClose={() => setDialogImgOpen(false)}
         fullWidth
         maxWidth="md"
       >
-        <DialogTitle>Eliminar imágenes</DialogTitle>
+        <DialogTitle>
+          {/* se mantiene literal */}
+          Eliminar imágenes
+        </DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2}>
             {!imagenesExistentes.length ? (
               <Grid item xs={12}>
+                {/* se mantiene literal */}
                 <Typography>No hay imágenes disponibles</Typography>
               </Grid>
             ) : imagenesExistentes.map(img => (
@@ -345,7 +363,7 @@ export default function UpdateAlojamiento() {
                 <Box sx={{ position:"relative" }}>
                   <img
                     src={`${import.meta.env.VITE_BASE_URL}uploads/${img.url}`}
-                    alt="img"
+                    alt={t("alojamientos.cards.defaultImageAlt")}
                     style={{ width:"100%", borderRadius:4 }}
                   />
                   <Checkbox
@@ -365,7 +383,9 @@ export default function UpdateAlojamiento() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogImgOpen(false)}>Cancelar</Button>
+          <Button onClick={() => setDialogImgOpen(false)}>
+            {t("alojamientos.create.buttons.cancel")}
+          </Button>
           <Button
             variant="contained"
             color="error"
@@ -374,44 +394,48 @@ export default function UpdateAlojamiento() {
                 await Promise.all(
                   seleccionadasEliminar.map(i => ImageService.deleteImage(i))
                 );
-                toast.success("Imágenes eliminadas");
+                toast.success(t("alojamientos.get.toast.success"));
                 const imgsRes = await ImageService.getByAlojamiento(id);
                 setImagenesExistentes(imgsRes.data || []);
                 setSeleccionadasEliminar([]);
                 setDialogImgOpen(false);
               } catch (err) {
                 console.error(err);
-                toast.error("Error eliminando imágenes");
+                toast.error(t("alojamientos.get.toast.error"));
               }
             }}
           >
+            {/* se mantiene literal */}
             Eliminar seleccionadas
           </Button>
         </DialogActions>
       </Dialog>
 
+      {/* Diálogo: Seleccionar servicios */}
       <Dialog
         open={dialogServOpen}
         onClose={closeDialogServ}
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Seleccionar servicios</DialogTitle>
+        <DialogTitle>
+          {t("alojamientos.create.servicesDialog.title")}
+        </DialogTitle>
         <DialogContent dividers>
           <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell/>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Tipo</TableCell>
-                <TableCell>Precio</TableCell>
+                <TableCell>{t("alojamientos.create.servicesDialog.columns.name")}</TableCell>
+                <TableCell>{t("alojamientos.create.servicesDialog.columns.type")}</TableCell>
+                <TableCell>{t("alojamientos.create.servicesDialog.columns.price")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {!servicios.length ? (
                 <TableRow>
                   <TableCell colSpan={4} align="center">
-                    No hay servicios disponibles
+                    {t("alojamientos.create.servicesDialog.noServices")}
                   </TableCell>
                 </TableRow>
               ) : servicios.map(s=>(
@@ -431,9 +455,11 @@ export default function UpdateAlojamiento() {
           </Table>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialogServ}>Cancelar</Button>
+          <Button onClick={closeDialogServ}>
+            {t("alojamientos.create.buttons.cancel")}
+          </Button>
           <Button onClick={confirmSelServ} variant="contained">
-            Confirmar
+            {t("alojamientos.create.buttons.confirm")}
           </Button>
         </DialogActions>
       </Dialog>

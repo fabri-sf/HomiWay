@@ -14,8 +14,10 @@ import {
   useTheme
 } from '@mui/material';
 import PedidoService from "../../services/PedidoService";
+import { useTranslation } from 'react-i18next';
 
 const ListPedido = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const [pedidos, setPedidos] = useState([]);
@@ -37,14 +39,14 @@ const ListPedido = () => {
       
     } catch (err) {
       console.error('Error al cargar pedidos:', err);
-      let errorMessage = 'Error al cargar los pedidos';
+      let errorMessage = t("pedidos.list.errors.fetch");
       
       if (err.response) {
-        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || 'Error del servidor'}`;
+        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || t("pedidos.list.errors.server")}`;
       } else if (err.request) {
-        errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
+        errorMessage = t("pedidos.list.errors.connection");
       } else {
-        errorMessage = err.message || 'Error desconocido';
+        errorMessage = err.message || t("pedidos.list.errors.unknown");
       }
       
       setError(errorMessage);
@@ -54,10 +56,10 @@ const ListPedido = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'No especificada';
+    if (!dateString) return t("common.noDate");
     
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'Fecha inválida';
+    if (isNaN(date.getTime())) return t("common.invalidDate");
     
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -101,7 +103,7 @@ const ListPedido = () => {
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
         <CircularProgress sx={{ color: theme.palette.primary.main }} />
         <Typography variant="body1" sx={{ ml: 2, color: theme.palette.text.primary }}>
-          Cargando pedidos...
+          {t("pedidos.list.loading")}
         </Typography>
       </Box>
     );
@@ -114,7 +116,7 @@ const ListPedido = () => {
           severity="error" 
           action={
             <Button color="inherit" size="small" onClick={handleRetry}>
-              Reintentar
+              {t("pedidos.list.buttons.retry")}
             </Button>
           }
         >
@@ -123,8 +125,7 @@ const ListPedido = () => {
       </Container>
     );
   }
-
-  return (
+    return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom sx={{
         color: theme.palette.primary.main,
@@ -132,20 +133,20 @@ const ListPedido = () => {
         textAlign: 'center',
         mb: 4
       }}>
-        Mis Pedidos
+        {t("pedidos.list.title")}
       </Typography>
 
       {pedidos.length === 0 ? (
         <Box textAlign="center" sx={{ mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
-            No hay pedidos registrados
+            {t("pedidos.list.empty")}
           </Typography>
           <Button 
             variant="outlined" 
             onClick={handleRetry}
             sx={{ mt: 2, color: theme.palette.primary.main, borderColor: theme.palette.primary.main }}
           >
-            Actualizar
+            {t("pedidos.list.buttons.refresh")}
           </Button>
         </Box>
       ) : (
@@ -165,7 +166,7 @@ const ListPedido = () => {
                     {/* Columna 1: Número y Fecha */}
                     <Grid item xs={12} sm={4}>
                       <Typography variant="subtitle1" color="text.secondary">
-                        Pedido # {pedido.ID}
+                        {t("pedidos.list.labels.order")} # {pedido.ID}
                       </Typography>
                       <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                         {formatDate(pedido.Fecha)}
@@ -205,7 +206,7 @@ const ListPedido = () => {
                           }
                         }}
                       >
-                        Ver Detalle
+                        {t("pedidos.list.buttons.viewDetail")}
                       </Button>
                     </Grid>
                   </Grid>

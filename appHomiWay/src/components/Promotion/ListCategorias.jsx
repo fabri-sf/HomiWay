@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Modal, Box, Typography, Button, Table, 
-  TableBody, TableCell, TableContainer, 
-  TableHead, TableRow, Paper, CircularProgress, Alert 
+import {
+  Modal, Box, Typography, Button, Table,
+  TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, CircularProgress, Alert
 } from '@mui/material';
 import AlojamientoService from '../../services/AlojamientoService';
 import EtiquetaService from '../../services/EtiquetaService';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   position: 'absolute',
@@ -23,6 +24,7 @@ const style = {
 };
 
 const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,16 +43,15 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
     try {
       setLoading(true);
       const response = await AlojamientoService.getCategorias();
-      
-      // Asegúrate de que response sea un array
+
       if (!Array.isArray(response)) {
         throw new Error('Formato de datos inválido');
       }
-      
+
       setCategories(response);
     } catch (err) {
       console.error('Error al cargar categorías:', err);
-      setError(err.message || 'Error al cargar categorías');
+      setError(err.message || t('listCategorias.errorLoad'));
     } finally {
       setLoading(false);
     }
@@ -60,29 +61,27 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
     try {
       setApplying(category);
       setError(null);
-      
-      // Usar el método applyPromocionByCategoria del EtiquetaService
+
       await EtiquetaService.applyPromocionByCategoria(category, promotionId);
-      
-      // Mostrar mensaje de éxito
-      setSuccess(`¡Promoción creada y asociada exitosamente a la categoría "${category}"!`);
-      
-      // Llamar al callback de éxito
+
+      setSuccess(
+        t('listCategorias.successApply', { category })
+      );
+
       onSuccess();
-      
-      // Cerrar el modal después de 2 segundos
+
       setTimeout(() => {
         onClose();
         setSuccess(null);
       }, 2000);
-      
+
     } catch (err) {
       console.error('Error al aplicar promoción a categoría:', err);
       setError(
-        err.response?.data?.error || 
-        err.response?.data?.message || 
-        err.message || 
-        'Error al aplicar promoción a la categoría'
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        t('listCategorias.errorApply')
       );
     } finally {
       setApplying(null);
@@ -93,7 +92,7 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>
         <Typography variant="h6" component="h2" gutterBottom>
-          Seleccione una categoría para aplicar la promoción
+          {t('listCategorias.title')}
         </Typography>
 
         {error && (
@@ -117,8 +116,8 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Categoría</TableCell>
-                  <TableCell align="right">Acción</TableCell>
+                  <TableCell>{t('listCategorias.category')}</TableCell>
+                  <TableCell align="right">{t('listCategorias.action')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -130,10 +129,10 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
                       </Typography>
                     </TableCell>
                     <TableCell align="right">
-                      <Button 
+                      <Button
                         variant="contained"
                         onClick={() => handleApplyPromotion(category)}
-                        disabled={applying === category || success}
+                        disabled={applying === category || Boolean(success)}
                         sx={{
                           backgroundColor: '#2e7d32',
                           '&:hover': { backgroundColor: '#1b5e20' },
@@ -143,7 +142,7 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
                         {applying === category ? (
                           <CircularProgress size={24} color="inherit" />
                         ) : (
-                          'Aplicar Promoción'
+                          t('listCategorias.applyPromotion')
                         )}
                       </Button>
                     </TableCell>
@@ -156,7 +155,7 @@ const ListCategorias = ({ open, onClose, promotionId, onSuccess }) => {
 
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={onClose} disabled={applying}>
-            Cancelar
+            {t('listCategorias.cancel')}
           </Button>
         </Box>
       </Box>

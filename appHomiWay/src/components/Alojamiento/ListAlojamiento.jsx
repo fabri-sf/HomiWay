@@ -4,10 +4,13 @@ import { ListCardAlojamientos } from './ListCardAlojamientos';
 import {
   Box,
   CircularProgress,
-  Typography
+  Typography,
+  Button
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export function ListAlojamiento() {
+  const { t } = useTranslation();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [loaded, setLoaded] = useState(false);
@@ -20,10 +23,10 @@ export function ListAlojamiento() {
         setLoaded(true);
       })
       .catch((err) => {
-        setError(err.message || 'Error al obtener alojamientos');
+        setError(err.message || t('alojamientos.list.errorFetch'));
         setLoaded(false);
       });
-  }, []);
+  }, [t]);
 
   if (!loaded) {
     return (
@@ -35,27 +38,33 @@ export function ListAlojamiento() {
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: '#fafaf7',
-          color: '#2E7D32',
+          color: '#2E7D32'
         }}
       >
         <CircularProgress size={60} sx={{ color: '#2E7D32', mb: 2 }} />
-        <Typography variant="h6">Cargando alojamientos...</Typography>
+        <Typography variant="h6">
+          {t('alojamientos.list.loading')}
+        </Typography>
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ padding: '2rem', backgroundColor: '#fafaf7' }}>
-        <Typography color="error">Error: {error}</Typography>
+      <Box sx={{ p: 4, backgroundColor: '#fafaf7' }}>
+        <Typography color="error">
+          {t('alojamientos.list.error')}: {error}
+        </Typography>
       </Box>
     );
   }
 
   if (!Array.isArray(data) || data.length === 0) {
     return (
-      <Box sx={{ padding: '2rem', backgroundColor: '#fafaf7' }}>
-        <Typography>No hay alojamientos para mostrar.</Typography>
+      <Box sx={{ p: 4, backgroundColor: '#fafaf7' }}>
+        <Typography>
+          {t('alojamientos.list.empty')}
+        </Typography>
       </Box>
     );
   }
