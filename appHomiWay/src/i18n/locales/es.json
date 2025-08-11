@@ -1,0 +1,569 @@
+{
+    "homePage": {
+        "logoAlt": "Logo HomiWay",
+        "title": "HomiWay: Vive la experiencia",
+        "subtitle": "Encuentra alojamientos únicos, explora tours increíbles y reserva servicios locales en Costa Rica."
+    },
+    "footer": {
+        "nombreApp": "HomiWay",
+        "derechos": "© {{year}} Todos los derechos reservados",
+        "desarrolladoPor": "Desarrollado por:",
+        "desarrollador1": "Thaylin Barrueta López",
+        "desarrollador2": "Fabricio Sequeira Dávila",
+        "codigoCurso": "ISW-613"
+    },
+    "header": {
+        "inicio": "Inicio",
+        "alojamientos": "Alojamientos",
+        "promocionesDisponibles": "Promociones Disponibles",
+        "pedidos": "Pedidos",
+        "administracion": "Administración",
+        "login": "Login",
+        "registrarse": "Registrarse",
+        "logout": "Logout",
+        "navegacion": "Navegación",
+        "resenas": "Reseñas",
+        "promociones": "Promociones",
+        "mantenimientos": "Mantenimientos",
+        "listaAlojamientos": "Lista Alojamientos",
+        "servicio": "Servicio",
+        "usuario": "Usuario",
+        "compras": "Compras",
+        "notificaciones": "Notificaciones",
+        "tooltipLogo": "HomiWay – Vive la experiencia"
+    },
+    "alojamientos": {
+        "create": {
+            "errorLoadUsers": "No se pudieron cargar usuarios",
+            "errorLoadServices": "No se pudieron cargar servicios",
+            "success": "Alojamiento creado exitosamente",
+            "error": "Error al crear alojamiento",
+            "savingAccommodation": "Guardando alojamiento...",
+            "title": "Crear Alojamiento",
+            "errors": {
+                "selectUser": "Selecciona un usuario",
+                "selectProvince": "Selecciona provincia",
+                "selectPostal": "Selecciona código postal",
+                "cantonRequired": "Cantón obligatorio",
+                "distritoRequired": "Distrito obligatorio",
+                "direccionRequired": "Dirección obligatoria",
+                "nombreRequired": "Nombre obligatorio",
+                "descripcionRequired": "Descripción obligatoria",
+                "precioNocheRequired": "Precio por noche obligatorio",
+                "capacidadRequired": "Capacidad obligatoria",
+                "selectCategory": "Selecciona categoría",
+                "selectFeature": "Selecciona al menos una característica"
+            },
+            "labels": {
+                "user": "Usuario",
+                "province": "Provincia",
+                "postalCode": "Código Postal",
+                "canton": "Cantón",
+                "distrito": "Distrito",
+                "direccion": "Dirección",
+                "nombre": "Nombre",
+                "descripcion": "Descripción",
+                "precioNoche": "Precio por noche",
+                "capacidad": "Capacidad",
+                "category": "Categoría",
+                "features": "Características",
+                "images": "Imágenes",
+                "services": "Servicios",
+                "imagesExisting": "Imágenes actuales",
+                "manageImages": "Administrar imágenes"
+            },
+            "buttons": {
+                "addServices": "Agregar servicios",
+                "saveAccommodation": "Guardar alojamiento",
+                "cancel": "Cancelar",
+                "confirm": "Confirmar"
+            },
+            "noServiceSelected": "Ningún servicio seleccionado",
+            "servicesDialog": {
+                "title": "Seleccionar servicios",
+                "columns": {
+                    "name": "Nombre",
+                    "type": "Tipo",
+                    "price": "Precio"
+                },
+                "noServices": "No hay servicios disponibles"
+            },
+            "imagesDialog": {
+                "title": "Eliminar imágenes",
+                "noImages": "No hay imágenes disponibles",
+                "deleteSelected": "Eliminar seleccionadas"
+            }
+        },
+        "update": {
+            "success": "Alojamiento actualizado",
+            "error": "Error actualizando alojamiento"
+        },
+        "get": {
+            "loading": "Cargando alojamientos...",
+            "error": "Error al cargar alojamientos",
+            "unexpectedResponse": "Respuesta inesperada del servidor",
+            "empty": "No hay alojamientos para mostrar.",
+            "title": "Listado de Alojamientos",
+            "buttons": {
+                "create": "Crear alojamiento",
+                "edit": "Editar",
+                "delete": "Eliminar"
+            },
+            "columns": {
+                "name": "Nombre",
+                "description": "Descripción",
+                "category": "Categoría",
+                "actions": "Acciones"
+            },
+            "toast": {
+                "loading": "Eliminando alojamiento...",
+                "success": "Alojamiento eliminado",
+                "error": "No se pudo eliminar"
+            }
+        },
+        "list": {
+            "loading": "Cargando alojamientos...",
+            "errorFetch": "Error al obtener alojamientos",
+            "error": "Error al procesar alojamientos",
+            "empty": "No hay alojamientos para mostrar."
+        },
+        "cards": {
+            "imageAlt": "Imagen {{num}}",
+            "defaultImageAlt": "Imagen predeterminada",
+            "prev": "Anterior",
+            "next": "Siguiente",
+            "loading": "Cargando…",
+            "outOfFive": "/ 5",
+            "viewMore": "Ver más"
+        },
+        "table": {
+            "loading": "Cargando...",
+            "errorPrefix": "Error:",
+            "title": "Listado de Alojamientos",
+            "buttons": {
+                "create": "Crear",
+                "update": "Actualizar"
+            },
+            "columns": {
+                "title": "Título",
+                "location": "Ubicación",
+                "capacity": "Capacidad",
+                "actions": "Acciones"
+            }
+        },
+        "detail": {
+            "loading": "Cargando datos...",
+            "errors": {
+                "prefix": "Error:",
+                "fetch": "Error al obtener alojamiento"
+            },
+            "noImages": "No hay imágenes disponibles para este alojamiento.",
+            "personas": "personas",
+            "location": "Ubicación",
+            "locationUnavailable": "No disponible",
+            "buttons": {
+                "reserve": "Reservar",
+                "rate": "Valorar Alojamiento",
+                "viewAllReviews": "Ver todas las reseñas"
+            }
+        },
+        "pageNotFound": {
+            "titulo": "Recurso no encontrado",
+            "mensaje": "La página que está buscando podría haber sido eliminada, cambio su nombre o no está disponible temporalmente",
+            "imagenAlt": "Error 404"
+        }
+    },
+    "pedidos": {
+        "list": {
+            "title": "Mis Pedidos",
+            "loading": "Cargando pedidos...",
+            "empty": "No hay pedidos registrados",
+            "labels": {
+                "order": "Pedido"
+            },
+            "buttons": {
+                "viewDetail": "Ver Detalle",
+                "refresh": "Actualizar",
+                "retry": "Reintentar"
+            },
+            "errors": {
+                "fetch": "Error al cargar los pedidos",
+                "server": "Error del servidor",
+                "connection": "Error de conexión. Verifica tu conexión a internet.",
+                "unknown": "Error desconocido"
+            }
+        },
+        "detail": {
+            "loading": "Cargando detalle de la factura...",
+            "title": "FACTURA",
+            "buttons": {
+                "back": "Volver al listado"
+            },
+            "sections": {
+                "orderInfo": "Información del Pedido",
+                "clientInfo": "Información del Cliente",
+                "products": "Detalle de Productos",
+                "customProducts": "Productos Personalizados (Servicios)",
+                "summary": "Resumen del Pedido"
+            },
+            "labels": {
+                "orderNumber": "Número de Pedido",
+                "dateTime": "Fecha y Hora",
+                "status": "Estado",
+                "name": "Nombre",
+                "email": "Correo",
+                "phone": "Teléfono",
+                "duration": "Duración",
+                "languages": "Idiomas",
+                "type": "Tipo",
+                "subtotal": "Subtotal",
+                "taxes": "Impuestos",
+                "total": "Total",
+                "paymentMethod": "Método de Pago",
+                "bank": "Banco",
+                "cardEnding": "Tarjeta terminada en"
+            },
+            "table": {
+                "product": "Producto",
+                "quantity": "Cantidad",
+                "unitPrice": "Precio Unitario",
+                "subtotal": "Subtotal",
+                "service": "Servicio",
+                "details": "Detalles",
+                "total": "Total"
+            },
+            "fallback": {
+                "noName": "Sin nombre",
+                "noDescription": "Sin descripción",
+                "noProducts": "No hay productos registrados en este pedido.",
+                "noCustomProducts": "No hay productos personalizados en este pedido.",
+                "noLanguages": "No especificados",
+                "noType": "No especificado",
+                "noPayment": "No especificado"
+            },
+            "footer": {
+                "thankYou": "Gracias por su compra. Para cualquier consulta, contacte a nuestro servicio al cliente.",
+                "generatedOn": "Factura generada el {{date}}"
+            },
+            "errors": {
+                "fetch": "Error al cargar el detalle de la factura",
+                "server": "Error del servidor",
+                "connection": "Error de conexión. Verifica tu conexión a internet.",
+                "unknown": "Error desconocido"
+            }
+        }
+    },
+    "common": {
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida"
+    },
+    "auth": {
+        "login": {
+            "title": "Iniciar Sesión",
+            "fields": {
+                "email": "Correo",
+                "password": "Contraseña"
+            },
+            "buttons": {
+                "submit": "Acceder"
+            },
+            "errors": {
+                "required": "Todos los campos son obligatorios",
+                "invalidEmail": "Formato de correo inválido",
+                "invalidUser": "Usuario no válido",
+                "server": "Error al conectar con el servidor",
+                "loginFailed": "Falló la solicitud de login"
+            },
+            "toast": {
+                "welcome": "Bienvenido, usuario"
+            }
+        },
+        "signup": {
+            "title": "Registro de Usuario",
+            "fields": {
+                "name": "Nombre",
+                "surname": "Apellido",
+                "email": "Correo",
+                "password": "Contraseña"
+            },
+            "buttons": {
+                "submit": "Registrarse"
+            },
+            "errors": {
+                "required": "Todos los campos son obligatorios",
+                "invalidEmail": "Formato inválido",
+                "registerFailed": "Falló la solicitud de registro"
+            },
+            "toast": {
+                "success": "Usuario registrado correctamente",
+                "error": "Error al registrar usuario"
+            }
+        },
+        "unauthorized": {
+            "title": "Autorización",
+            "message": "Usuario no autorizado"
+        }
+    },
+    "reviews": {
+        "form": {
+            "title": "Agregar Reseña",
+            "fields": {
+                "comment": "Comentario",
+                "rating": "Calificación (1–5)"
+            },
+            "errors": {
+                "required": "El comentario es obligatorio",
+                "type": "Debés escribir un número",
+                "min": "Mínimo 1",
+                "max": "Máximo 5",
+                "auth": "Debés iniciar sesión para dejar una reseña",
+                "incomplete": "Completá todos los campos"
+            },
+            "toast": {
+                "success": "Reseña creada correctamente",
+                "error": "Error al crear la reseña"
+            },
+            "buttons": {
+                "submit": "Guardar Reseña"
+            }
+        },
+        "list": {
+            "title": "Listado de Reseñas",
+            "loading": "Cargando reseñas...",
+            "error": "Error al cargar reseñas",
+            "empty": "No hay reseñas disponibles",
+            "buttons": {
+                "create": "Crear nueva reseña"
+            },
+            "toast": {
+                "delete": {
+                    "loading": "Eliminando reseña...",
+                    "success": "Reseña eliminada",
+                    "error": "No se pudo eliminar"
+                }
+            },
+            "table": {
+                "user": "Usuario",
+                "date": "Fecha",
+                "comment": "Comentario",
+                "rating": "Calificación",
+                "id": "ID Alojamiento",
+                "action": "Acción"
+            }
+        },
+        "detail": {
+            "title": "Reseñas del alojamiento",
+            "back": "← Volver al detalle",
+            "loading": "Cargando reseñas...",
+            "error": "Error al cargar reseñas",
+            "empty": "No hay reseñas disponibles para este alojamiento",
+            "anonymous": "Usuario anónimo",
+            "date": "Fecha"
+        }
+    },
+    "list": {
+        "title": "Promociones Disponibles",
+        "empty": "No hay promociones disponibles en este momento",
+        "emptyFiltered": "No hay promociones con estado \"{{estado}}\"",
+        "loading": "Cargando promociones...",
+        "error": "Error al cargar las promociones",
+        "retry": "Reintentar",
+        "states": {
+            "todos": "Todos",
+            "vigente": "Vigente",
+            "pendiente": "Pendiente",
+            "aplicado": "Aplicado"
+        }
+    },
+    "buttons": {
+        "view": "Ver detalles",
+        "edit": "Editar",
+        "create": "Crear Promoción",
+        "update": "Actualizar",
+        "refresh": "Actualizar",
+        "retry": "Reintentar"
+    },
+    "fields": {
+        "validFrom": "Válido desde",
+        "validUntil": "Válido hasta",
+        "noDescription": "Sin descripción disponible",
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida",
+        "noValue": "No especificado"
+    },
+    "states": {
+        "active": "Vigente",
+        "pending": "Pendiente",
+        "applied": "Aplicado",
+        "noDates": "Sin fechas",
+        "invalidDates": "Fechas inválidas",
+        "error": "Error en fechas"
+    },
+    "messages": {
+        "created": "Promoción creada exitosamente"
+    },
+    "errors": {
+        "load": "Error al cargar las promociones",
+        "server": "Error del servidor",
+        "connection": "Error de conexión. Verifica tu conexión a internet.",
+        "unknown": "Error desconocido"
+    },
+    "filters": {
+        "label": "Filtrar por Estado",
+        "all": "Todos"
+    },
+    "promotionDetail": {
+        "title": "Detalles de la Promoción",
+        "code": "Código",
+        "description": "Descripción",
+        "discountType": "Tipo de descuento",
+        "percentage": "Porcentaje",
+        "fixedAmount": "Monto fijo",
+        "value": "Valor",
+        "validFrom": "Fecha de inicio",
+        "validUntil": "Fecha de fin",
+        "status": "Estado",
+        "requirements": "Requisitos",
+        "notAvailable": "N/A",
+        "noDescription": "Sin descripción disponible",
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida",
+        "noValue": "No especificado",
+        "off": "OFF"
+    },
+    "currency": {
+        "symbol": "₡"
+    },
+    "listAlojamientos": {
+        "title": "Seleccione un alojamiento para aplicar la promoción",
+        "applyPromotion": "Aplicar Promoción",
+        "cancel": "Cancelar",
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "defaultImageAlt": "Imagen predeterminada",
+        "successApply": "¡Promoción creada y asociada exitosamente al alojamiento \"{{nombre}}\"!",
+        "errorLoad": "Error al cargar alojamientos",
+        "errorApply": "Error al aplicar promoción",
+        "defaultPromotionName": "Promoción aplicada",
+        "defaultPromotionDesc": "Promoción aplicada al alojamiento"
+    },
+    "listCategorias": {
+        "title": "Seleccione una categoría para aplicar la promoción",
+        "category": "Categoría",
+        "action": "Acción",
+        "applyPromotion": "Aplicar Promoción",
+        "cancel": "Cancelar",
+        "errorLoad": "Error al cargar categorías",
+        "errorApply": "Error al aplicar promoción a la categoría",
+        "successApply": "¡Promoción creada y asociada exitosamente a la categoría \"{{category}}\"!"
+    },
+    "editPromotion": {
+        "errorInicioRequired": "La fecha de inicio es requerida",
+        "errorInicioPast": "La fecha de inicio no puede ser anterior a hoy",
+        "errorFinRequired": "La fecha de fin es requerida",
+        "errorFinAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio",
+        "errorCodigoRequired": "El código es requerido",
+        "errorDescripcionRequired": "La descripción es requerida",
+        "errorValorPositive": "El valor debe ser mayor a 0",
+        "errorValorMax100": "El porcentaje no puede ser mayor a 100%",
+        "title": "Editar Promoción",
+        "updatedInfo": "Promoción actualizada. Ahora selecciona dónde aplicar la promoción.",
+        "errorUpdate": "Error al actualizar promoción",
+        "labelCodigo": "Código de Promoción",
+        "labelTipoDescuento": "Tipo de Descuento",
+        "optionPorcentaje": "Porcentaje (%)",
+        "optionMonto": "Monto fijo (₡)",
+        "labelValorPercent": "Valor (%)",
+        "labelValorAmount": "Monto (₡)",
+        "legendApplyTo": "Aplicar a:",
+        "radioCategoria": "Categoría",
+        "radioAlojamiento": "Alojamiento",
+        "labelInicio": "Fecha de Inicio",
+        "labelFin": "Fecha de Fin",
+        "labelDescripcion": "Descripción",
+        "labelRequisitos": "Requisitos (Opcional)",
+        "btnClose": "Cerrar",
+        "btnCancel": "Cancelar",
+        "btnNext": "Siguiente",
+        "btnSelectCategories": "Seleccionar Categorías",
+        "btnSelectAlojamientos": "Seleccionar Alojamientos"
+    },
+    "createPromotion": {
+        "title": "Crear Nueva Promoción",
+        "errorInicioRequired": "La fecha de inicio es requerida",
+        "errorInicioPast": "La fecha de inicio no puede ser anterior a hoy",
+        "errorFinRequired": "La fecha de fin es requerida",
+        "errorFinAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio",
+        "errorCodigoRequired": "El código es requerido",
+        "errorDescripcionRequired": "La descripción es requerida",
+        "errorValorPositive": "El valor debe ser mayor a 0",
+        "errorValorMax100": "El porcentaje no puede ser mayor a 100%",
+        "errorCreate": "Error al crear promoción",
+        "labelCodigo": "Código de Promoción",
+        "labelTipoDescuento": "Tipo de Descuento",
+        "optionPorcentaje": "Porcentaje (%)",
+        "optionMonto": "Monto fijo (₡)",
+        "labelValorPercent": "Valor (%)",
+        "labelValorAmount": "Monto (₡)",
+        "legendApplyTo": "Aplicar a:",
+        "radioCategoria": "Categoría",
+        "radioAlojamiento": "Alojamiento",
+        "labelInicio": "Fecha de Inicio",
+        "labelFin": "Fecha de Fin",
+        "labelDescripcion": "Descripción",
+        "labelRequisitos": "Requisitos (Opcional)",
+        "btnCancel": "Cancelar",
+        "btnNext": "Siguiente"
+    },
+    "productosConPromociones": {
+        "errorLoad": "Error al cargar los productos con promociones",
+        "error": "Error",
+        "errorServer": "Error del servidor",
+        "errorConnection": "Error de conexión. Verifica tu conexión a internet.",
+        "errorUnknown": "Error desconocido",
+        "loadingText": "Cargando productos con promociones...",
+        "buttonRetry": "Reintentar",
+        "title": "Productos con Promociones",
+        "noProducts": "No hay productos con promociones disponibles",
+        "buttonRefresh": "Actualizar",
+        "labelCapacity": "Capacidad:",
+        "na": "N/A",
+        "personas": "personas",
+        "labelCategory": "Categoría:",
+        "noCategory": "Sin categoría",
+        "fallbackNoName": "Producto sin nombre",
+        "fallbackNoDescription": "Sin descripción disponible",
+        "stateActive": "Vigente",
+        "statePending": "Pendiente",
+        "stateNone": "Sin promoción",
+        "btnUse": "Utilizar",
+        "btnComingSoon": "Próximamente",
+        "perNight": "por noche",
+        "previousPrice": "Precio anterior:",
+        "promoPrice": "Precio con promoción:",
+        "labelPrice": "Precio:",
+        "ariaViewDetails": "Ver detalles"
+    },
+    "promo": {
+        "title": "Detalles del Alojamiento",
+        "noName": "Alojamiento sin nombre",
+        "descriptionLabel": "Descripción",
+        "noDescription": "Sin descripción disponible",
+        "capacity": "Capacidad",
+        "people": "personas",
+        "na": "N/A",
+        "category": "Categoría",
+        "noCategory": "Sin categoría",
+        "tagLabel": "Etiqueta",
+        "priceNight": "Precio por noche",
+        "infoTitle": "Información de la Promoción",
+        "codeLabel": "Código de promoción",
+        "descLabel": "Descripción de la promoción",
+        "priceDiscountLabel": "Precio con descuento",
+        "startDateLabel": "Fecha de inicio",
+        "endDateLabel": "Fecha de fin",
+        "noActive": "Este alojamiento no tiene promociones activas.",
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida"
+    }
+}
