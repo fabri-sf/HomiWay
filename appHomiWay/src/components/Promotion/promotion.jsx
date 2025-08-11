@@ -25,6 +25,7 @@ import PromotionDetail from './PromotionDetail';
 import CreatePromotion from './CreatePromotion';
 import EditPromotion from './EditPromotion';
 
+import { useTranslation } from 'react-i18next';
 
 const Promotion = () => {
   const theme = useTheme();
@@ -37,6 +38,7 @@ const Promotion = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [promotionToEdit, setPromotionToEdit] = useState(null);
   const [filtroEstado, setFiltroEstado] = useState('todos');
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchPromociones();
@@ -53,14 +55,14 @@ const Promotion = () => {
       
     } catch (err) {
       console.error('Error al cargar promociones:', err);
-      let errorMessage = 'Error al cargar las promociones';
+      let errorMessage = t('errors.load');
       
       if (err.response) {
-        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || 'Error del servidor'}`;
+        errorMessage = `Error ${err.response.status}: ${err.response.data?.message || t('errors.server')}`;
       } else if (err.request) {
-        errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
+        errorMessage = t('errors.connection');
       } else {
-        errorMessage = err.message || 'Error desconocido';
+        errorMessage = err.message || t('errors.unknown');
       }
       
       setError(errorMessage);
@@ -70,29 +72,26 @@ const Promotion = () => {
   };
 
   const formatDate = (dateString) => {
-  if (!dateString) return 'No especificada';
-  
-  try {
-    // Separar la fecha en sus componentes para evitar problemas de zona horaria
-    const [year, month, day] = dateString.split('T')[0].split('-');
+    if (!dateString) return t('fields.noDate');
     
-    // Crear la fecha usando los componentes individuales (mes - 1 porque JavaScript cuenta desde 0)
-    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-    
-    if (isNaN(date.getTime())) return 'Fecha inválida';
-    
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long', 
-      day: 'numeric'
-    });
-  } catch {
-    return 'Fecha inválida';
-  }
-};
+    try {
+      const [year, month, day] = dateString.split('T')[0].split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      
+      if (isNaN(date.getTime())) return t('fields.invalidDate');
+      
+      return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long', 
+        day: 'numeric'
+      });
+    } catch {
+      return t('fields.invalidDate');
+    }
+  };
 
   const formatValue = (tipo, valor) => {
-    if (!valor) return 'No especificado';
+    if (!valor) return t('fields.noValue');
     
     if (tipo === 'porcentaje') {
       return `${valor}% OFF`;
@@ -102,41 +101,33 @@ const Promotion = () => {
     return valor;
   };
 
- // También necesitas corregir la función calcularEstadoDinamico
-const calcularEstadoDinamico = (inicio, fin) => {
-  if (!inicio || !fin) return { estado: 'Sin fechas', color: theme.palette.custom.aplicado };
-  
+ const calcularEstadoDinamico = (inicio, fin) => {
+  if (!inicio || !fin) return { estadoKey: 'noDates', estado: t('states.noDates'), color: theme.palette.custom.aplicado };
+
   try {
     const now = new Date();
-    
-    // Separar las fechas en componentes para evitar problemas de zona horaria
     const [yearInicio, monthInicio, dayInicio] = inicio.split('T')[0].split('-');
     const [yearFin, monthFin, dayFin] = fin.split('T')[0].split('-');
-    
-    // Crear las fechas usando componentes individuales
     const fechaInicio = new Date(parseInt(yearInicio), parseInt(monthInicio) - 1, parseInt(dayInicio));
     const fechaFin = new Date(parseInt(yearFin), parseInt(monthFin) - 1, parseInt(dayFin));
-    
+
     if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
-      return { estado: 'Fechas inválidas', color: theme.palette.custom.aplicado };
+      return { estadoKey: 'invalidDates', estado: t('states.invalidDates'), color: theme.palette.custom.aplicado };
     }
-    
-    // Establecer la hora final del día para la fecha de fin
+
     fechaFin.setHours(23, 59, 59, 999);
-    
-    // Comparar solo las fechas (sin horas) para el inicio
     const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const inicioDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate());
-    
+
     if (nowDate < inicioDate) {
-      return { estado: 'Pendiente', color: theme.palette.custom.pendiente };
+      return { estadoKey: 'pendiente', estado: t('states.pending'), color: theme.palette.custom.pendiente };
     } else if (now >= fechaInicio && now <= fechaFin) {
-      return { estado: 'Vigente', color: theme.palette.custom.vigente };
+      return { estadoKey: 'vigente', estado: t('states.active'), color: theme.palette.custom.vigente };
     } else {
-      return { estado: 'Aplicado', color: theme.palette.custom.aplicado };
+      return { estadoKey: 'aplicado', estado: t('states.applied'), color: theme.palette.custom.aplicado };
     }
   } catch {
-    return { estado: 'Error en fechas', color: theme.palette.custom.aplicado };
+    return { estadoKey: 'error', estado: t('states.error'), color: theme.palette.custom.aplicado };
   }
 };
 
@@ -156,18 +147,13 @@ const calcularEstadoDinamico = (inicio, fin) => {
   };
 
   const handlePromotionCreated = () => {
-    
-    console.log('Promoción creada exitosamente');
-      // Recargar la lista de promociones
-  fetchPromociones();
-  // Cerrar el modal de creación
-  setShowCreateModal(false);
+    console.log(t('messages.created'));
+    fetchPromociones();
+    setShowCreateModal(false);
   };
 
   const handleCrearPromocion = () => {
     setShowCreateModal(true);
-    // Aquí puedes implementar la lógica para abrir un formulario de creación
-    // alert('Funcionalidad de crear nueva promoción');
   };
 
   const handleRetry = () => {
@@ -178,12 +164,11 @@ const calcularEstadoDinamico = (inicio, fin) => {
     setFiltroEstado(event.target.value);
   };
 
-  // Filtrar promociones según el estado seleccionado
   const promocionesFiltradas = promociones.filter((promocion) => {
-    if (filtroEstado === 'todos') return true;
-    const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
-    return estadoDinamico.estado.toLowerCase() === filtroEstado;
-  });
+  if (filtroEstado === 'todos') return true;
+  const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
+  return estadoDinamico.estadoKey === filtroEstado;
+});
 
   if (loading) {
     return (
@@ -195,7 +180,7 @@ const calcularEstadoDinamico = (inicio, fin) => {
       >
         <CircularProgress sx={{ color: theme.palette.primary.main }} />
         <Typography variant="body1" sx={{ ml: 2, color: theme.palette.text.primary }}>
-          Cargando promociones...
+            {t('list.loading')}
         </Typography>
       </Box>
     );
@@ -208,7 +193,7 @@ const calcularEstadoDinamico = (inicio, fin) => {
           severity="error" 
           action={
             <Button color="inherit" size="small" onClick={handleRetry}>
-              Reintentar
+             {t('buttons.retry')}
             </Button>
           }
         >
@@ -220,7 +205,6 @@ const calcularEstadoDinamico = (inicio, fin) => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      {/* Sección del título con botón de crear */}
       <Box sx={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -238,7 +222,7 @@ const calcularEstadoDinamico = (inicio, fin) => {
             fontWeight: 'bold',
           }}
         >
-          Promociones Disponibles
+         {t('list.title')}
         </Typography>
         
         <Button
@@ -257,7 +241,7 @@ const calcularEstadoDinamico = (inicio, fin) => {
             height: '48px'
           }}
         >
-          Crear Promoción
+           {t('filters.label')}
         </Button>
 
         <CreatePromotion
@@ -267,10 +251,9 @@ const calcularEstadoDinamico = (inicio, fin) => {
         />
       </Box>
 
-      {/* Filtro por estado */}
-      <Box sx={{ mb: 3 }}>
+          <Box sx={{ mb: 3 }}>
         <FormControl sx={{ minWidth: 200 }}>
-          <InputLabel id="filtro-estado-label">Filtrar por Estado</InputLabel>
+          <InputLabel id="filtro-estado-label"> {t('filters.filter')}</InputLabel>
           <Select
             labelId="filtro-estado-label"
             id="filtro-estado"
@@ -278,10 +261,10 @@ const calcularEstadoDinamico = (inicio, fin) => {
             label="Filtrar por Estado"
             onChange={handleFiltroChange}
           >
-            <MenuItem value="todos">Todos</MenuItem>
-            <MenuItem value="vigente">Vigente</MenuItem>
-            <MenuItem value="pendiente">Pendiente</MenuItem>
-            <MenuItem value="aplicado">Aplicado</MenuItem>
+            <MenuItem value="todos">{t('list.states.todos')}</MenuItem>
+            <MenuItem value="vigente">{t('list.states.vigente')}</MenuItem>
+            <MenuItem value="pendiente">{t('list.states.pendiente')}</MenuItem>
+            <MenuItem value="aplicado">{t('list.states.aplicado')}</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -290,8 +273,8 @@ const calcularEstadoDinamico = (inicio, fin) => {
         <Box textAlign="center" sx={{ mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
             {filtroEstado === 'todos' 
-              ? 'No hay promociones disponibles en este momento'
-              : `No hay promociones con estado "${filtroEstado}"`
+              ? t('list.empty')
+              : t('list.emptyFiltered', { estado: filtroEstado })
             }
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
@@ -303,7 +286,7 @@ const calcularEstadoDinamico = (inicio, fin) => {
                 borderColor: theme.palette.primary.main 
               }}
             >
-              Actualizar
+              {t('buttons.refresh')}
             </Button>
             <Button 
               variant="contained" 
@@ -324,7 +307,6 @@ const calcularEstadoDinamico = (inicio, fin) => {
         <Grid container spacing={3}>
           {promocionesFiltradas.map((promocion) => {
             const estadoDinamico = calcularEstadoDinamico(promocion.Inicio, promocion.Fin);
-            
             return (
               <Grid item xs={12} sm={6} md={4} key={promocion.ID}>
                 <Card
@@ -344,20 +326,18 @@ const calcularEstadoDinamico = (inicio, fin) => {
                   }}
                 >
                   <CardContent sx={{ flexGrow: 1 }}>
-                    {/* Estado dinámico calculado */}
                     <Box display="flex" justifyContent="flex-end" mb={1}>
                       <Chip
                         label={estadoDinamico.estado}
                         size="small"
                         sx={{
                           backgroundColor: estadoDinamico.color,
-                          color: estadoDinamico.estado === 'Aplicado' ? '#666' : 'white',
+                          color: estadoDinamico.estado === t('states.applied') ? '#666' : 'white',
                           fontWeight: 'bold'
                         }}
                       />
                     </Box>
 
-                    {/* Valor/Descuento */}
                     <Typography
                       variant="h6"
                       component="div"
@@ -371,7 +351,6 @@ const calcularEstadoDinamico = (inicio, fin) => {
                       {formatValue(promocion.Tipo, promocion.Valor)}
                     </Typography>
 
-                    {/* Descripción */}
                     <Typography
                       sx={{
                         color: theme.palette.text.primary,
@@ -381,16 +360,15 @@ const calcularEstadoDinamico = (inicio, fin) => {
                         textAlign: 'center'
                       }}
                     >
-                      {promocion.Descripcion || 'Sin descripción disponible'}
+                      {promocion.Descripcion || t('fields.noDescription')}
                     </Typography>
 
-                    {/* Fechas de vigencia */}
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                        <strong>Válido desde:</strong> {formatDate(promocion.Inicio)}
+                        <strong>{t('fields.validFrom')}:</strong> {formatDate(promocion.Inicio)}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                        <strong>Válido hasta:</strong> {formatDate(promocion.Fin)}
+                        <strong>{t('fields.validUntil')}:</strong> {formatDate(promocion.Fin)}
                       </Typography>
                     </Box>
                   </CardContent>
@@ -398,7 +376,7 @@ const calcularEstadoDinamico = (inicio, fin) => {
                   <CardActions sx={{ padding: 2, pt: 0 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                       <IconButton 
-                        aria-label="ver detalles" 
+                        aria-label={t('buttons.view')} 
                         onClick={() => handleVerDetalles(promocion)}
                         sx={{
                           color: theme.palette.primary.main,
@@ -409,10 +387,10 @@ const calcularEstadoDinamico = (inicio, fin) => {
                       >
                         <VisibilityIcon />
                       </IconButton>
-                      {/* Solo mostrar el botón de editar si el estado no es 'Aplicado' */}
-                      {estadoDinamico.estado !== 'Aplicado' && (
+
+                      {estadoDinamico.estado !== t('states.applied') && (
                         <IconButton 
-                          aria-label="editar" 
+                          aria-label={t('buttons.edit')} 
                           onClick={() => handleEditar(promocion)}
                           sx={{
                             color: theme.palette.secondary.main,
@@ -439,12 +417,12 @@ const calcularEstadoDinamico = (inicio, fin) => {
           onClose={() => setShowEditModal(false)}
           promotion={promotionToEdit}
           onPromotionUpdated={() => {
-            fetchPromociones(); // Recargar la lista
+            fetchPromociones();
             setShowEditModal(false);
           }}
         />
       )}
-      
+
       <PromotionDetail
         open={modalOpen}
         onClose={handleCloseModal}

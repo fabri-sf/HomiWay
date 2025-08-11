@@ -6,6 +6,7 @@ import {
 import AlojamientoService from '../../services/AlojamientoService';
 import EtiquetaService from '../../services/EtiquetaService';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   position: 'absolute',
@@ -21,7 +22,15 @@ const style = {
   overflowY: 'auto'
 };
 
-const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName, promotionDescription }) => {
+const ListAlojamientos = ({
+  open,
+  onClose,
+  promotionId,
+  onSuccess,
+  promotionName,
+  promotionDescription
+}) => {
+  const { t } = useTranslation();
   const [alojamientos, setAlojamientos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +53,7 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
       setAlojamientos(response.data);
     } catch (err) {
       console.error('Error al cargar alojamientos:', err);
-      setError(err.message || 'Error al cargar alojamientos');
+      setError(err.message || t('listAlojamientos.errorLoad'));
     } finally {
       setLoading(false);
     }
@@ -54,37 +63,34 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
     try {
       setApplying(alojamientoId);
       setError(null);
-      
-   
+
       const etiquetaData = {
         ID_Alojamiento: alojamientoId,
-        Nombre: promotionName || 'Promoción aplicada',
-        Descripcion: promotionDescription || 'Promoción aplicada al alojamiento',
+        Nombre: promotionName || t('listAlojamientos.defaultPromotionName'),
+        Descripcion:
+          promotionDescription || t('listAlojamientos.defaultPromotionDesc'),
         ID_Promocion: promotionId
       };
-      
-  
-      await EtiquetaService.createPromocionAlojamientos(etiquetaData);
-      
 
-      setSuccess(`¡Promoción creada y asociada exitosamente al alojamiento "${alojamientoNombre}"!`);
-      
-  
+      await EtiquetaService.createPromocionAlojamientos(etiquetaData);
+
+      setSuccess(
+        t('listAlojamientos.successApply', { nombre: alojamientoNombre })
+      );
+
       onSuccess();
-      
-   
+
       setTimeout(() => {
         onClose();
         setSuccess(null);
       }, 2000);
-      
     } catch (err) {
       console.error('Error al aplicar promoción:', err);
       setError(
-        err.response?.data?.error || 
-        err.response?.data?.message || 
-        err.message || 
-        'Error al aplicar promoción'
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        t('listAlojamientos.errorApply')
       );
     } finally {
       setApplying(null);
@@ -95,7 +101,7 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>
         <Typography variant="h6" component="h2" gutterBottom>
-          Seleccione un alojamiento para aplicar la promoción
+          {t('listAlojamientos.title')}
         </Typography>
 
         {error && (
@@ -124,7 +130,8 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
             }}
           >
             {alojamientos.map((item) => {
-              const tieneImagenes = Array.isArray(item.imagenes) && item.imagenes.length > 0;
+              const tieneImagenes =
+                Array.isArray(item.imagenes) && item.imagenes.length > 0;
               const idCarousel = `carousel-modal-${item.id}`;
               const alojamientoId = item.ID || item.id;
               const nombre = item.Nombre || item.nombre;
@@ -132,9 +139,9 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
               return (
                 <Card
                   key={alojamientoId}
-                  sx={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
                     height: '100%',
                     cursor: 'pointer',
                     '&:hover': {
@@ -142,7 +149,7 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                     }
                   }}
                 >
-                  {/* Carrusel Bootstrap embebido - igual que en tu referencia */}
+                  {/* Carrusel Bootstrap */}
                   {tieneImagenes ? (
                     <div
                       id={idCarousel}
@@ -160,7 +167,9 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                             <img
                               src={`${BASE_URL}${img.url}`}
                               className="d-block w-100"
-                              alt={`Imagen ${index + 1}`}
+                              alt={t('alojamientos.cards.imageAlt', {
+                                num: index + 1
+                              })}
                               style={{ height: 200, objectFit: 'cover' }}
                             />
                           </div>
@@ -178,7 +187,9 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                               className="carousel-control-prev-icon"
                               aria-hidden="true"
                             />
-                            <span className="visually-hidden">Anterior</span>
+                            <span className="visually-hidden">
+                              {t('listAlojamientos.previous')}
+                            </span>
                           </button>
                           <button
                             className="carousel-control-next"
@@ -190,7 +201,9 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                               className="carousel-control-next-icon"
                               aria-hidden="true"
                             />
-                            <span className="visually-hidden">Siguiente</span>
+                            <span className="visually-hidden">
+                              {t('listAlojamientos.next')}
+                            </span>
                           </button>
                         </>
                       )}
@@ -198,7 +211,7 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                   ) : (
                     <img
                       src="/monteVerde.jpg"
-                      alt="Imagen predeterminada"
+                      alt={t('listAlojamientos.defaultImageAlt')}
                       style={{ height: 200, width: '100%', objectFit: 'cover' }}
                     />
                   )}
@@ -213,7 +226,9 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                     <Button
                       fullWidth
                       variant="contained"
-                      onClick={() => handleApplyPromotion(alojamientoId, nombre)}
+                      onClick={() =>
+                        handleApplyPromotion(alojamientoId, nombre)
+                      }
                       disabled={applying === alojamientoId || success}
                       sx={{
                         backgroundColor: '#2e7d32',
@@ -223,7 +238,7 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
                       {applying === alojamientoId ? (
                         <CircularProgress size={24} color="inherit" />
                       ) : (
-                        'Aplicar Promoción'
+                        t('listAlojamientos.applyPromotion')
                       )}
                     </Button>
                   </CardActions>
@@ -235,7 +250,7 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
 
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={onClose} disabled={applying}>
-            Cancelar
+            {t('listAlojamientos.cancel')}
           </Button>
         </Box>
       </Box>
@@ -246,7 +261,8 @@ const ListAlojamientos = ({ open, onClose, promotionId, onSuccess, promotionName
 ListAlojamientos.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  promotionId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  promotionId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   onSuccess: PropTypes.func.isRequired,
   promotionName: PropTypes.string,
   promotionDescription: PropTypes.string

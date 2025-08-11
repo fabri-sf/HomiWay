@@ -25,8 +25,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
+  const { t } = useTranslation();
+
   // Contexto de usuario
   const { user, decodeToken, autorize } = useContext(UserContext);
   const [userData, setUserData] = useState(decodeToken());
@@ -56,22 +59,21 @@ export default function Header() {
   // Menú principal (desktop)
   const [anchorElPrincipal, setAnchorElPrincipal] = useState(null);
   const menuIdPrincipal = "menu-appbar";
-
   const handleClosePrincipalMenu = () => setAnchorElPrincipal(null);
 
   const userItems = [
-    { name: "Login", link: "/user/login", login: false },
-    { name: "Registrarse", link: "/user/create", login: false },
-    { name: "Logout", link: "/user/logout", login: true },
+    { name: t("header.login"), link: "/user/login", login: false },
+    { name: t("header.registrarse"), link: "/user/create", login: false },
+    { name: t("header.logout"), link: "/user/logout", login: true }
   ];
-  
+
   // Elementos del menú principal
   const navItems = [
-    { name: "Inicio", link: "/", roles: null },
-    { name: "Alojamientos", link: "/alojamientos", roles: null },
-    { name: "Promociones Disponibles", link: "/promocionesDis", roles: null },
-    { name: "Pedidos", link: "/pedidos", roles: null },
-    { name: "Administración", link: "/admin/dashboard", roles: ["Administrador"] },
+    { name: t("header.inicio"), link: "/", roles: null },
+    { name: t("header.alojamientos"), link: "/alojamientos", roles: null },
+    { name: t("header.promocionesDisponibles"), link: "/promocionesDis", roles: null },
+    { name: t("header.pedidos"), link: "/pedidos", roles: null },
+    { name: t("header.administracion"), link: "/admin/dashboard", roles: ["Administrador"] }
   ];
 
   // Drawer lateral y submenú "Mantenimientos"
@@ -176,14 +178,13 @@ export default function Header() {
       </Menu>
     </Box>
   );
-
-  // Menú de opciones mobile (carrito / notificaciones)
+    // Menú de opciones mobile (carrito / notificaciones)
   const menuOpcionesMobile = (
     <Menu
+      id={menuOpcionesId}
       anchorEl={mobileOpcionesAnchorEl}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuOpcionesId}
       keepMounted
       open={isMobileOpcionesMenuOpen}
       onClose={handleOpcionesMenuClose}
@@ -194,7 +195,7 @@ export default function Header() {
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <Typography sx={{ ml: 1 }}>Compras</Typography>
+        <Typography sx={{ ml: 1 }}>{t("header.compras")}</Typography>
       </MenuItem>
       <MenuItem>
         <IconButton size="large" color="inherit">
@@ -202,7 +203,7 @@ export default function Header() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <Typography sx={{ ml: 1 }}>Notificaciones</Typography>
+        <Typography sx={{ ml: 1 }}>{t("header.notificaciones")}</Typography>
       </MenuItem>
     </Menu>
   );
@@ -220,9 +221,9 @@ export default function Header() {
           {menuPrincipalMobile}
 
           {/* Logo / enlace a home */}
-          <Tooltip title="HomiWay – Vive la experiencia">
+          <Tooltip title={t("header.tooltipLogo")}>
             <IconButton size="large" edge="end" component="a" href="/" color="primary">
-              <img src="/src/assets/logo.png" alt="HomiWay" style={{ width: 30, height: 30 }} />
+              <img src="/src/assets/logo.png" alt={t("homePage.logoAlt")} style={{ width: 30, height: 30 }} />
             </IconButton>
           </Tooltip>
 
@@ -283,22 +284,22 @@ export default function Header() {
         }}
       >
         <Typography variant="h6" sx={{ mb: 2, color: "text.primary" }}>
-          Navegación
+          {t("header.navegacion")}
         </Typography>
         <MenuList>
           {/* Elementos principales del drawer */}
           <MenuItem component={Link} to="/resenas" onClick={toggleDrawer}>
-            Reseñas
+            {t("header.resenas")}
           </MenuItem>
           
           <MenuItem component={Link} to="/promociones" onClick={toggleDrawer}>
-            Promociones
+            {t("header.promociones")}
           </MenuItem>
 
           {/* Submenu: Mantenimientos */}
           <ListItemButton onClick={toggleSubmenu}>
             <ListItemText
-              primary="Mantenimientos"
+              primary={t("header.mantenimientos")}
               primaryTypographyProps={{ color: "text.primary" }}
             />
             {submenuOpen ? "▲" : "▼"}
@@ -313,7 +314,7 @@ export default function Header() {
                   setSubmenuOpen(false);
                 }}
               >
-                Lista Alojamientos
+                {t("header.listaAlojamientos")}
               </MenuItem>
 
               <MenuItem
@@ -324,7 +325,7 @@ export default function Header() {
                   setSubmenuOpen(false);
                 }}
               >
-                Servicio
+                {t("header.servicio")}
               </MenuItem>
               
               <MenuItem
@@ -335,7 +336,7 @@ export default function Header() {
                   setSubmenuOpen(false);
                 }}
               >
-                Usuario
+                {t("header.usuario")}
               </MenuItem>
             </MenuList>
           </Collapse>

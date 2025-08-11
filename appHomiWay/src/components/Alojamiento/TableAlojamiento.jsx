@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Typography, Tooltip, IconButton
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Tooltip,
+  IconButton
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import AlojamientoService from '../../services/AlojamientoService';
 
 export default function TableAlojamientos() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
@@ -21,9 +32,9 @@ export default function TableAlojamientos() {
         setError(response.error);
         setLoaded(true);
       })
-      .catch((error) => {
-        if (error instanceof SyntaxError) {
-          setError(error);
+      .catch((err) => {
+        if (err instanceof SyntaxError) {
+          setError(err);
           setLoaded(false);
           throw new Error('Respuesta no válida del servidor');
         }
@@ -34,15 +45,29 @@ export default function TableAlojamientos() {
     navigate(`/alojamiento/update/${id}`);
   };
 
-  if (!loaded) return <p>Cargando...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (!loaded) {
+    return <p>{t('alojamientos.table.loading')}</p>;
+  }
+
+  if (error) {
+    return (
+      <p>
+        {t('alojamientos.table.errorPrefix')} {error.message}
+      </p>
+    );
+  }
 
   return (
     <>
       <Typography variant="h5" gutterBottom>
-        Listado de Alojamientos
-        <Tooltip title="Crear">
-          <IconButton component={Link} to="/alojamiento/crear" color="success">
+        {t('alojamientos.table.title')}
+        <Tooltip title={t('alojamientos.table.buttons.create')}>
+          <IconButton
+            component={Link}
+            to="/alojamiento/crear"
+            color="success"
+            sx={{ ml: 1 }}
+          >
             <AddIcon />
           </IconButton>
         </Tooltip>
@@ -53,10 +78,18 @@ export default function TableAlojamientos() {
           <Table aria-label="tabla alojamientos">
             <TableHead>
               <TableRow>
-                <TableCell>Título</TableCell>
-                <TableCell>Ubicación</TableCell>
-                <TableCell>Capacidad</TableCell>
-                <TableCell align="right">Acciones</TableCell>
+                <TableCell>
+                  {t('alojamientos.table.columns.title')}
+                </TableCell>
+                <TableCell>
+                  {t('alojamientos.table.columns.location')}
+                </TableCell>
+                <TableCell>
+                  {t('alojamientos.table.columns.capacity')}
+                </TableCell>
+                <TableCell align="right">
+                  {t('alojamientos.table.columns.actions')}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -66,8 +99,11 @@ export default function TableAlojamientos() {
                   <TableCell>{row.ubicacion}</TableCell>
                   <TableCell>{row.capacidad}</TableCell>
                   <TableCell align="right">
-                    <Tooltip title="Actualizar">
-                      <IconButton onClick={() => update(row.id)} color="success">
+                    <Tooltip title={t('alojamientos.table.buttons.update')}>
+                      <IconButton
+                        onClick={() => update(row.id)}
+                        color="success"
+                      >
                         <EditIcon />
                       </IconButton>
                     </Tooltip>

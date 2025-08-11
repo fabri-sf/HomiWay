@@ -1,3 +1,4 @@
+// GetAlojamiento.jsx
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -17,10 +18,12 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import AlojamientoService from "../../services/AlojamientoService";
 
 export default function GetAlojamiento() {
+  const { t } = useTranslation();
   const [alojamientos, setAlojamientos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -28,20 +31,17 @@ export default function GetAlojamiento() {
   const fetchAlojamientos = () => {
     setLoading(true);
     AlojamientoService.getAlojamientos()
-      .then((res) => {
-        console.log("API Alojamientos:", res.data);
-        // Asegurarse de que venga un array
+      .then(res => {
         if (Array.isArray(res.data)) {
           setAlojamientos(res.data);
           setError("");
         } else {
           setAlojamientos([]);
-          setError("Respuesta inesperada del servidor");
+          setError(t("alojamientos.get.unexpectedResponse"));
         }
       })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message || "Error al cargar alojamientos");
+      .catch(() => {
+        setError(t("alojamientos.get.error"));
       })
       .finally(() => setLoading(false));
   };
@@ -50,14 +50,14 @@ export default function GetAlojamiento() {
     fetchAlojamientos();
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     toast
       .promise(
         AlojamientoService.deleteLogicoAlojamiento(id),
         {
-          loading: "Eliminando alojamiento...",
-          success: "Alojamiento eliminado",
-          error: "No se pudo eliminar"
+          loading: t("alojamientos.get.toast.loading"),
+          success: t("alojamientos.get.toast.success"),
+          error:   t("alojamientos.get.toast.error")
         },
         { position: "bottom-center" }
       )
@@ -78,7 +78,9 @@ export default function GetAlojamiento() {
         }}
       >
         <CircularProgress size={60} sx={{ color: "#2E7D32", mb: 2 }} />
-        <Typography variant="h6">Cargando alojamientos...</Typography>
+        <Typography variant="h6">
+          {t("alojamientos.get.loading")}
+        </Typography>
       </Box>
     );
   }
@@ -94,7 +96,7 @@ export default function GetAlojamiento() {
   if (!alojamientos.length) {
     return (
       <Box sx={{ p: 4, backgroundColor: "#fafaf7" }}>
-        <Typography>No hay alojamientos para mostrar.</Typography>
+        <Typography>{t("alojamientos.get.empty")}</Typography>
       </Box>
     );
   }
@@ -102,7 +104,7 @@ export default function GetAlojamiento() {
   return (
     <Box sx={{ maxWidth: 1200, m: "2rem auto", px: 2 }}>
       <Typography variant="h5" gutterBottom>
-        Listado de Alojamientos
+        {t("alojamientos.get.title")}
       </Typography>
 
       <Box mb={2}>
@@ -112,7 +114,7 @@ export default function GetAlojamiento() {
           component={Link}
           to="/alojamiento/crear"
         >
-          Crear alojamiento
+          {t("alojamientos.get.buttons.create")}
         </Button>
       </Box>
 
@@ -120,14 +122,16 @@ export default function GetAlojamiento() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Descripción</TableCell>
-              <TableCell>Categoría</TableCell>
-              <TableCell align="center">Acciones</TableCell>
+              <TableCell>{t("alojamientos.get.columns.name")}</TableCell>
+              <TableCell>{t("alojamientos.get.columns.description")}</TableCell>
+              <TableCell>{t("alojamientos.get.columns.category")}</TableCell>
+              <TableCell align="center">
+                {t("alojamientos.get.columns.actions")}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {alojamientos.map((a) => {
+            {alojamientos.map(a => {
               const id = a.ID ?? a.id;
               const nombre = a.Nombre ?? a.nombre;
               const desc = a.Descripcion ?? a.descripcion;
@@ -146,10 +150,7 @@ export default function GetAlojamiento() {
                     >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDelete(id)}
-                    >
+                    <IconButton size="small" onClick={() => handleDelete(id)}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </TableCell>
@@ -161,4 +162,4 @@ export default function GetAlojamiento() {
       </TableContainer>
     </Box>
   );
-}//yaaaaaaaaaaaaaaaa
+}

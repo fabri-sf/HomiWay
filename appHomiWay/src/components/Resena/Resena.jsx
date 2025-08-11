@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ResenaService from '../../services/ResenaService';
 import { Typography, Grid, Card, CardContent, Rating } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function Resena({ alojamientoId }) {
   const [resenas, setResenas] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     ResenaService.getByAlojamiento(alojamientoId)
@@ -16,27 +18,28 @@ export default function Resena({ alojamientoId }) {
         setLoaded(true);
       })
       .catch((err) => {
-        setError(err.message || 'Error al cargar reseñas');
+        setError(err.message || t('reviews.list.error'));
         setLoaded(false);
       });
+  }, [alojamientoId]);
 
-}, [alojamientoId]);
   if (!loaded) return null;
+
   if (error || resenas.length === 0) {
-    return <p><em>No hay reseñas para este alojamiento.</em></p>;
+    return <p><em>{t('reviews.list.empty')}</em></p>;
   }
 
   return (
     <div style={{ marginTop: '2rem' }}>
-      <Typography variant="h5" gutterBottom>Reseñas</Typography>
+      <Typography variant="h5" gutterBottom>{t('reviews.list.title')}</Typography>
       <Grid container spacing={2}>
         {resenas.map((r, i) => (
           <Grid item xs={12} md={6} key={i}>
             <Card variant="outlined">
               <CardContent>
-               <Typography variant="subtitle1">
-                {r.UsuarioNombre}
-              </Typography>
+                <Typography variant="subtitle1">
+                  {r.UsuarioNombre}
+                </Typography>
                 <Rating value={Number(r.Calificacion)} readOnly precision={0.5} />
                 <Typography variant="body2" color="textSecondary">
                   {new Date(r.Fecha).toLocaleDateString('es-CR')}

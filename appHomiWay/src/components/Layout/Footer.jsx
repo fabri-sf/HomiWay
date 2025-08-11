@@ -14,8 +14,11 @@ import {
   Twitter,
   WhatsApp
 } from "@mui/icons-material";
+import { useTranslation } from 'react-i18next'; // Importación añadida
 
 export function Footer() {
+  const { t } = useTranslation(); // Hook para traducciones
+
   return (
     <Toolbar
       component="footer"
@@ -26,46 +29,42 @@ export function Footer() {
         paddingTop: "1.5rem",
         paddingBottom: "1.5rem",
         color: "white",
-        marginTop: "auto" // Para que quede pegado abajo si el contenido es corto
+        marginTop: "auto"
       }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={3}>
-          {/* Nombre de la aplicación y derechos */}
           <Grid item xs={12} md={4}>
             <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
               <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                HomiWay
+                {t('footer.nombreApp')} {/* Texto traducido */}
               </Typography>
               <Typography variant="body2">
-                © {new Date().getFullYear()} Todos los derechos reservados
+                {t('footer.derechos', { year: new Date().getFullYear() })} {/* Texto con parámetro */}
               </Typography>
             </Box>
           </Grid>
 
-          {/* Desarrolladores */}
           <Grid item xs={12} md={4}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                Desarrollado por:
+                {t('footer.desarrolladoPor')} {/* Texto traducido */}
               </Typography>
               <Typography variant="body2">
-                Thaylin Barrueta López
+                {t('footer.desarrollador1')} {/* Texto traducido */}
               </Typography>
               <Typography variant="body2">
-                Fabricio Sequeira Dávila
+                {t('footer.desarrollador2')} {/* Texto traducido */}
               </Typography>
             </Box>
           </Grid>
 
-          {/* Redes sociales y código */}
           <Grid item xs={12} md={4}>
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column',
               alignItems: { xs: 'center', md: 'flex-end' }
             }}>
-              {/* Redes sociales */}
               <Box sx={{ mb: 1 }}>
                 <IconButton 
                   color="inherit" 
@@ -101,13 +100,12 @@ export function Footer() {
                 </IconButton>
               </Box>
               
-              {/* Código del curso */}
               <Typography variant="caption" sx={{ 
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 padding: '4px 8px',
                 borderRadius: '4px'
               }}>
-                ISW-613
+                {t('footer.codigoCurso')} {/* Texto traducido */}
               </Typography>
             </Box>
           </Grid>
