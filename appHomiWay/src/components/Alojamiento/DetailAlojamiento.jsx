@@ -13,12 +13,15 @@ import {
   Box
 } from '@mui/material';
 
+import { useTranslation } from 'react-i18next';
+
 export function DetailAlojamiento() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [showAll] = useState(false); 
+  const [showAll] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL + 'uploads';
 
   useEffect(() => {
@@ -29,10 +32,10 @@ export function DetailAlojamiento() {
         setError('');
       })
       .catch((err) => {
-        setError(err.message || 'Error al obtener alojamiento');
+        setError(err.message || t("alojamientos.detail.errors.fetch"));
         setLoaded(false);
       });
-  }, [id]);
+  }, [id, t]);
 
   if (!loaded) {
     return (
@@ -48,7 +51,7 @@ export function DetailAlojamiento() {
         }}
       >
         <CircularProgress size={60} sx={{ color: '#2E7D32', mb: 2 }} />
-        <Typography variant="h6">Cargando datos...</Typography>
+        <Typography variant="h6">{t("alojamientos.detail.loading")}</Typography>
       </Box>
     );
   }
@@ -56,7 +59,7 @@ export function DetailAlojamiento() {
   if (error) {
     return (
       <Box sx={{ padding: '2rem' }}>
-        <Typography color="error">Error: {error}</Typography>
+        <Typography color="error">{t("alojamientos.detail.errors.prefix")} {error}</Typography>
       </Box>
     );
   }
@@ -76,7 +79,7 @@ export function DetailAlojamiento() {
                 data-bs-slide-to={i}
                 className={i === 0 ? 'active' : ''}
                 aria-current={i === 0 ? 'true' : undefined}
-                aria-label={`Slide ${i + 1}`}
+                aria-label={`${t("alojamientos.cards.imageAlt", { num: i + 1 })}`}
               ></button>
             ))}
           </div>
@@ -86,7 +89,7 @@ export function DetailAlojamiento() {
                 <img
                   src={`${BASE_URL}/${img.url}`}
                   className="d-block w-100"
-                  alt={`Imagen ${i + 1}`}
+                  alt={t("alojamientos.cards.imageAlt", { num: i + 1 })}
                   style={{ height: '400px', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </div>
@@ -99,7 +102,7 @@ export function DetailAlojamiento() {
             data-bs-slide="prev"
           >
             <span className="carousel-control-prev-icon" aria-hidden="true" />
-            <span className="visually-hidden">Anterior</span>
+            <span className="visually-hidden">{t("alojamientos.cards.prev")}</span>
           </button>
           <button
             className="carousel-control-next"
@@ -108,24 +111,24 @@ export function DetailAlojamiento() {
             data-bs-slide="next"
           >
             <span className="carousel-control-next-icon" aria-hidden="true" />
-            <span className="visually-hidden">Siguiente</span>
+            <span className="visually-hidden">{t("alojamientos.cards.next")}</span>
           </button>
         </div>
       ) : (
-        <p><em>No hay imágenes disponibles para este alojamiento.</em></p>
+        <p><em>{t("alojamientos.detail.noImages")}</em></p>
       )}
 
       <div style={{ lineHeight: 1.8 }}>
-        <p><strong>Precio por noche:</strong> ₡{data.PrecioNoche}</p>
-        <p><strong>Capacidad:</strong> {data.Capacidad} personas</p>
-        <p><strong>Categoría:</strong> {data.Categoria || '—'}</p>
-        <p><strong>Características:</strong> {data.Caracteristicas || '—'}</p>
-        <p><strong>Ubicación:</strong> {data.ubicacion
+        <p><strong>{t("alojamientos.create.labels.precioNoche")}:</strong> ₡{data.PrecioNoche}</p>
+        <p><strong>{t("alojamientos.create.labels.capacidad")}:</strong> {data.Capacidad} personas</p>
+        <p><strong>{t("alojamientos.create.labels.category")}:</strong> {data.Categoria || '—'}</p>
+        <p><strong>{t("alojamientos.create.labels.features")}:</strong> {data.Caracteristicas || '—'}</p>
+        <p><strong>{t("alojamientos.detail.location")}:</strong> {data.ubicacion
           ? `${data.ubicacion.Direccion}, ${data.ubicacion.Distrito}, ${data.ubicacion.Canton}, ${data.ubicacion.Provincia}`
-          : 'No disponible'}
+          : t("alojamientos.detail.locationUnavailable")}
         </p>
-        <p><strong>Código Postal:</strong> {data.ubicacion?.CodigoPostal || '—'}</p>
-        <p><strong>Descripción:</strong></p>
+        <p><strong>{t("alojamientos.create.labels.postalCode")}:</strong> {data.ubicacion?.CodigoPostal || '—'}</p>
+        <p><strong>{t("alojamientos.create.labels.descripcion")}:</strong></p>
         <p style={{ textAlign: 'justify' }}>{data.Descripcion}</p>
       </div>
 
@@ -143,7 +146,7 @@ export function DetailAlojamiento() {
           marginTop: '1rem',
         }}
       >
-        Reservar
+        {t("alojamientos.detail.buttons.reserve")}
       </Button>
 
       <Resena alojamientoId={parseInt(data.ID)} />
@@ -159,24 +162,22 @@ export function DetailAlojamiento() {
           margin: '1rem',
         }}
       >
-        Valorar Alojamiento
+        {t("alojamientos.detail.buttons.rate")}
       </Button>
 
       <Button
-      size="small"
-      component={Link}
-      to={`/resena/alojamiento/${data.ID}`} 
-      sx={{
-        backgroundColor: '#388e3c',
-        color: '#ffffff',
-        '&:hover': { backgroundColor: '#2e7d32' },
-
-        margin: '1rem', 
-        
-      }}
-    >
-      Ver todas las reseñas
-    </Button>
+        size="small"
+        component={Link}
+        to={`/resena/alojamiento/${data.ID}`}
+        sx={{
+          backgroundColor: '#388e3c',
+          color: '#ffffff',
+          '&:hover': { backgroundColor: '#2e7d32' },
+          margin: '1rem',
+        }}
+      >
+        {t("alojamientos.detail.buttons.viewAllReviews")}
+      </Button>
 
       {showAll && <ResenaAlojamiento alojamientoId={parseInt(data.ID)} />}
     </div>

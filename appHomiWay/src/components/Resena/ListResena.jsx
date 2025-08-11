@@ -17,8 +17,8 @@ import Grid from '@mui/material/Grid2';
 import ResenaService from '../../services/ResenaService';
 import { jwtDecode } from 'jwt-decode';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';  // sólo toast, no Toaster
-
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 export default function ListResena() {
   const [resenas, setResenas] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,6 +26,7 @@ export default function ListResena() {
 
   const token = localStorage.getItem('user')?.replace(/^"|"$/g, '');
   const userData = token ? jwtDecode(token) : null;
+  const { t } = useTranslation();
 
   const fetchResenas = async () => {
     try {
@@ -34,7 +35,7 @@ export default function ListResena() {
       const res = await ResenaService.getAll();
       setResenas(res.data);
     } catch (err) {
-      setError(err.message || 'Error al cargar reseñas');
+      setError(err.message || t('reviews.list.error'));
     } finally {
       setLoading(false);
     }
@@ -43,19 +44,18 @@ export default function ListResena() {
   useEffect(() => {
     fetchResenas();
   }, []);
-
- const handleDelete = async (id) => {
-  await toast.promise(
-    ResenaService.deleteLogicoResena(id),
-    {
-      loading: 'Eliminando reseña...',
-      success:  'Reseña eliminada',
-      error:    'No se pudo eliminar'
-    },
-    { position: 'bottom-center' }
-  );
-  fetchResenas();
-};
+    const handleDelete = async (id) => {
+    await toast.promise(
+      ResenaService.deleteLogicoResena(id),
+      {
+        loading: t('reviews.list.toast.delete.loading'),
+        success: t('reviews.list.toast.delete.success'),
+        error: t('reviews.list.toast.delete.error')
+      },
+      { position: 'bottom-center' }
+    );
+    fetchResenas();
+  };
 
   if (loading) {
     return (
@@ -71,7 +71,7 @@ export default function ListResena() {
         }}
       >
         <CircularProgress size={60} sx={{ color: '#2E7D32', mb: 2 }} />
-        <Typography variant="h6">Cargando reseñas...</Typography>
+        <Typography variant="h6">{t('reviews.list.loading')}</Typography>
       </Box>
     );
   }
@@ -88,12 +88,11 @@ export default function ListResena() {
       </Box>
     );
   }
-
-  return (
+    return (
     <Box sx={{ maxWidth: 1200, m: '2rem auto', px: 2 }}>
 
       <Typography variant="h5" gutterBottom>
-        Listado de Reseñas
+        {t('reviews.list.title')}
       </Typography>
 
       <Grid container justifyContent="left" mb={2}>
@@ -103,7 +102,7 @@ export default function ListResena() {
           to="/resena/crear/1"
           color="primary"
         >
-          Crear nueva reseña
+          {t('reviews.list.buttons.create')}
         </Button>
       </Grid>
 
@@ -111,12 +110,12 @@ export default function ListResena() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Usuario</TableCell>
-              <TableCell>Fecha</TableCell>
-              <TableCell>Comentario</TableCell>
-              <TableCell>Calificación</TableCell>
-              <TableCell>ID Alojamiento</TableCell>
-              <TableCell align="center">Acción</TableCell>
+              <TableCell>{t('reviews.list.table.user')}</TableCell>
+              <TableCell>{t('reviews.list.table.date')}</TableCell>
+              <TableCell>{t('reviews.list.table.comment')}</TableCell>
+              <TableCell>{t('reviews.list.table.rating')}</TableCell>
+              <TableCell>{t('reviews.list.table.id')}</TableCell>
+              <TableCell align="center">{t('reviews.list.table.action')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

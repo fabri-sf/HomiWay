@@ -11,15 +11,18 @@ import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import UsuarioService from '../../services/UsuarioService';
 import { UserContext } from '../../context/UserContext';
-
+import { useTranslation } from 'react-i18next';
 export function Login() {
   const navigate = useNavigate();
   const { saveUser } = useContext(UserContext);
+  const { t } = useTranslation();
 
-  // Validación: campos obligatorios
   const loginSchema = yup.object({
-    Correo: yup.string().required('El correo es obligatorio').email('Formato de correo inválido'),
-    Contrasena: yup.string().required('La contraseña es obligatoria'),
+    Correo: yup.string()
+      .required(t('auth.login.errors.required'))
+      .email(t('auth.login.errors.invalidEmail')),
+    Contrasena: yup.string()
+      .required(t('auth.login.errors.required')),
   });
 
   const {
@@ -35,37 +38,32 @@ export function Login() {
   });
 
   const [error, setError] = useState(null);
-
   const onSubmit = (dataForm) => {
     UsuarioService.loginUsuario(dataForm)
       .then((response) => {
         const token = response.data;
         if (token && typeof token === 'string' && token !== 'Usuario no valido') {
           saveUser(token);
-          toast.success('Bienvenido, usuario', { duration: 4000 });
+          toast.success(t('auth.login.toast.welcome'), { duration: 4000 });
           navigate('/');
         } else {
-          toast.error('Usuario no válido', { duration: 4000 });
+          toast.error(t('auth.login.errors.invalidUser'), { duration: 4000 });
         }
       })
       .catch(() => {
-        toast.error('Error al conectar con el servidor');
-        setError('Fallo la solicitud de login');
+        toast.error(t('auth.login.errors.server'));
+        setError(t('auth.login.errors.loginFailed'));
       });
-  };
-
-  const onError = () => {
-    toast.error('Todos los campos son obligatorios');
   };
 
   return (
     <>
       <Toaster />
       {error && <p>Error: {error}</p>}
-      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <Grid container spacing={2}>
           <Grid size={12}>
-            <Typography variant="h5" gutterBottom>Iniciar Sesión</Typography>
+            <Typography variant="h5" gutterBottom>{t('auth.login.title')}</Typography>
           </Grid>
 
           <Grid size={12} sm={6}>
@@ -76,7 +74,7 @@ export function Login() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Correo"
+                    label={t('auth.login.fields.email')}
                     error={!!errors.Correo}
                     helperText={errors.Correo?.message || ' '}
                   />
@@ -93,7 +91,7 @@ export function Login() {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Contraseña"
+                    label={t('auth.login.fields.password')}
                     type="password"
                     error={!!errors.Contrasena}
                     helperText={errors.Contrasena?.message || ' '}
@@ -105,11 +103,11 @@ export function Login() {
 
           <Grid size={12}>
             <Button type="submit" variant="contained" color="secondary">
-              Acceder
+              {t('auth.login.buttons.submit')}
             </Button>
           </Grid>
         </Grid>
       </form>
     </>
   );
-}
+};

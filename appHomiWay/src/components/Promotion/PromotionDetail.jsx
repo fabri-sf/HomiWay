@@ -5,17 +5,61 @@ import {
   Modal,
   IconButton,
   Divider,
-  useTheme,
-    Grid
+  Grid,
+  useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
-
-const PromotionDetailsModal = ({ open, onClose, promotion }) => {
+const PromotionDetailsModal = ({
+  open = false,
+  onClose = () => {},
+  promotion = null
+}) => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   if (!promotion) return null;
+
+  const formatDate = (dateString) => {
+    if (!dateString) return t('promotionDetail.noDate');
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return t('promotionDetail.invalidDate');
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatValue = (tipo, valor) => {
+    if (valor == null) return t('promotionDetail.noValue');
+    if (tipo === 'porcentaje') {
+      return `${valor}% ${t('promotionDetail.off')}`;
+    }
+    if (tipo === 'monto') {
+      return `${t('currency.symbol')}${Number(valor).toLocaleString()}`;
+    }
+    return `${valor}`;
+  };
+
+  const calcularEstadoDinamico = (inicio, fin) => {
+    if (!inicio || !fin) {
+      return { estado: t('states.noDates') };
+    }
+    const now = new Date();
+    const start = new Date(inicio);
+    const end = new Date(fin);
+    if (isNaN(start) || isNaN(end)) {
+      return { estado: t('states.invalidDates') };
+    }
+    end.setHours(23, 59, 59, 999);
+
+    if (now < start) return { estado: t('states.pending') };
+    if (now >= start && now <= end) return { estado: t('states.active') };
+    return { estado: t('states.applied') };
+  };
 
   return (
     <Modal
@@ -24,22 +68,24 @@ const PromotionDetailsModal = ({ open, onClose, promotion }) => {
       aria-labelledby="promotion-details-modal"
       aria-describedby="promotion-details-description"
     >
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: { xs: '90%', sm: '80%', md: '600px' },
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        borderRadius: 2,
-        p: 4,
-        outline: 'none'
-      }}>
-        {/* Header del Modal */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '90%', sm: '80%', md: '600px' },
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          borderRadius: 2,
+          p: 4,
+          outline: 'none'
+        }}
+      >
+        {/* Header */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h5" component="h2" color={theme.palette.primary.main}>
-            Detalles de la Promoción
+            {t('promotionDetail.title')}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -48,36 +94,52 @@ const PromotionDetailsModal = ({ open, onClose, promotion }) => {
 
         <Divider sx={{ my: 2 }} />
 
-        {/* Contenido del Modal */}
+        {/* Contenido */}
         <Box sx={{ maxHeight: '70vh', overflowY: 'auto', p: 1 }}>
           <Grid container spacing={2}>
-            {/* Columna izquierda - Datos principales */}
+            {/* Izquierda */}
             <Grid item xs={12} md={6}>
-              <DetailItem label="Código" value={promotion.Codigo || 'N/A'} />
-              <DetailItem label="Descripción" value={promotion.Descripcion || 'Sin descripción'} />
-              <DetailItem 
-                label="Tipo de descuento" 
-                value={promotion.Tipo === 'porcentaje' ? 'Porcentaje' : 'Monto fijo'} 
+              <DetailItem
+                label={t('promotionDetail.code')}
+                value={promotion.Codigo || t('promotionDetail.notAvailable')}
               />
-              <DetailItem 
-                label="Valor" 
-                value={formatValue(promotion.Tipo, promotion.Valor)} 
+              <DetailItem
+                label={t('promotionDetail.description')}
+                value={promotion.Descripcion || t('promotionDetail.noDescription')}
+              />
+              <DetailItem
+                label={t('promotionDetail.discountType')}
+                value={
+                  promotion.Tipo === 'porcentaje'
+                    ? t('promotionDetail.percentage')
+                    : t('promotionDetail.fixedAmount')
+                }
+              />
+              <DetailItem
+                label={t('promotionDetail.value')}
+                value={formatValue(promotion.Tipo, promotion.Valor)}
               />
             </Grid>
 
-            {/* Columna derecha - Fechas y estado */}
+            {/* Derecha */}
             <Grid item xs={12} md={6}>
-              <DetailItem label="Fecha de inicio" value={formatDate(promotion.Inicio)} />
-              <DetailItem label="Fecha de fin" value={formatDate(promotion.Fin)} />
-              <DetailItem 
-                label="Estado" 
-                value={calcularEstadoDinamico(promotion.Inicio, promotion.Fin).estado} 
+              <DetailItem
+                label={t('promotionDetail.validFrom')}
+                value={formatDate(promotion.Inicio)}
+              />
+              <DetailItem
+                label={t('promotionDetail.validUntil')}
+                value={formatDate(promotion.Fin)}
+              />
+              <DetailItem
+                label={t('promotionDetail.status')}
+                value={calcularEstadoDinamico(promotion.Inicio, promotion.Fin).estado}
               />
               {promotion.Requisitos && (
-                <DetailItem 
-                  label="Requisitos" 
-                  value={promotion.Requisitos} 
-                  multiline 
+                <DetailItem
+                  label={t('promotionDetail.requirements')}
+                  value={promotion.Requisitos}
+                  multiline
                 />
               )}
             </Grid>
@@ -88,78 +150,33 @@ const PromotionDetailsModal = ({ open, onClose, promotion }) => {
   );
 };
 
-// Componente auxiliar para mostrar cada campo
-const DetailItem = ({ label, value, multiline = false }) => {
-  return (
-    <Box mb={2}>
-      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-        {label}:
+const DetailItem = ({ label, value, multiline = false }) => (
+  <Box mb={2}>
+    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+      {label}:
+    </Typography>
+    {multiline ? (
+      <Typography
+        variant="body1"
+        sx={{
+          whiteSpace: 'pre-line',
+          backgroundColor: 'action.hover',
+          p: 1,
+          borderRadius: 1
+        }}
+      >
+        {value}
       </Typography>
-      {multiline ? (
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            whiteSpace: 'pre-line',
-            backgroundColor: 'action.hover',
-            p: 1,
-            borderRadius: 1
-          }}
-        >
-          {value}
-        </Typography>
-      ) : (
-        <Typography variant="body1">
-          {value}
-        </Typography>
-      )}
-    </Box>
-  );
-};
+    ) : (
+      <Typography variant="body1">{value}</Typography>
+    )}
+  </Box>
+);
 
 DetailItem.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   multiline: PropTypes.bool
-};
-
-// Funciones auxiliares (también podrían importarse de un archivo de utilidades)
-const formatDate = (dateString) => {
-  if (!dateString) return 'No especificada';
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) 
-    ? 'Fecha inválida' 
-    : date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-};
-
-const formatValue = (tipo, valor) => {
-  if (!valor) return 'No especificado';
-  return tipo === 'porcentaje' 
-    ? `${valor}% OFF` 
-    : tipo === 'monto' 
-      ? `₡${Number(valor).toLocaleString()}` 
-      : valor;
-};
-
-const calcularEstadoDinamico = (inicio, fin) => {
-  if (!inicio || !fin) return { estado: 'Sin fechas', color: 'default' };
-  
-  const now = new Date();
-  const fechaInicio = new Date(inicio);
-  const fechaFin = new Date(fin);
-  
-  if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
-    return { estado: 'Fechas inválidas', color: 'default' };
-  }
-  
-  fechaFin.setHours(23, 59, 59, 999);
-  
-  if (now < fechaInicio) return { estado: 'Pendiente', color: 'warning' };
-  if (now >= fechaInicio && now <= fechaFin) return { estado: 'Vigente', color: 'success' };
-  return { estado: 'Aplicado', color: 'default' };
 };
 
 PromotionDetailsModal.propTypes = {
@@ -172,10 +189,8 @@ PromotionDetailsModal.propTypes = {
     Valor: PropTypes.number,
     Inicio: PropTypes.string,
     Fin: PropTypes.string,
-    Requisitos: PropTypes.string,
-    
+    Requisitos: PropTypes.string
   })
 };
-
 
 export default PromotionDetailsModal;

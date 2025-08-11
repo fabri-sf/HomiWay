@@ -7,3 +7,4 @@ return [
     'DB_DBNAME' => 'dbhomiway2',
     'SECRET_KEY'=>'e0d17975bc9bd57eee132eecb6da6f11048e8a88506cc3bffc7249078cf2a77a'
 ];
+
