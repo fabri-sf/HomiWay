@@ -1,3 +1,5 @@
+// src/components/Promotion/CreatePromotion.jsx
+
 import React, { useState } from 'react';
 import { 
   Modal, Box, Typography, Button, TextField, 
@@ -5,9 +7,10 @@ import {
   RadioGroup, FormControlLabel, FormControl, FormLabel, Grid
 } from '@mui/material';
 import ListCategories from './ListCategorias';
+import ListAlojamientos from './ListAlojamientos';
 import PromocionService from '../../services/PromocionService';
 import PropTypes from 'prop-types';
-import ListAlojamientos from './ListAlojamientos';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   position: 'absolute',
@@ -24,7 +27,12 @@ const style = {
   overflowY: 'auto'
 };
 
-const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
+const CreatePromotion = ({
+  open = false,
+  onClose = () => {},
+  onPromotionCreated = () => {}
+}) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     Codigo: '',
     Descripcion: '',
@@ -44,23 +52,22 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
 
   const validateDates = (inicio, fin) => {
     const errors = {};
-    
-   
     const today = new Date();
-    const todayString = today.getFullYear() + '-' + 
-      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+    const todayString =
+      today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
       String(today.getDate()).padStart(2, '0');
 
     if (!inicio) {
-      errors.Inicio = 'La fecha de inicio es requerida';
+      errors.Inicio = t('createPromotion.errorInicioRequired');
     } else if (inicio < todayString) {
-      errors.Inicio = 'La fecha de inicio no puede ser anterior a hoy';
+      errors.Inicio = t('createPromotion.errorInicioPast');
     }
 
     if (!fin) {
-      errors.Fin = 'La fecha de fin es requerida';
+      errors.Fin = t('createPromotion.errorFinRequired');
     } else if (inicio && fin <= inicio) {
-      errors.Fin = 'La fecha de fin debe ser posterior a la fecha de inicio';
+      errors.Fin = t('createPromotion.errorFinAfterStart');
     }
 
     return errors;
@@ -70,49 +77,43 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
     const errors = {};
 
     if (!formData.Codigo.trim()) {
-      errors.Codigo = 'El código es requerido';
+      errors.Codigo = t('createPromotion.errorCodigoRequired');
     }
 
     if (!formData.Descripcion.trim()) {
-      errors.Descripcion = 'La descripción es requerida';
+      errors.Descripcion = t('createPromotion.errorDescripcionRequired');
     }
 
     if (!formData.Valor || formData.Valor <= 0) {
-      errors.Valor = 'El valor debe ser mayor a 0';
+      errors.Valor = t('createPromotion.errorValorPositive');
     } else if (formData.Tipo === 'porcentaje' && formData.Valor > 100) {
-      errors.Valor = 'El porcentaje no puede ser mayor a 100%';
+      errors.Valor = t('createPromotion.errorValorMax100');
     }
 
-    const dateErrors = validateDates(formData.Inicio, formData.Fin);
-    Object.assign(errors, dateErrors);
-
+    Object.assign(errors, validateDates(formData.Inicio, formData.Fin));
     return errors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Limpiar errores de validación cuando el usuario corrige
+
     if (validationErrors[name]) {
       setValidationErrors(prev => ({ ...prev, [name]: '' }));
     }
 
-    // Validar fechas en tiempo real
     if (name === 'Inicio' || name === 'Fin') {
-      const newFormData = { ...formData, [name]: value };
-      const dateErrors = validateDates(newFormData.Inicio, newFormData.Fin);
-      setValidationErrors(prev => ({ 
-        ...prev, 
-        Inicio: dateErrors.Inicio || '', 
-        Fin: dateErrors.Fin || '' 
+      const newForm = { ...formData, [name]: value };
+      const dateErr = validateDates(newForm.Inicio, newForm.Fin);
+      setValidationErrors(prev => ({
+        ...prev,
+        Inicio: dateErr.Inicio || '',
+        Fin: dateErr.Fin || ''
       }));
     }
   };
-
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
@@ -135,15 +136,18 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
       });
 
       setCreatedPromotionId(response.data.ID);
-      
+
       if (formData.TipoAplicacion === 'categoria') {
         setShowCategories(true);
       } else {
         setShowAlojamientos(true);
       }
-
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Error al crear promoción');
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        t('createPromotion.errorCreate')
+      );
     } finally {
       setLoading(false);
     }
@@ -171,7 +175,6 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
   const handleCategorySelected = () => {
     onPromotionCreated();
     handleCloseAll();
-    
   };
 
   return (
@@ -179,10 +182,14 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
       <Modal open={open} onClose={!loading ? handleCloseAll : undefined}>
         <Box sx={style}>
           <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
-            Crear Nueva Promoción
+            {t('createPromotion.title')}
           </Typography>
 
-          {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
 
           <Box component="form" onSubmit={handleSubmit}>
             <Grid container spacing={2}>
@@ -190,7 +197,7 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
                 <TextField
                   required
                   fullWidth
-                  label="Código de Promoción"
+                  label={t('createPromotion.labelCodigo')}
                   name="Codigo"
                   value={formData.Codigo}
                   onChange={handleChange}
@@ -200,29 +207,37 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
                   helperText={validationErrors.Codigo}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
                   select
-                  label="Tipo de Descuento"
+                  label={t('createPromotion.labelTipoDescuento')}
                   name="Tipo"
                   value={formData.Tipo}
                   onChange={handleChange}
                   margin="normal"
                   size="small"
                 >
-                  <MenuItem value="porcentaje">Porcentaje (%)</MenuItem>
-                  <MenuItem value="monto">Monto fijo (₡)</MenuItem>
+                  <MenuItem value="porcentaje">
+                    {t('createPromotion.optionPorcentaje')}
+                  </MenuItem>
+                  <MenuItem value="monto">
+                    {t('createPromotion.optionMonto')}
+                  </MenuItem>
                 </TextField>
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  label={formData.Tipo === 'porcentaje' ? 'Valor (%)' : 'Monto (₡)'}
+                  label={
+                    formData.Tipo === 'porcentaje'
+                      ? t('createPromotion.labelValorPercent')
+                      : t('createPromotion.labelValorAmount')
+                  }
                   name="Valor"
                   type="number"
                   value={formData.Valor}
@@ -236,7 +251,9 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
 
               <Grid item xs={12} sm={6}>
                 <FormControl component="fieldset" fullWidth sx={{ mt: 2 }}>
-                  <FormLabel component="legend">Aplicar a:</FormLabel>
+                  <FormLabel component="legend">
+                    {t('createPromotion.legendApplyTo')}
+                  </FormLabel>
                   <RadioGroup
                     row
                     aria-label="tipo-aplicacion"
@@ -244,25 +261,25 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
                     value={formData.TipoAplicacion}
                     onChange={handleChange}
                   >
-                    <FormControlLabel 
-                      value="categoria" 
-                      control={<Radio size="small" />} 
-                      label="Categoría" 
+                    <FormControlLabel
+                      value="categoria"
+                      control={<Radio size="small" />}
+                      label={t('createPromotion.radioCategoria')}
                     />
-                    <FormControlLabel 
-                      value="alojamiento" 
-                      control={<Radio size="small" />} 
-                      label="Alojamiento"
+                    <FormControlLabel
+                      value="alojamiento"
+                      control={<Radio size="small" />}
+                      label={t('createPromotion.radioAlojamiento')}
                     />
                   </RadioGroup>
                 </FormControl>
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  label="Fecha de Inicio"
+                  label={t('createPromotion.labelInicio')}
                   name="Inicio"
                   type="date"
                   value={formData.Inicio}
@@ -274,12 +291,12 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
                   helperText={validationErrors.Inicio}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  label="Fecha de Fin"
+                  label={t('createPromotion.labelFin')}
                   name="Fin"
                   type="date"
                   value={formData.Fin}
@@ -291,12 +308,12 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
                   helperText={validationErrors.Fin}
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  label="Descripción"
+                  label={t('createPromotion.labelDescripcion')}
                   name="Descripcion"
                   value={formData.Descripcion}
                   onChange={handleChange}
@@ -308,11 +325,11 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
                   helperText={validationErrors.Descripcion}
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Requisitos (Opcional)"
+                  label={t('createPromotion.labelRequisitos')}
                   name="Requisitos"
                   value={formData.Requisitos}
                   onChange={handleChange}
@@ -322,30 +339,32 @@ const CreatePromotion = ({ open, onClose, onPromotionCreated }) => {
               </Grid>
             </Grid>
 
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'flex-end', 
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
               gap: 2,
               mt: 3,
               pt: 2,
               borderTop: '1px solid rgba(0, 0, 0, 0.12)'
             }}>
-              <Button 
-                onClick={handleCloseAll} 
+              <Button
+                onClick={handleCloseAll}
                 disabled={loading}
                 variant="outlined"
                 size="medium"
               >
-                Cancelar
+                {t('createPromotion.btnCancel')}
               </Button>
-              <Button 
-                type="submit" 
-                variant="contained" 
+              <Button
+                type="submit"
+                variant="contained"
                 disabled={loading}
                 size="medium"
                 sx={{ minWidth: 120 }}
               >
-                {loading ? <CircularProgress size={24} /> : 'Siguiente'}
+                {loading
+                  ? <CircularProgress size={24} />
+                  : t('createPromotion.btnNext')}
               </Button>
             </Box>
           </Box>
