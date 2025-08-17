@@ -27,6 +27,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 export default function Header() {
   const { t } = useTranslation();
 
@@ -38,7 +42,11 @@ export default function Header() {
   }, [user]);
 
   // Carrito
-  const { cart, getCountItems } = useCart();
+  const { cart } = useCart();
+  const countItems = cart.length;
+
+  const isAuthenticated = Boolean(userData && userData.id);
+  const navigate = useNavigate();
 
   // Menú usuario
   const [anchorElUser, setAnchorEl] = useState(null);
@@ -56,6 +64,31 @@ export default function Header() {
   const handleOpcionesMenuOpen = (e) => setMobileMoreAnchorEl(e.currentTarget);
   const handleOpcionesMenuClose = () => setMobileMoreAnchorEl(null);
 
+  const handleCartClick = () => {
+    if (!isAuthenticated) {
+      return toast.custom((t) => (
+        <span>
+          {t("cart.loginRequired")}
+          <button
+            onClick={() => navigate("/user/login")}
+            style={{
+              marginLeft: "0.5rem",
+              background: "#4caf50",
+              color: "#fff",
+              border: "none",
+              padding: "4px 8px",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            {t("header.login")}
+          </button>
+        </span>
+      ));
+    }
+    navigate("/Carrito");
+  };
+
   // Menú principal (desktop)
   const [anchorElPrincipal, setAnchorElPrincipal] = useState(null);
   const menuIdPrincipal = "menu-appbar";
@@ -64,16 +97,24 @@ export default function Header() {
   const userItems = [
     { name: t("header.login"), link: "/user/login", login: false },
     { name: t("header.registrarse"), link: "/user/create", login: false },
-    { name: t("header.logout"), link: "/user/logout", login: true }
+    { name: t("header.logout"), link: "/user/logout", login: true },
   ];
 
   // Elementos del menú principal
   const navItems = [
     { name: t("header.inicio"), link: "/", roles: null },
     { name: t("header.alojamientos"), link: "/alojamientos", roles: null },
-    { name: t("header.promocionesDisponibles"), link: "/promocionesDis", roles: null },
+    {
+      name: t("header.promocionesDisponibles"),
+      link: "/promocionesDis",
+      roles: null,
+    },
     { name: t("header.pedidos"), link: "/pedidos", roles: null },
-    { name: t("header.administracion"), link: "/admin/dashboard", roles: ["Administrador"] }
+    {
+      name: t("header.administracion"),
+      link: "/admin/dashboard",
+      roles: ["Administrador"],
+    },
   ];
 
   // Drawer lateral y submenú "Mantenimientos"
@@ -121,7 +162,12 @@ export default function Header() {
       sx={{ display: { xs: "block", md: "none" } }}
     >
       {navItems.map((page, i) => (
-        <MenuItem key={i} component={Link} to={page.link} onClick={handleClosePrincipalMenu}>
+        <MenuItem
+          key={i}
+          component={Link}
+          to={page.link}
+          onClick={handleClosePrincipalMenu}
+        >
           <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
         </MenuItem>
       ))}
@@ -162,14 +208,28 @@ export default function Header() {
         {userItems.map((setting, i) => {
           if (setting.login && userData && Object.keys(userData).length > 0) {
             return (
-              <MenuItem key={i} component={Link} to={setting.link} onClick={handleUserMenuClose}>
-                <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
+              <MenuItem
+                key={i}
+                component={Link}
+                to={setting.link}
+                onClick={handleUserMenuClose}
+              >
+                <Typography sx={{ textAlign: "center" }}>
+                  {setting.name}
+                </Typography>
               </MenuItem>
             );
           } else if (!setting.login && Object.keys(userData).length === 0) {
             return (
-              <MenuItem key={i} component={Link} to={setting.link} onClick={handleUserMenuClose}>
-                <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
+              <MenuItem
+                key={i}
+                component={Link}
+                to={setting.link}
+                onClick={handleUserMenuClose}
+              >
+                <Typography sx={{ textAlign: "center" }}>
+                  {setting.name}
+                </Typography>
               </MenuItem>
             );
           }
@@ -178,7 +238,7 @@ export default function Header() {
       </Menu>
     </Box>
   );
-    // Menú de opciones mobile (carrito / notificaciones)
+  // Menú de opciones mobile (carrito / notificaciones)
   const menuOpcionesMobile = (
     <Menu
       id={menuOpcionesId}
@@ -190,8 +250,8 @@ export default function Header() {
       onClose={handleOpcionesMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" color="inherit" component={Link} to="/rental/crear/">
-          <Badge badgeContent={getCountItems(cart)} color="primary">
+        <IconButton size="large" color="inherit" onClick={handleCartClick}>
+          <Badge badgeContent={countItems} color="success">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -210,10 +270,19 @@ export default function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="primaryLight" sx={{ backgroundColor: "primaryLight.main" }}>
+      <AppBar
+        position="static"
+        color="primaryLight"
+        sx={{ backgroundColor: "primaryLight.main" }}
+      >
         <Toolbar>
           {/* Botón hamburguesa abre el Drawer */}
-          <IconButton size="large" color="inherit" sx={{ mr: 2 }} onClick={toggleDrawer}>
+          <IconButton
+            size="large"
+            color="inherit"
+            sx={{ mr: 2 }}
+            onClick={toggleDrawer}
+          >
             <MenuIcon />
           </IconButton>
 
@@ -222,8 +291,18 @@ export default function Header() {
 
           {/* Logo / enlace a home */}
           <Tooltip title={t("header.tooltipLogo")}>
-            <IconButton size="large" edge="end" component="a" href="/" color="primary">
-              <img src="/src/assets/logo.png" alt={t("homePage.logoAlt")} style={{ width: 30, height: 30 }} />
+            <IconButton
+              size="large"
+              edge="end"
+              component="a"
+              href="/"
+              color="primary"
+            >
+              <img
+                src="/src/assets/logo.png"
+                alt={t("homePage.logoAlt")}
+                style={{ width: 30, height: 30 }}
+              />
             </IconButton>
           </Tooltip>
 
@@ -234,11 +313,17 @@ export default function Header() {
 
           {/* Iconos carrito y notificaciones en desktop */}
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton size="large" color="inherit" component={Link} to="/rental/crear/">
-              <Badge badgeContent={getCountItems(cart)} color="primary">
+            <IconButton
+              size="large"
+              color="inherit"
+              component={Link}
+              to="/Carrito"
+            >
+              <Badge badgeContent={countItems} color="success">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
+
             <IconButton size="large" color="inherit">
               <Badge badgeContent={17} color="primary">
                 <NotificationsIcon />
@@ -291,7 +376,7 @@ export default function Header() {
           <MenuItem component={Link} to="/resenas" onClick={toggleDrawer}>
             {t("header.resenas")}
           </MenuItem>
-          
+
           <MenuItem component={Link} to="/promociones" onClick={toggleDrawer}>
             {t("header.promociones")}
           </MenuItem>
@@ -308,7 +393,7 @@ export default function Header() {
             <MenuList sx={{ pl: 2 }}>
               <MenuItem
                 component={Link}
-                to="/alojamiento"      
+                to="/alojamiento"
                 onClick={() => {
                   toggleDrawer();
                   setSubmenuOpen(false);
@@ -327,7 +412,7 @@ export default function Header() {
               >
                 {t("header.servicio")}
               </MenuItem>
-              
+
               <MenuItem
                 component={Link}
                 to="/usuario/crear"

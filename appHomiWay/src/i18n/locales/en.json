@@ -1,570 +1,579 @@
 {
-    "homePage": {
-        "logoAlt": "HomiWay Logo",
-        "title": "HomiWay: Live the experience",
-        "subtitle": "Find unique accommodations, explore amazing tours and book local services in Costa Rica."
+  "homePage": {
+    "logoAlt": "HomiWay Logo",
+    "title": "HomiWay: Live the experience",
+    "subtitle": "Find unique accommodations, explore amazing tours and book local services in Costa Rica."
+  },
+  "footer": {
+    "nombreApp": "HomiWay",
+    "derechos": "© {{year}} All rights reserved",
+    "desarrolladoPor": "Developed by:",
+    "desarrollador1": "Thaylin Barrueta López",
+    "desarrollador2": "Fabricio Sequeira Dávila",
+    "codigoCurso": "ISW-613"
+  },
+  "header": {
+    "inicio": "Home",
+    "alojamientos": "Accommodations",
+    "promocionesDisponibles": "Available Promotions",
+    "pedidos": "Orders",
+    "administracion": "Administration",
+    "login": "Login",
+    "registrarse": "Register",
+    "logout": "Logout",
+    "navegacion": "Navigation",
+    "resenas": "Reviews",
+    "promociones": "Promotions",
+    "mantenimientos": "Maintenance",
+    "listaAlojamientos": "Accommodations List",
+    "servicio": "Service",
+    "usuario": "User",
+    "compras": "Purchases",
+    "notificaciones": "Notifications",
+    "tooltipLogo": "HomiWay – Live the experience"
+  },
+  "alojamientos": {
+    "create": {
+      "errorLoadUsers": "Failed to load users",
+      "errorLoadServices": "Failed to load services",
+      "success": "Accommodation created successfully",
+      "error": "Error creating accommodation",
+      "savingAccommodation": "Saving accommodation...",
+      "title": "Create Accommodation",
+      "errors": {
+        "selectUser": "Select a user",
+        "selectProvince": "Select a province",
+        "selectPostal": "Select a postal code",
+        "cantonRequired": "Canton is required",
+        "distritoRequired": "District is required",
+        "direccionRequired": "Address is required",
+        "nombreRequired": "Name is required",
+        "descripcionRequired": "Description is required",
+        "precioNocheRequired": "Price per night is required",
+        "capacidadRequired": "Capacity is required",
+        "selectCategory": "Select a category",
+        "selectFeature": "Select at least one feature"
+      },
+      "labels": {
+        "user": "User",
+        "province": "Province",
+        "postalCode": "Postal Code",
+        "canton": "Canton",
+        "distrito": "District",
+        "direccion": "Address",
+        "nombre": "Name",
+        "descripcion": "Description",
+        "precioNoche": "Price per night",
+        "capacidad": "Capacity",
+        "category": "Category",
+        "features": "Features",
+        "images": "Images",
+        "services": "Services",
+        "imagesExisting": "Current images",
+        "manageImages": "Manage images"
+      },
+      "buttons": {
+        "addServices": "Add services",
+        "saveAccommodation": "Save accommodation",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      },
+      "noServiceSelected": "No services selected",
+      "servicesDialog": {
+        "title": "Select services",
+        "columns": {
+          "name": "Name",
+          "type": "Type",
+          "price": "Price"
+        },
+        "noServices": "No services available"
+      },
+      "imagesDialog": {
+        "title": "Delete images",
+        "noImages": "No images available",
+        "deleteSelected": "Delete selected"
+      }
     },
-    "footer": {
-        "nombreApp": "HomiWay",
-        "derechos": "© {{year}} All rights reserved",
-        "desarrolladoPor": "Developed by:",
-        "desarrollador1": "Thaylin Barrueta López",
-        "desarrollador2": "Fabricio Sequeira Dávila",
-        "codigoCurso": "ISW-613"
+    "update": {
+      "success": "Accommodation updated",
+      "error": "Error updating accommodation"
     },
-    "header": {
-        "inicio": "Home",
-        "alojamientos": "Accommodations",
-        "promocionesDisponibles": "Available Promotions",
-        "pedidos": "Orders",
-        "administracion": "Administration",
-        "login": "Login",
-        "registrarse": "Register",
-        "logout": "Logout",
-        "navegacion": "Navigation",
-        "resenas": "Reviews",
-        "promociones": "Promotions",
-        "mantenimientos": "Maintenance",
-        "listaAlojamientos": "Accommodations List",
-        "servicio": "Service",
-        "usuario": "User",
-        "compras": "Purchases",
-        "notificaciones": "Notifications",
-        "tooltipLogo": "HomiWay – Live the experience"
-    },
-    "alojamientos": {
-        "create": {
-            "errorLoadUsers": "Failed to load users",
-            "errorLoadServices": "Failed to load services",
-            "success": "Accommodation created successfully",
-            "error": "Error creating accommodation",
-            "savingAccommodation": "Saving accommodation...",
-            "title": "Create Accommodation",
-            "errors": {
-                "selectUser": "Select a user",
-                "selectProvince": "Select a province",
-                "selectPostal": "Select a postal code",
-                "cantonRequired": "Canton is required",
-                "distritoRequired": "District is required",
-                "direccionRequired": "Address is required",
-                "nombreRequired": "Name is required",
-                "descripcionRequired": "Description is required",
-                "precioNocheRequired": "Price per night is required",
-                "capacidadRequired": "Capacity is required",
-                "selectCategory": "Select a category",
-                "selectFeature": "Select at least one feature"
-            },
-            "labels": {
-                "user": "User",
-                "province": "Province",
-                "postalCode": "Postal Code",
-                "canton": "Canton",
-                "distrito": "District",
-                "direccion": "Address",
-                "nombre": "Name",
-                "descripcion": "Description",
-                "precioNoche": "Price per night",
-                "capacidad": "Capacity",
-                "category": "Category",
-                "features": "Features",
-                "images": "Images",
-                "services": "Services",
-                "imagesExisting": "Current images",
-                "manageImages": "Manage images"
-            },
-            "buttons": {
-                "addServices": "Add services",
-                "saveAccommodation": "Save accommodation",
-                "cancel": "Cancel",
-                "confirm": "Confirm"
-            },
-            "noServiceSelected": "No services selected",
-            "servicesDialog": {
-                "title": "Select services",
-                "columns": {
-                    "name": "Name",
-                    "type": "Type",
-                    "price": "Price"
-                },
-                "noServices": "No services available"
-            },
-            "imagesDialog": {
-                "title": "Delete images",
-                "noImages": "No images available",
-                "deleteSelected": "Delete selected"
-            }
-        },
-        "update": {
-            "success": "Accommodation updated",
-            "error": "Error updating accommodation"
-        },
-        "get": {
-            "loading": "Loading accommodations...",
-            "error": "Error loading accommodations",
-            "unexpectedResponse": "Unexpected server response",
-            "empty": "No accommodations to display.",
-            "title": "List of Accommodations",
-            "buttons": {
-                "create": "Create accommodation",
-                "edit": "Edit",
-                "delete": "Delete"
-            },
-            "columns": {
-                "name": "Name",
-                "description": "Description",
-                "category": "Category",
-                "actions": "Actions"
-            },
-            "toast": {
-                "loading": "Deleting accommodation...",
-                "success": "Accommodation deleted",
-                "error": "Failed to delete"
-            }
-        },
-        "list": {
-            "loading": "Loading accommodations...",
-            "errorFetch": "Error fetching accommodations",
-            "error": "Error processing accommodations",
-            "empty": "No accommodations to display."
-        },
-        "cards": {
-            "imageAlt": "Image {{num}}",
-            "defaultImageAlt": "Default image",
-            "prev": "Previous",
-            "next": "Next",
-            "loading": "Loading…",
-            "outOfFive": "/ 5",
-            "viewMore": "View more"
-        },
-        "detail": {
-            "loading": "Loading data...",
-            "errors": {
-                "prefix": "Error:",
-                "fetch": "Error fetching accommodation"
-            },
-            "noImages": "No images available for this accommodation.",
-            "personas": "people",
-            "location": "Location",
-            "locationUnavailable": "Unavailable",
-            "buttons": {
-                "reserve": "Reserve",
-                "rate": "Rate Accommodation",
-                "viewAllReviews": "View all reviews"
-            }
-        },
-        "table": {
-            "loading": "Loading...",
-            "errorPrefix": "Error:",
-            "title": "List of Accommodations",
-            "buttons": {
-                "create": "Create",
-                "update": "Update"
-            },
-            "columns": {
-                "title": "Title",
-                "location": "Location",
-                "capacity": "Capacity",
-                "actions": "Actions"
-            }
-        },
-        "pageNotFound": {
-            "titulo": "Resource not found",
-            "mensaje": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable",
-            "imagenAlt": "404 Error"
-        }
-    },
-    "pedidos": {
-        "list": {
-            "title": "My Orders",
-            "loading": "Loading orders...",
-            "empty": "No orders registered",
-            "labels": {
-                "order": "Order"
-            },
-            "buttons": {
-                "viewDetail": "View Detail",
-                "refresh": "Refresh",
-                "retry": "Retry"
-            },
-            "errors": {
-                "fetch": "Error loading orders",
-                "server": "Server error",
-                "connection": "Connection error. Please check your internet.",
-                "unknown": "Unknown error"
-            }
-        },
-        "detail": {
-            "loading": "Loading invoice details...",
-            "title": "INVOICE",
-            "buttons": {
-                "back": "Back to list"
-            },
-            "sections": {
-                "orderInfo": "Order Information",
-                "clientInfo": "Client Information",
-                "products": "Product Details",
-                "customProducts": "Custom Products (Services)",
-                "summary": "Order Summary"
-            },
-            "labels": {
-                "orderNumber": "Order Number",
-                "dateTime": "Date and Time",
-                "status": "Status",
-                "name": "Name",
-                "email": "Email",
-                "phone": "Phone",
-                "duration": "Duration",
-                "languages": "Languages",
-                "type": "Type",
-                "subtotal": "Subtotal",
-                "taxes": "Taxes",
-                "total": "Total",
-                "paymentMethod": "Payment Method",
-                "bank": "Bank",
-                "cardEnding": "Card ending in"
-            },
-            "table": {
-                "product": "Product",
-                "quantity": "Quantity",
-                "unitPrice": "Unit Price",
-                "subtotal": "Subtotal",
-                "service": "Service",
-                "details": "Details",
-                "total": "Total"
-            },
-            "fallback": {
-                "noName": "Unnamed",
-                "noDescription": "No description",
-                "noProducts": "No products registered in this order.",
-                "noCustomProducts": "No custom products in this order.",
-                "noLanguages": "Not specified",
-                "noType": "Not specified",
-                "noPayment": "Not specified"
-            },
-            "footer": {
-                "thankYou": "Thank you for your purchase. For any inquiries, contact our customer service.",
-                "generatedOn": "Invoice generated on {{date}}"
-            },
-            "errors": {
-                "fetch": "Error loading invoice details",
-                "server": "Server error",
-                "connection": "Connection error. Please check your internet.",
-                "unknown": "Unknown error"
-            }
-        }
-    },
-    "common": {
-        "noDate": "Not specified",
-        "invalidDate": "Invalid date"
-    },
-    "auth": {
-        "login": {
-            "title": "Login",
-            "fields": {
-                "email": "Email",
-                "password": "Password"
-            },
-            "buttons": {
-                "submit": "Sign In"
-            },
-            "errors": {
-                "required": "All fields are required",
-                "invalidEmail": "Invalid email format",
-                "invalidUser": "Invalid user",
-                "server": "Server connection error",
-                "loginFailed": "Login request failed"
-            },
-            "toast": {
-                "welcome": "Welcome, user"
-            }
-        },
-        "signup": {
-            "title": "User Registration",
-            "fields": {
-                "name": "Name",
-                "surname": "Surname",
-                "email": "Email",
-                "password": "Password"
-            },
-            "buttons": {
-                "submit": "Register"
-            },
-            "errors": {
-                "required": "All fields are required",
-                "invalidEmail": "Invalid format",
-                "registerFailed": "Registration request failed"
-            },
-            "toast": {
-                "success": "User registered successfully",
-                "error": "Error registering user"
-            }
-        },
-        "unauthorized": {
-            "title": "Authorization",
-            "message": "Unauthorized user"
-        }
-    },
-    "reviews": {
-        "form": {
-            "title": "Add Review",
-            "fields": {
-                "comment": "Comment",
-                "rating": "Rating (1–5)"
-            },
-            "errors": {
-                "required": "Comment is required",
-                "type": "You must enter a number",
-                "min": "Minimum 1",
-                "max": "Maximum 5",
-                "auth": "You must be logged in to leave a review",
-                "incomplete": "Please complete all fields"
-            },
-            "toast": {
-                "success": "Review created successfully",
-                "error": "Error creating review"
-            },
-            "buttons": {
-                "submit": "Save Review"
-            }
-        },
-        "list": {
-            "title": "Review List",
-            "loading": "Loading reviews...",
-            "error": "Error loading reviews",
-            "empty": "No reviews available",
-            "buttons": {
-                "create": "Create new review"
-            },
-            "toast": {
-                "delete": {
-                    "loading": "Deleting review...",
-                    "success": "Review deleted",
-                    "error": "Could not delete"
-                }
-            },
-            "table": {
-                "user": "User",
-                "date": "Date",
-                "comment": "Comment",
-                "rating": "Rating",
-                "id": "Accommodation ID",
-                "action": "Action"
-            }
-        },
-        "detail": {
-            "title": "Accommodation Reviews",
-            "back": "← Back to detail",
-            "loading": "Loading reviews...",
-            "error": "Error loading reviews",
-            "empty": "No reviews available for this accommodation",
-            "anonymous": "Anonymous user",
-            "date": "Date"
-        }
+    "get": {
+      "loading": "Loading accommodations...",
+      "error": "Error loading accommodations",
+      "unexpectedResponse": "Unexpected server response",
+      "empty": "No accommodations to display.",
+      "title": "List of Accommodations",
+      "buttons": {
+        "create": "Create accommodation",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "category": "Category",
+        "actions": "Actions"
+      },
+      "toast": {
+        "loading": "Deleting accommodation...",
+        "success": "Accommodation deleted",
+        "error": "Failed to delete"
+      }
     },
     "list": {
-        "title": "Available Promotions",
-        "empty": "No promotions available at the moment",
-        "emptyFiltered": "No promotions with status \"{{estado}}\"",
-        "loading": "Loading promotions...",
-        "error": "Error loading promotions",
-        "retry": "Retry",
-        "states": {
-            "todos": "All",
-            "vigente": "Active",
-            "pendiente": "Upcoming",
-            "aplicado": "Expired"
-        }
+      "loading": "Loading accommodations...",
+      "errorFetch": "Error fetching accommodations",
+      "error": "Error processing accommodations",
+      "empty": "No accommodations to display."
     },
-    "buttons": {
-        "view": "View Details",
-        "edit": "Edit",
-        "create": "Create Promotion",
-        "update": "Update",
+    "cards": {
+      "imageAlt": "Image {{num}}",
+      "defaultImageAlt": "Default image",
+      "prev": "Previous",
+      "next": "Next",
+      "loading": "Loading…",
+      "outOfFive": "/ 5",
+      "viewMore": "View more"
+    },
+    "detail": {
+      "loading": "Loading data...",
+      "errors": {
+        "prefix": "Error:",
+        "fetch": "Error fetching accommodation"
+      },
+      "noImages": "No images available for this accommodation.",
+      "personas": "people",
+      "location": "Location",
+      "locationUnavailable": "Unavailable",
+      "buttons": {
+        "reserve": "Add Cart",
+        "rate": "Rate Accommodation",
+        "viewAllReviews": "View all reviews"
+      }
+    },
+    "table": {
+      "loading": "Loading...",
+      "errorPrefix": "Error:",
+      "title": "List of Accommodations",
+      "buttons": {
+        "create": "Create",
+        "update": "Update"
+      },
+      "columns": {
+        "title": "Title",
+        "location": "Location",
+        "capacity": "Capacity",
+        "actions": "Actions"
+      }
+    },
+    "pageNotFound": {
+      "titulo": "Resource not found",
+      "mensaje": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable",
+      "imagenAlt": "404 Error"
+    }
+  },
+  "pedidos": {
+    "list": {
+      "title": "My Orders",
+      "loading": "Loading orders...",
+      "empty": "No orders registered",
+      "labels": {
+        "order": "Order"
+      },
+      "buttons": {
+        "viewDetail": "View Detail",
         "refresh": "Refresh",
         "retry": "Retry"
-    },
-    "fields": {
-        "validFrom": "Valid from",
-        "validUntil": "Valid until",
-        "noDescription": "No description",
-        "noDate": "Not specified",
-        "invalidDate": "Invalid date",
-        "noValue": "No value"
-    },
-    "states": {
-        "active": "Active",
-        "pending": "Upcoming",
-        "applied": "Expired",
-        "noDates": "No dates",
-        "invalidDates": "Invalid dates",
-        "error": "Date error"
-    },
-    "messages": {
-        "created": "Promotion created successfully"
-    },
-    "errors": {
-        "load": "Failed to load promotions",
+      },
+      "errors": {
+        "fetch": "Error loading orders",
         "server": "Server error",
-        "connection": "Connection error. Check your internet connection.",
+        "connection": "Connection error. Please check your internet.",
         "unknown": "Unknown error"
+      }
     },
-    "filters": {
-        "label": "New Promotion",
-        "all": "All",
-        "filter": "Filter by status"
-    },
-    "promotionDetail": {
-        "title": "Promotion Details",
-        "code": "Code",
-        "description": "Description",
-        "discountType": "Discount Type",
-        "percentage": "Percentage",
-        "fixedAmount": "Fixed Amount",
-        "value": "Value",
-        "validFrom": "Valid from",
-        "validUntil": "Valid until",
+    "detail": {
+      "loading": "Loading invoice details...",
+      "title": "INVOICE",
+      "buttons": {
+        "back": "Back to list"
+      },
+      "sections": {
+        "orderInfo": "Order Information",
+        "clientInfo": "Client Information",
+        "products": "Product Details",
+        "customProducts": "Custom Products (Services)",
+        "summary": "Order Summary"
+      },
+      "labels": {
+        "orderNumber": "Order Number",
+        "dateTime": "Date and Time",
         "status": "Status",
-        "requirements": "Requirements",
-        "notAvailable": "N/A",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "duration": "Duration",
+        "languages": "Languages",
+        "type": "Type",
+        "subtotal": "Subtotal",
+        "taxes": "Taxes",
+        "total": "Total",
+        "paymentMethod": "Payment Method",
+        "bank": "Bank",
+        "cardEnding": "Card ending in"
+      },
+      "table": {
+        "product": "Product",
+        "quantity": "Quantity",
+        "unitPrice": "Unit Price",
+        "subtotal": "Subtotal",
+        "service": "Service",
+        "details": "Details",
+        "total": "Total"
+      },
+      "fallback": {
+        "noName": "Unnamed",
         "noDescription": "No description",
-        "noDate": "Not specified",
-        "invalidDate": "Invalid date",
-        "noValue": "No value",
-        "off": "OFF"
-    },
-    "currency": {
-        "symbol": "$"
-    },
-    "listAlojamientos": {
-        "title": "Select an accommodation to apply the promotion",
-        "applyPromotion": "Apply Promotion",
-        "cancel": "Cancel",
-        "previous": "Previous",
-        "next": "Next",
-        "defaultImageAlt": "Default image",
-        "successApply": "Promotion successfully created and associated with accommodation \"{{nombre}}\"!",
-        "errorLoad": "Error loading accommodations",
-        "errorApply": "Error applying promotion",
-        "defaultPromotionName": "Applied promotion",
-        "defaultPromotionDesc": "Promotion applied to accommodation"
-    },
-    "listCategorias": {
-        "title": "Select a category to apply the promotion",
-        "category": "Category",
-        "action": "Action",
-        "applyPromotion": "Apply Promotion",
-        "cancel": "Cancel",
-        "errorLoad": "Error loading categories",
-        "errorApply": "Error applying promotion to category",
-        "successApply": "Promotion successfully created and associated with category \"{{category}}\"!"
-    },
-    "editPromotion": {
-        "errorInicioRequired": "Start date is required",
-        "errorInicioPast": "Start date cannot be before today",
-        "errorFinRequired": "End date is required",
-        "errorFinAfterStart": "End date must be after start date",
-        "errorCodigoRequired": "Code is required",
-        "errorDescripcionRequired": "Description is required",
-        "errorValorPositive": "Value must be greater than 0",
-        "errorValorMax100": "Percentage cannot be greater than 100%",
-        "title": "Edit Promotion",
-        "updatedInfo": "Promotion updated. Now select where to apply it.",
-        "errorUpdate": "Error updating promotion",
-        "labelCodigo": "Promotion Code",
-        "labelTipoDescuento": "Discount Type",
-        "optionPorcentaje": "Percentage (%)",
-        "optionMonto": "Fixed Amount ($)",
-        "labelValorPercent": "Value (%)",
-        "labelValorAmount": "Amount ($)",
-        "legendApplyTo": "Apply to:",
-        "radioCategoria": "Category",
-        "radioAlojamiento": "Accommodation",
-        "labelInicio": "Start Date",
-        "labelFin": "End Date",
-        "labelDescripcion": "Description",
-        "labelRequisitos": "Requirements (Optional)",
-        "btnClose": "Close",
-        "btnCancel": "Cancel",
-        "btnNext": "Next",
-        "btnSelectCategories": "Select Categories",
-        "btnSelectAlojamientos": "Select Accommodations"
-    },
-    "createPromotion": {
-        "title": "Create New Promotion",
-        "errorInicioRequired": "Start date is required",
-        "errorInicioPast": "Start date cannot be before today",
-        "errorFinRequired": "End date is required",
-        "errorFinAfterStart": "End date must be after start date",
-        "errorCodigoRequired": "Code is required",
-        "errorDescripcionRequired": "Description is required",
-        "errorValorPositive": "Value must be greater than 0",
-        "errorValorMax100": "Percentage cannot be greater than 100%",
-        "errorCreate": "Error creating promotion",
-        "labelCodigo": "Promotion Code",
-        "labelTipoDescuento": "Discount Type",
-        "optionPorcentaje": "Percentage (%)",
-        "optionMonto": "Fixed Amount ($)",
-        "labelValorPercent": "Value (%)",
-        "labelValorAmount": "Amount ($)",
-        "legendApplyTo": "Apply to:",
-        "radioCategoria": "Category",
-        "radioAlojamiento": "Accommodation",
-        "labelInicio": "Start Date",
-        "labelFin": "End Date",
-        "labelDescripcion": "Description",
-        "labelRequisitos": "Requirements (Optional)",
-        "btnCancel": "Cancel",
-        "btnNext": "Next"
-    },
-    "productosConPromociones": {
-        "errorLoad": "Error loading products with promotions",
-        "error": "Error",
-        "errorServer": "Server error",
-        "errorConnection": "Connection error. Please check your internet connection.",
-        "errorUnknown": "Unknown error",
-        "loadingText": "Loading products with promotions...",
-        "buttonRetry": "Retry",
-        "title": "Products with Promotions",
-        "noProducts": "No products with promotions available",
-        "buttonRefresh": "Refresh",
-        "labelCapacity": "Capacity:",
-        "na": "N/A",
-        "personas": "people",
-        "labelCategory": "Category:",
-        "noCategory": "No category",
-        "fallbackNoName": "Product without name",
-        "fallbackNoDescription": "No description available",
-        "stateActive": "Active",
-        "statePending": "Upcoming",
-        "stateNone": "No promotion",
-        "btnUse": "Use",
-        "btnComingSoon": "Coming Soon",
-        "perNight": "per night",
-        "previousPrice": "Previous price:",
-        "promoPrice": "Promotional price:",
-        "labelPrice": "Price:",
-        "ariaViewDetails": "View details"
-    },
-    "promo": {
-        "title": "Accommodation Details",
-        "noName": "Accommodation without name",
-        "descriptionLabel": "Description",
-        "noDescription": "No description available",
-        "capacity": "Capacity",
-        "people": "people",
-        "na": "N/A",
-        "category": "Category",
-        "noCategory": "No category",
-        "tagLabel": "Tag",
-        "priceNight": "Price per night",
-        "infoTitle": "Promotion Information",
-        "codeLabel": "Promotion Code",
-        "descLabel": "Promotion Description",
-        "priceDiscountLabel": "Discounted Price",
-        "startDateLabel": "Start Date",
-        "endDateLabel": "End Date",
-        "noActive": "This accommodation has no active promotions.",
-        "noDate": "Not specified",
-        "invalidDate": "Invalid date"
+        "noProducts": "No products registered in this order.",
+        "noCustomProducts": "No custom products in this order.",
+        "noLanguages": "Not specified",
+        "noType": "Not specified",
+        "noPayment": "Not specified"
+      },
+      "footer": {
+        "thankYou": "Thank you for your purchase. For any inquiries, contact our customer service.",
+        "generatedOn": "Invoice generated on {{date}}"
+      },
+      "errors": {
+        "fetch": "Error loading invoice details",
+        "server": "Server error",
+        "connection": "Connection error. Please check your internet.",
+        "unknown": "Unknown error"
+      }
     }
+  },
+  "common": {
+    "noDate": "Not specified",
+    "invalidDate": "Invalid date"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "buttons": {
+        "submit": "Sign In"
+      },
+      "errors": {
+        "required": "All fields are required",
+        "invalidEmail": "Invalid email format",
+        "invalidUser": "Invalid user",
+        "server": "Server connection error",
+        "loginFailed": "Login request failed"
+      },
+      "toast": {
+        "welcome": "Welcome, user"
+      }
+    },
+    "signup": {
+      "title": "User Registration",
+      "fields": {
+        "name": "Name",
+        "surname": "Surname",
+        "email": "Email",
+        "password": "Password"
+      },
+      "buttons": {
+        "submit": "Register"
+      },
+      "errors": {
+        "required": "All fields are required",
+        "invalidEmail": "Invalid format",
+        "registerFailed": "Registration request failed"
+      },
+      "toast": {
+        "success": "User registered successfully",
+        "error": "Error registering user"
+      }
+    },
+    "unauthorized": {
+      "title": "Authorization",
+      "message": "Unauthorized user"
+    }
+  },
+  "reviews": {
+    "form": {
+      "title": "Add Review",
+      "fields": {
+        "comment": "Comment",
+        "rating": "Rating (1–5)"
+      },
+      "errors": {
+        "required": "Comment is required",
+        "type": "You must enter a number",
+        "min": "Minimum 1",
+        "max": "Maximum 5",
+        "auth": "You must be logged in to leave a review",
+        "incomplete": "Please complete all fields"
+      },
+      "toast": {
+        "success": "Review created successfully",
+        "error": "Error creating review"
+      },
+      "buttons": {
+        "submit": "Save Review"
+      }
+    },
+    "list": {
+      "title": "Review List",
+      "loading": "Loading reviews...",
+      "error": "Error loading reviews",
+      "empty": "No reviews available",
+      "buttons": {
+        "create": "Create new review"
+      },
+      "toast": {
+        "delete": {
+          "loading": "Deleting review...",
+          "success": "Review deleted",
+          "error": "Could not delete"
+        }
+      },
+      "table": {
+        "user": "User",
+        "date": "Date",
+        "comment": "Comment",
+        "rating": "Rating",
+        "id": "Accommodation ID",
+        "action": "Action"
+      }
+    },
+    "detail": {
+      "title": "Accommodation Reviews",
+      "back": "← Back to detail",
+      "loading": "Loading reviews...",
+      "error": "Error loading reviews",
+      "empty": "No reviews available for this accommodation",
+      "anonymous": "Anonymous user",
+      "date": "Date"
+    }
+  },
+  "list": {
+    "title": "Available Promotions",
+    "empty": "No promotions available at the moment",
+    "emptyFiltered": "No promotions with status \"{{estado}}\"",
+    "loading": "Loading promotions...",
+    "error": "Error loading promotions",
+    "retry": "Retry",
+    "states": {
+      "todos": "All",
+      "vigente": "Active",
+      "pendiente": "Upcoming",
+      "aplicado": "Expired"
+    }
+  },
+  "buttons": {
+    "view": "View Details",
+    "edit": "Edit",
+    "create": "Create Promotion",
+    "update": "Update",
+    "refresh": "Refresh",
+    "retry": "Retry"
+  },
+  "fields": {
+    "validFrom": "Valid from",
+    "validUntil": "Valid until",
+    "noDescription": "No description",
+    "noDate": "Not specified",
+    "invalidDate": "Invalid date",
+    "noValue": "No value"
+  },
+  "states": {
+    "active": "Active",
+    "pending": "Upcoming",
+    "applied": "Expired",
+    "noDates": "No dates",
+    "invalidDates": "Invalid dates",
+    "error": "Date error"
+  },
+  "messages": {
+    "created": "Promotion created successfully"
+  },
+  "errors": {
+    "load": "Failed to load promotions",
+    "server": "Server error",
+    "connection": "Connection error. Check your internet connection.",
+    "unknown": "Unknown error"
+  },
+  "filters": {
+    "label": "New Promotion",
+    "all": "All",
+    "filter": "Filter by status"
+  },
+  "promotionDetail": {
+    "title": "Promotion Details",
+    "code": "Code",
+    "description": "Description",
+    "discountType": "Discount Type",
+    "percentage": "Percentage",
+    "fixedAmount": "Fixed Amount",
+    "value": "Value",
+    "validFrom": "Valid from",
+    "validUntil": "Valid until",
+    "status": "Status",
+    "requirements": "Requirements",
+    "notAvailable": "N/A",
+    "noDescription": "No description",
+    "noDate": "Not specified",
+    "invalidDate": "Invalid date",
+    "noValue": "No value",
+    "off": "OFF"
+  },
+  "currency": {
+    "symbol": "$"
+  },
+  "listAlojamientos": {
+    "title": "Select an accommodation to apply the promotion",
+    "applyPromotion": "Apply Promotion",
+    "cancel": "Cancel",
+    "previous": "Previous",
+    "next": "Next",
+    "defaultImageAlt": "Default image",
+    "successApply": "Promotion successfully created and associated with accommodation \"{{nombre}}\"!",
+    "errorLoad": "Error loading accommodations",
+    "errorApply": "Error applying promotion",
+    "defaultPromotionName": "Applied promotion",
+    "defaultPromotionDesc": "Promotion applied to accommodation"
+  },
+  "listCategorias": {
+    "title": "Select a category to apply the promotion",
+    "category": "Category",
+    "action": "Action",
+    "applyPromotion": "Apply Promotion",
+    "cancel": "Cancel",
+    "errorLoad": "Error loading categories",
+    "errorApply": "Error applying promotion to category",
+    "successApply": "Promotion successfully created and associated with category \"{{category}}\"!"
+  },
+  "editPromotion": {
+    "errorInicioRequired": "Start date is required",
+    "errorInicioPast": "Start date cannot be before today",
+    "errorFinRequired": "End date is required",
+    "errorFinAfterStart": "End date must be after start date",
+    "errorCodigoRequired": "Code is required",
+    "errorDescripcionRequired": "Description is required",
+    "errorValorPositive": "Value must be greater than 0",
+    "errorValorMax100": "Percentage cannot be greater than 100%",
+    "title": "Edit Promotion",
+    "updatedInfo": "Promotion updated. Now select where to apply it.",
+    "errorUpdate": "Error updating promotion",
+    "labelCodigo": "Promotion Code",
+    "labelTipoDescuento": "Discount Type",
+    "optionPorcentaje": "Percentage (%)",
+    "optionMonto": "Fixed Amount ($)",
+    "labelValorPercent": "Value (%)",
+    "labelValorAmount": "Amount ($)",
+    "legendApplyTo": "Apply to:",
+    "radioCategoria": "Category",
+    "radioAlojamiento": "Accommodation",
+    "labelInicio": "Start Date",
+    "labelFin": "End Date",
+    "labelDescripcion": "Description",
+    "labelRequisitos": "Requirements (Optional)",
+    "btnClose": "Close",
+    "btnCancel": "Cancel",
+    "btnNext": "Next",
+    "btnSelectCategories": "Select Categories",
+    "btnSelectAlojamientos": "Select Accommodations"
+  },
+  "createPromotion": {
+    "title": "Create New Promotion",
+    "errorInicioRequired": "Start date is required",
+    "errorInicioPast": "Start date cannot be before today",
+    "errorFinRequired": "End date is required",
+    "errorFinAfterStart": "End date must be after start date",
+    "errorCodigoRequired": "Code is required",
+    "errorDescripcionRequired": "Description is required",
+    "errorValorPositive": "Value must be greater than 0",
+    "errorValorMax100": "Percentage cannot be greater than 100%",
+    "errorCreate": "Error creating promotion",
+    "labelCodigo": "Promotion Code",
+    "labelTipoDescuento": "Discount Type",
+    "optionPorcentaje": "Percentage (%)",
+    "optionMonto": "Fixed Amount ($)",
+    "labelValorPercent": "Value (%)",
+    "labelValorAmount": "Amount ($)",
+    "legendApplyTo": "Apply to:",
+    "radioCategoria": "Category",
+    "radioAlojamiento": "Accommodation",
+    "labelInicio": "Start Date",
+    "labelFin": "End Date",
+    "labelDescripcion": "Description",
+    "labelRequisitos": "Requirements (Optional)",
+    "btnCancel": "Cancel",
+    "btnNext": "Next"
+  },
+  "productosConPromociones": {
+    "errorLoad": "Error loading products with promotions",
+    "error": "Error",
+    "errorServer": "Server error",
+    "errorConnection": "Connection error. Please check your internet connection.",
+    "errorUnknown": "Unknown error",
+    "loadingText": "Loading products with promotions...",
+    "buttonRetry": "Retry",
+    "title": "Products with Promotions",
+    "noProducts": "No products with promotions available",
+    "buttonRefresh": "Refresh",
+    "labelCapacity": "Capacity:",
+    "na": "N/A",
+    "personas": "people",
+    "labelCategory": "Category:",
+    "noCategory": "No category",
+    "fallbackNoName": "Product without name",
+    "fallbackNoDescription": "No description available",
+    "stateActive": "Active",
+    "statePending": "Upcoming",
+    "stateNone": "No promotion",
+    "btnUse": "Use",
+    "btnComingSoon": "Coming Soon",
+    "perNight": "per night",
+    "previousPrice": "Previous price:",
+    "promoPrice": "Promotional price:",
+    "labelPrice": "Price:",
+    "ariaViewDetails": "View details"
+  },
+  "promo": {
+    "title": "Accommodation Details",
+    "noName": "Accommodation without name",
+    "descriptionLabel": "Description",
+    "noDescription": "No description available",
+    "capacity": "Capacity",
+    "people": "people",
+    "na": "N/A",
+    "category": "Category",
+    "noCategory": "No category",
+    "tagLabel": "Tag",
+    "priceNight": "Price per night",
+    "infoTitle": "Promotion Information",
+    "codeLabel": "Promotion Code",
+    "descLabel": "Promotion Description",
+    "priceDiscountLabel": "Discounted Price",
+    "startDateLabel": "Start Date",
+    "endDateLabel": "End Date",
+    "noActive": "This accommodation has no active promotions.",
+    "noDate": "Not specified",
+    "invalidDate": "Invalid date"
+  },
+  "cart": {
+    "hookError": "Cart hook must be used within <CartProvider>",
+    "itemExists": "{{name}} is already in the cart",
+    "itemAdded": "{{name}} added to cart",
+    "itemRemoved": "{{name}} removed from cart",
+    "cartCleared": "Cart cleared",
+    "loginRequired": "You must be logged in to add items to the cart"
+
+  }
 }
