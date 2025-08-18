@@ -185,10 +185,6 @@ export function DetailAlojamiento() {
       <Button
         size="small"
         onClick={() => {
-          if (!isAuthenticated) {
-            toast.error(t("cart.loginRequired"));
-            return;
-          }
           addAlojamiento({
             id: data.ID,
             image: `${BASE_URL}/${data.imagenes[0].url}`,

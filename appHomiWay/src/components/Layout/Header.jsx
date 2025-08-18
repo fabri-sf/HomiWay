@@ -27,7 +27,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
