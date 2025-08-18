@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import PedidoService from "../../services/PedidoService";
 import { useTranslation } from 'react-i18next';
+import AddIcon from '@mui/icons-material/Add'; 
 
 const ListPedido = () => {
   const { t } = useTranslation();
@@ -98,6 +99,10 @@ const ListPedido = () => {
     fetchPedidos();
   };
 
+  const handleCrearFactura = () => {
+  navigate('/facturacion');
+};
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
@@ -125,16 +130,34 @@ const ListPedido = () => {
       </Container>
     );
   }
-    return (
+
+  return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom sx={{
-        color: theme.palette.primary.main,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        mb: 4
-      }}>
-        {t("pedidos.list.title")}
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Typography variant="h4" component="h1" sx={{
+          color: theme.palette.primary.main,
+          fontWeight: 'bold'
+        }}>
+          {t("pedidos.list.title")}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleCrearFactura}
+          sx={{
+            textTransform: 'none',
+            fontWeight: 'bold',
+            boxShadow: 'none',
+            '&:hover': {
+              boxShadow: 'none',
+              backgroundColor: theme.palette.primary.dark
+            }
+          }}
+        >
+          {t("Crear Factura")}
+        </Button>
+      </Box>
 
       {pedidos.length === 0 ? (
         <Box textAlign="center" sx={{ mt: 4 }}>

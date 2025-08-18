@@ -54,8 +54,14 @@ import PromotionDetail from "./components/Promotion/PromotionDetail";
 import ListResena from "./components/Resena/ListResena";
 import ResenaAlojamiento from "./components/Resena/ResenaAlojamiento";
 
+import CreateReserva from "./components/Reserva/CreteReserva";
+
 import ListPedido from "./components/Pedido/ListPedido";
 import DetailPedido from "./components/Pedido/DetailPedido";
+
+
+
+import  Facturacion  from "./components/Factura/Facturacion";
 
 import { CreateResena } from "./components/Resena/CreateResena";
 
@@ -103,6 +109,15 @@ const rutas = createBrowserRouter([
         path: "/alojamiento/:id",
         element: <DetailAlojamiento />,
       },
+      // ========= NUEVA RUTA PARA CREAR RESERVAS =========
+      {
+        path: '/reserva/crear/:id',
+        element: <CreateReserva />
+      },
+      {
+        path: '/reserva-crear/:id',
+        element: <CreateReserva />
+      },
       {
         path: "/alojamiento/crear",
         element: <CreateAlojamiento />,
@@ -123,6 +138,12 @@ const rutas = createBrowserRouter([
         path: "/promocionesDis",
         element: <ProductosConPromociones />,
       },
+
+{
+  path: '/facturacion',
+  element: <Facturacion />,
+},
+
       {
         path: "/pedidos",
         element: <ListPedido />,

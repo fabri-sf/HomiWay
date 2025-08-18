@@ -75,11 +75,11 @@ class PedidoModel {
                     AND fd.ID_Servicio IS NOT NULL
             ";
             $result = $this->enlace->ExecuteSQL($vSql);
-            // Retornar array vacío si no hay resultados, nunca null
+            
             return $result ?: [];
         } catch (Exception $e) {
             handleException($e);
-            return []; // Retornar array vacío en caso de error
+            return []; 
         }
     }
     

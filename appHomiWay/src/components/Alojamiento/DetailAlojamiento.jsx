@@ -183,6 +183,7 @@ export function DetailAlojamiento() {
       <ListServicios alojamientoId={parseInt(data.ID)} />
 
       <Button
+
         size="small"
         onClick={() => {
           addAlojamiento({
@@ -201,6 +202,7 @@ export function DetailAlojamiento() {
       >
         {t("alojamientos.detail.buttons.reserve")}
       </Button>
+
 
       <Resena alojamientoId={parseInt(data.ID)} />
 

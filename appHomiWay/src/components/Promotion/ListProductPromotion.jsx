@@ -19,6 +19,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useTheme } from '@mui/material/styles';
 import PromocionService from "../../services/PromocionService";
 import PromotionProductDetail from './PromotionProductDetail';
+import { useNavigate } from "react-router-dom";
 
 const ProductosConPromociones = () => {
   const theme = useTheme();
@@ -29,6 +30,7 @@ const ProductosConPromociones = () => {
   const [preciosCalculados, setPreciosCalculados] = useState({});
   const [selectedAlojamiento, setSelectedAlojamiento] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+   const navigate = useNavigate();
 
   useEffect(() => {
     fetchAlojamientosConPromociones();
@@ -166,10 +168,34 @@ const ProductosConPromociones = () => {
     setModalOpen(true);
   };
 
-  const handleUtilizarPromocion = (a) => {
-    console.log('Utilizando promoción para:', a);
-    alert(`${t('productosConPromociones.btnUse')} ${a.AlojamientoNombre}`);
+  const handleUtilizarPromocion = (alojamiento) => {
+  // Calcular el precio con descuento
+  const noches = 1; // Valor inicial, se actualizará en el formulario
+  const precioOriginal = alojamiento.PrecioNoche * noches;
+  
+  let precioConDescuento;
+  if (alojamiento.Tipo === 'Porcentaje') {
+    precioConDescuento = precioOriginal * (1 - alojamiento.Valor/100);
+  } else {
+    precioConDescuento = precioOriginal - alojamiento.Valor;
+  }
+
+  // Guardar en el estado/localStorage
+  const promocionAplicada = {
+    alojamientoId: alojamiento.AlojamientoID,
+    promocionId: alojamiento.PromocionID,
+    tipo: alojamiento.Tipo,
+    valor: alojamiento.Valor,
+    precioOriginal,
+    precioConDescuento,
+    noches
   };
+
+  localStorage.setItem('promocionAplicada', JSON.stringify(promocionAplicada));
+  
+  // Navegar al formulario de reserva
+  navigate(`/reserva-crear/${alojamiento.AlojamientoID}`);
+};
 
   if (loading) {
     return (
@@ -398,24 +424,24 @@ const ProductosConPromociones = () => {
                       </IconButton>
 
                       {tienePromocion && (
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          color={estado.botonColor}
-                          disabled={!estado.activo}
-                          onClick={() => estado.activo && handleUtilizarPromocion(a)}
-                          sx={{
-                            fontWeight: 'bold',
-                            textTransform: 'none',
-                            flexGrow: 1,
-                            '&:disabled': {
-                              backgroundColor: theme.palette.grey[300],
-                              color: theme.palette.grey[600]
-                            }
-                          }}
-                        >
-                          {estado.botonTexto}
-                        </Button>
+                       <Button
+  fullWidth
+  variant="contained"
+  color={estado.botonColor}
+  disabled={!estado.activo}
+  onClick={() => estado.activo && handleUtilizarPromocion(a)}
+  sx={{
+    fontWeight: 'bold',
+    textTransform: 'none',
+    flexGrow: 1,
+    '&:disabled': {
+      backgroundColor: theme.palette.grey[300],
+      color: theme.palette.grey[600]
+    }
+  }}
+>
+  {estado.botonTexto}
+</Button>
                       )}
                     </Box>
                   </CardActions>
