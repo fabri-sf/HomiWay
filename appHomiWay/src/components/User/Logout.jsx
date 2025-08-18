@@ -1,15 +1,13 @@
-import { useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
+// src/components/User/Logout.jsx
+import React from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { Navigate } from 'react-router-dom';
 
 export function Logout() {
-  const navigate = useNavigate();
-  const { clearUser } = useContext(UserContext);
+  const { logout } = useAuth();
+  logout(); // limpia token
 
-  useEffect(() => {
-    clearUser();
-    navigate('/user/login');
-  }, []);
-
-  return null;
+  return <Navigate to="/user/login" replace />;
 }
+
+export default Logout;

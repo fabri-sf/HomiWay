@@ -25,6 +25,12 @@ class ImageService {
         { headers: { Authorization: `Bearer ${token}` }}
       );
     }
+     // <-- Nuevo método para descargar el binario de la imagen
+  getFile(filename) {
+    return axios.get(`${BASE_URL}/file/${filename}`, {
+      responseType: "blob",
+    });
+  }
 
 }
 
