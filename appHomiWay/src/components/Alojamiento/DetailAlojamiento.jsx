@@ -136,18 +136,18 @@ export function DetailAlojamiento() {
       <ListServicios alojamientoId={parseInt(data.ID)} />
 
       <Button
-        size="small"
-        component={Link}
-        to={`/rental/crear`}
-        sx={{
-          backgroundColor: '#2e7d32',
-          color: '#ffffff',
-          '&:hover': { backgroundColor: '#1b5e20' },
-          marginTop: '1rem',
-        }}
-      >
-        {t("alojamientos.detail.buttons.reserve")}
-      </Button>
+  size="small"
+  component={Link}
+  to={`/reserva/crear/${data.ID}`}  // ← NUEVA RUTA CON EL ID DEL ALOJAMIENTO
+  sx={{
+    backgroundColor: '#2e7d32',
+    color: '#ffffff',
+    '&:hover': { backgroundColor: '#1b5e20' },
+    marginTop: '1rem',
+  }}
+>
+  {t("alojamientos.detail.buttons.reserve")}
+</Button>
 
       <Resena alojamientoId={parseInt(data.ID)} />
 

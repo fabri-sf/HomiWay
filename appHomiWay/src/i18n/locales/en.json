@@ -566,5 +566,116 @@
         "noActive": "This accommodation has no active promotions.",
         "noDate": "Not specified",
         "invalidDate": "Invalid date"
+    },
+
+    "reserva": {
+    "availableServices": "Available Services",
+    "optional": "Optional",
+    "selectService": "Select Service",
+    "fechaServicio": "Service Date",
+
+    "serviceTypes": {
+      "transport": "Transport",
+      "tour": "Tour",
+      "food": "Food",
+      "other": "Other"
+    },
+
+    "serviceLabels": {
+      "price": "Price",
+      "rating": "Rating"
+    },
+
+    "promotion": {
+      "applied": "Promotion Applied",
+      "discount": "{{type}} discount",
+      "savings": "Savings",
+      "percentage": "{{value}}%",
+      "fixedAmount": "${{value}}"
     }
+  },
+
+  "billing": {
+    "title": "Billing",
+    "selectAll": "Select all",
+    "noReservations": "You have no pending reservations to bill.",
+    "proceedToPay": "Proceed to Payment",
+    "summary": {
+      "title": "Billing Summary",
+      "selectedItems": "Selected Items",
+      "total": "Total to Pay"
+    },
+    "table": {
+      "select": "Select",
+      "accommodation": "Accommodation",
+      "dates": "Dates",
+      "nights": "Nights",
+      "pricePerNight": "Price per night",
+      "subtotal": "Subtotal",
+      "tax": "Tax (13%)",
+      "total": "Total",
+      "status": "Status"
+    },
+    "payment": {
+      "title": "Payment Method",
+      "total": "Total to Pay",
+      "method": {
+        "title": "Select payment method",
+        "card": "Credit/Debit Card",
+        "cash": "Cash"
+      },
+      "card": {
+        "number": "Card Number",
+        "holder": "Cardholder Name",
+        "expiry": "Expiration Date (MM/YY)",
+        "cvv": "CVV"
+      },
+      "cash": {
+        "amount": "Amount Received",
+        "change": "Change"
+      },
+      "validation": {
+        "incomplete": "Please complete all fields correctly",
+        "card": {
+          "number": {
+            "required": "Card number is required",
+            "format": "Must have 16 digits",
+            "invalid": "Invalid card number"
+          },
+          "expiry": {
+            "required": "Expiration date is required",
+            "format": "MM/YY format",
+            "future": "Date must be in the future"
+          },
+          "cvv": {
+            "required": "CVV is required",
+            "format": "3 or 4 digits"
+          },
+          "holder": {
+            "required": "Cardholder name is required",
+            "min": "Minimum 3 characters"
+          }
+        },
+        "cash": {
+          "amount": {
+            "type": "Must be a number",
+            "required": "Amount is required",
+            "positive": "Must be positive",
+            "min": "Must be greater than or equal to total"
+          }
+        }
+      },
+      "confirm": "Confirm Payment",
+      "cancel": "Cancel",
+      "processing": "Processing payment...",
+      "success": "Payment successful",
+      "error": "Error processing payment"
+    },
+    "errors": {
+      "auth": "You must be logged in to access billing",
+      "selectReservation": "Select at least one reservation to bill",
+      "loadReservations": "Error loading reservations"
+    }
+  }
+    
 }
