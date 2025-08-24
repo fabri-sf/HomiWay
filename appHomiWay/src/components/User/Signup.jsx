@@ -58,6 +58,7 @@ export function Signup() {
     };
     UsuarioService.registrarUsuario(payload)
       .then(() => {
+        console.log('Nuevo usuario registrado'); // Log para depuración
         toast.success(t('auth.signup.toast.success'));
         navigate('/user/login');
       })

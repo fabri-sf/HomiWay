@@ -42,6 +42,7 @@ export function Login() {
     resolver: yupResolver(loginSchema),
   });
 
+<<<<<<< HEAD
   const onSubmit = (dataForm) => {
     UsuarioService.loginUsuario(dataForm)
       .then((res) => {
@@ -59,6 +60,27 @@ export function Login() {
         setError(t('auth.login.errors.loginFailed'));
       });
   };
+=======
+ const [error, setError] = useState(null);
+const onSubmit = (dataForm) => {
+  UsuarioService.loginUsuario(dataForm)
+    .then((response) => {
+      const token = response.data;
+      if (token && typeof token === 'string' && token !== 'Usuario no valido') {
+        saveUser(token);
+        console.log('Usuario autenticado con ID:', JSON.parse(atob(token.split('.')[1]))?.id); // Corregido aquí
+        toast.success(t('auth.login.toast.welcome'), { duration: 4000 });
+        navigate('/');
+      } else {
+        toast.error(t('auth.login.errors.invalidUser'), { duration: 4000 });
+      }
+    })
+    .catch(() => {
+      toast.error(t('auth.login.errors.server'));
+      setError(t('auth.login.errors.loginFailed'));
+    });
+};
+>>>>>>> 27051188f360108f780a3cbcdf8e005158c721d0
 
   return (
     <>

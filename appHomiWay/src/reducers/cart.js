@@ -1,4 +1,5 @@
 // src/reducers/cart.js
+<<<<<<< HEAD
 
 // Estado inicial: lee del localStorage o arranca vacío
 export const cartInitialState =
@@ -58,12 +59,34 @@ export function cartReducer(state, action) {
     }
     case CART_ACTION.CLEAN_CART: {
       updateLocalStorage([]);
+=======
+export const CART_ACTION = {
+  SET_CART:    'SET_CART',
+  ADD_ITEM:    'ADD_ITEM',
+  REMOVE_ITEM: 'REMOVE_ITEM',
+  CLEAN_CART:  'CLEAN_CART',
+};
+
+export function cartReducer(state, action) {
+  switch (action.type) {
+    case CART_ACTION.SET_CART:
+      return Array.isArray(action.payload) ? action.payload : state;
+
+    case CART_ACTION.ADD_ITEM:
+      return [...state, { ...action.payload }];
+
+    case CART_ACTION.REMOVE_ITEM:
+      return state.filter(item => item.id !== action.payload.id);
+
+    case CART_ACTION.CLEAN_CART:
+>>>>>>> 27051188f360108f780a3cbcdf8e005158c721d0
       return [];
-    }
+
     default:
       return state;
   }
 }
+<<<<<<< HEAD
 
 // Contador de ítems: suma campo 'days'
 export const getCountItems = (state) =>
@@ -71,3 +94,6 @@ export const getCountItems = (state) =>
 
 // Total del carrito
 export const getTotal = (state) => calculateTotal(state);
+=======
+//yaaa
+>>>>>>> 27051188f360108f780a3cbcdf8e005158c721d0
