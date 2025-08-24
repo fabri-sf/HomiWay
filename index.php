@@ -39,6 +39,7 @@ require_once "models/ServicioAlojamientoModel.php";
 require_once "models/EtiquetaModel.php";
 require_once "models/ReservaModel.php";
 require_once "models/FacturaModel.php";
+require_once "models/CarritoModel.php";
 /***--- Agregar todos los controladores*/
 
 
@@ -64,7 +65,7 @@ require_once "controllers/etiquetaController.php";
 require_once "controllers/ImagenController.php";
 require_once "controllers/ReservaController.php";
 require_once "controllers/FacturaController.php";
-
+require_once "controllers/CarritoController.php";
 
 //Enrutador
 require_once "routes/RoutesController.php";

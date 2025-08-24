@@ -1,69 +1,61 @@
+// src/reducers/cart.js
 
-export const cartInitialState = JSON.parse(localStorage.getItem('cart')) || [];
+// Estado inicial: lee del localStorage o arranca vacío
+export const cartInitialState =
+  JSON.parse(localStorage.getItem("cart")) || [];
+
+// Acciones disponibles
 export const CART_ACTION = {
-  ADD_ITEM: 'ADD_ITEM',
-  REMOVE_ITEM: 'REMOVE_ITEM',
-  CLEAN_CART: 'CLEAN_CART',
+  SET_CART:    "SET_CART",
+  ADD_ITEM:    "ADD_ITEM",
+  REMOVE_ITEM: "REMOVE_ITEM",
+  CLEAN_CART:  "CLEAN_CART",
 };
-//Actualizar localstorage
-export const updateLocalStorage = (state) => {
-  localStorage.setItem('cart', JSON.stringify(state));
+
+// Sincroniza el estado con localStorage
+const updateLocalStorage = (arr) => {
+  localStorage.setItem("cart", JSON.stringify(arr));
 };
-// Función para calcular el subtotal de cada ítem
+
+// Calcula subtotal por ítem
 const calculateSubtotal = (item) => item.price * item.days;
 
-// Función para calcular el total del carrito
+// Calcula total del carrito
 const calculateTotal = (cart) =>
-  cart.reduce((acc, item) => acc + item.subtotal, 0);
+  cart.reduce((sum, i) => sum + i.subtotal, 0);
 
-
-//Reducer carrito de compras
-//state: estado previo
-//retorna un nuevo estado
-export const cartReducer = (state, action) => {
-  //type: acción a realizar para cambiar el estado
-  //payload: datos que necesita la acción
-  const { type: actionType, payload: actionPayload } = action;
-  switch (actionType) {
-    //Agregar un item a la compra
+// Reducer principal
+export function cartReducer(state, action) {
+  switch (action.type) {
+    case CART_ACTION.SET_CART: {
+      updateLocalStorage(action.payload);
+      return action.payload;
+    }
     case CART_ACTION.ADD_ITEM: {
-      const { id } = actionPayload;
-      //Verificar sí existe
-      const movieInCart = state.findIndex((item) => item.id === id);
-      //Actualizar alquiler de pelicula existente
-      if (movieInCart >= 0) {
-        //structuredClone: copia a profundidad
-        const newState = structuredClone(state);
-        //Aumentar días de alquiler
-        newState[movieInCart].days += 1;
-        // Calcula y actualiza el subtotal
-        newState[movieInCart].subtotal = calculateSubtotal(
-          newState[movieInCart],
-        );
-        updateLocalStorage(state);
-        return newState;
+      const idx = state.findIndex((i) => i.id === action.payload.id);
+      if (idx >= 0) {
+        const copy = structuredClone(state);
+        copy[idx].days += 1;
+        copy[idx].subtotal = calculateSubtotal(copy[idx]);
+        updateLocalStorage(copy);
+        return copy;
       }
-      //Nueva pelicula en la compra
-      const newState = [
+      const added = [
         ...state,
-        {
-          ...actionPayload,
+        { 
+          ...action.payload,
           days: 1,
-          subtotal: calculateSubtotal({ ...actionPayload, days: 1 }),
+          subtotal: calculateSubtotal({ ...action.payload, days: 1 })
         },
       ];
-      updateLocalStorage(newState);
-      
-      return newState;
+      updateLocalStorage(added);
+      return added;
     }
-    //Eliminar item de la compra
     case CART_ACTION.REMOVE_ITEM: {
-      const { id } = actionPayload;
-      const newState = state.filter((item) => item.id !== id);
-      updateLocalStorage(state);
-      return newState;
+      const filtered = state.filter((i) => i.id !== action.payload.id);
+      updateLocalStorage(filtered);
+      return filtered;
     }
-    //Eliminar el carrito completo
     case CART_ACTION.CLEAN_CART: {
       updateLocalStorage([]);
       return [];
@@ -71,10 +63,11 @@ export const cartReducer = (state, action) => {
     default:
       return state;
   }
-};
-export const getTotal = (state) => {
-  return calculateTotal(state);
-};
-export const getCountItems = (state) => {
-  return state.reduce((acc) => acc + 1, 0);
-};
+}
+
+// Contador de ítems: suma campo 'days'
+export const getCountItems = (state) =>
+  state.reduce((sum, i) => sum + (i.days ?? 1), 0);
+
+// Total del carrito
+export const getTotal = (state) => calculateTotal(state);

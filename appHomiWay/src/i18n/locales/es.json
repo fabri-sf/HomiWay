@@ -25,12 +25,15 @@
         "resenas": "Reseñas",
         "promociones": "Promociones",
         "mantenimientos": "Mantenimientos",
-        "listaAlojamientos": "Lista Alojamientos",
+        "listaAlojamientos": "Mantenimiento Alojamientos",
         "servicio": "Servicio",
         "usuario": "Usuario",
         "compras": "Compras",
         "notificaciones": "Notificaciones",
-        "tooltipLogo": "HomiWay – Vive la experiencia"
+        "tooltipLogo": "HomiWay – Vive la experiencia",
+        "mantenimientoUsuarios": "Mantenimiento Usuarios",
+        "moreInfo": "Más info",
+        "serviciosMantenimiento": "Mantenimiento de Servicios"
     },
     "alojamientos": {
         "create": {
@@ -162,9 +165,13 @@
             "location": "Ubicación",
             "locationUnavailable": "No disponible",
             "buttons": {
-                "reserve": "Reservar",
+                "reserve": "Agregar al Carrito",
                 "rate": "Valorar Alojamiento",
                 "viewAllReviews": "Ver todas las reseñas"
+            },
+            "toast": {
+                "success": "Alojamiento agregado al carrito",
+                "error": "Error al agregar alojamiento al carrito"
             }
         },
         "pageNotFound": {
@@ -259,43 +266,47 @@
     },
     "auth": {
         "login": {
-            "title": "Iniciar Sesión",
+            "title": "Iniciar sesión",
             "fields": {
-                "email": "Correo",
+                "email": "Correo electrónico",
                 "password": "Contraseña"
             },
             "buttons": {
-                "submit": "Acceder"
+                "submit": "Entrar",
+                "register": "Registrarse"
             },
+            "forgotPassword": "¿Olvidaste tu contraseña?",
             "errors": {
                 "required": "Todos los campos son obligatorios",
                 "invalidEmail": "Formato de correo inválido",
-                "invalidUser": "Usuario no válido",
-                "server": "Error al conectar con el servidor",
-                "loginFailed": "Falló la solicitud de login"
+                "invalidUser": "Usuario inválido",
+                "server": "Error de conexión con el servidor",
+                "loginFailed": "Error en la solicitud de inicio de sesión"
             },
             "toast": {
                 "welcome": "Bienvenido, usuario"
             }
         },
         "signup": {
-            "title": "Registro de Usuario",
+            "title": "Registro de usuario",
             "fields": {
                 "name": "Nombre",
                 "surname": "Apellido",
-                "email": "Correo",
-                "password": "Contraseña"
+                "email": "Correo electrónico",
+                "password": "Contraseña",
+                "username": "Nombre de usuario"
             },
             "buttons": {
-                "submit": "Registrarse"
+                "submit": "Registrarse",
+                "login": "Entrar"
             },
             "errors": {
                 "required": "Todos los campos son obligatorios",
                 "invalidEmail": "Formato inválido",
-                "registerFailed": "Falló la solicitud de registro"
+                "registerFailed": "Error en la solicitud de registro"
             },
             "toast": {
-                "success": "Usuario registrado correctamente",
+                "success": "Usuario registrado con éxito",
                 "error": "Error al registrar usuario"
             }
         },
@@ -567,247 +578,345 @@
         "invalidDate": "Fecha inválida"
     },
     "billing": {
-    "title": "Facturación",
-    "selectAll": "Seleccionar todas",
-    "noReservations": "No tienes reservaciones pendientes de facturar.",
-    "proceedToPay": "Proceder al pago",
-    "summary": {
-        "title": "Resumen de Facturación",
-        "selectedItems": "Artículos seleccionados",
-        "total": "Total a pagar"
+        "title": "Facturación",
+        "selectAll": "Seleccionar todas",
+        "noReservations": "No tienes reservaciones pendientes de facturar.",
+        "proceedToPay": "Proceder al pago",
+        "summary": {
+            "title": "Resumen de Facturación",
+            "selectedItems": "Artículos seleccionados",
+            "total": "Total a pagar"
+        },
+        "table": {
+            "select": "Seleccionar",
+            "accommodation": "Alojamiento",
+            "dates": "Fechas",
+            "nights": "Noches",
+            "pricePerNight": "Precio por noche",
+            "subtotal": "Subtotal",
+            "tax": "Impuesto (13%)",
+            "total": "Total",
+            "status": "Estado"
+        },
+        "payment": {
+            "title": "Método de Pago",
+            "total": "Total a pagar",
+            "method": {
+                "title": "Seleccione método de pago",
+                "card": "Tarjeta de crédito/débito",
+                "cash": "Efectivo"
+            },
+            "card": {
+                "number": "Número de tarjeta",
+                "holder": "Nombre del titular",
+                "expiry": "Fecha de expiración (MM/AA)",
+                "cvv": "CVV"
+            },
+            "cash": {
+                "amount": "Monto recibido",
+                "change": "Vuelto"
+            },
+            "validation": {
+                "incomplete": "Por favor complete todos los campos correctamente",
+                "card": {
+                    "number": {
+                        "required": "Número de tarjeta es requerido",
+                        "format": "Debe tener 16 dígitos",
+                        "invalid": "Número de tarjeta inválido"
+                    },
+                    "expiry": {
+                        "required": "Fecha de expiración es requerida",
+                        "format": "Formato MM/AA",
+                        "future": "La fecha debe ser futura"
+                    },
+                    "cvv": {
+                        "required": "CVV es requerido",
+                        "format": "3 o 4 dígitos"
+                    },
+                    "holder": {
+                        "required": "Nombre del titular es requerido",
+                        "min": "Mínimo 3 caracteres"
+                    }
+                },
+                "cash": {
+                    "amount": {
+                        "type": "Debe ser un número",
+                        "required": "Monto es requerido",
+                        "positive": "Debe ser positivo",
+                        "min": "Debe ser mayor o igual al total"
+                    }
+                }
+            },
+            "confirm": "Confirmar pago",
+            "cancel": "Cancelar",
+            "processing": "Procesando pago...",
+            "success": "Pago realizado con éxito",
+            "error": "Error al procesar el pago"
+        },
+        "errors": {
+            "auth": "Debes iniciar sesión para acceder a facturación",
+            "selectReservation": "Selecciona al menos una reservación para facturar",
+            "loadReservations": "Error al cargar las reservaciones"
+        }
     },
-    "table": {
-        "select": "Seleccionar",
+    "reserva": {
+        "title": "Crear Reserva",
+        "dateSelection": "Selección de Fechas",
+        "fechaInicio": "Fecha de Inicio",
+        "fechaFin": "Fecha de Fin",
+        "summary": "Resumen de la Reserva",
         "accommodation": "Alojamiento",
         "dates": "Fechas",
         "nights": "Noches",
         "pricePerNight": "Precio por noche",
         "subtotal": "Subtotal",
-        "tax": "Impuesto (13%)",
         "total": "Total",
-        "status": "Estado"
+        "selectedServices": "Servicios seleccionados",
+        "createReservation": "Crear Reserva",
+        "images": "Imágenes del alojamiento",
+        "success": {
+            "title": "¡Reserva Confirmada!",
+            "message": "Tu reserva se ha creado exitosamente. A continuación encontrarás los detalles.",
+            "details": "Detalles de la reserva",
+            "reservationId": "Número de reserva",
+            "generateInvoice": "Generar Factura",
+            "created": "¡Reserva creada exitosamente!"
+        },
+        "availableServices": "Servicios Disponibles",
+        "optional": "Opcional",
+        "selectService": "Seleccionar Servicio",
+        "fechaServicio": "Fecha del Servicio",
+        "serviceTypes": {
+            "transport": "Transporte",
+            "tour": "Tour",
+            "food": "Alimentación",
+            "other": "Otro"
+        },
+        "serviceLabels": {
+            "price": "Precio",
+            "rating": "Valoración"
+        },
+        "errors": {
+            "userNotAuthenticated": "Debes iniciar sesión para crear una reserva",
+            "pleaseLogin": "Por favor inicia sesión para continuar con tu reserva",
+            "alojamientoNotFound": "No se encontró el alojamiento solicitado",
+            "loadAlojamiento": "Error al cargar los datos del alojamiento",
+            "create": "Error al crear la reserva",
+            "fechaInicioRequired": "La fecha de inicio es requerida",
+            "fechaInicioPast": "La fecha de inicio no puede ser anterior a hoy",
+            "fechaFinRequired": "La fecha de fin es requerida",
+            "fechaFinAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio",
+            "servicioFueraRango": "Las fechas de los servicios deben estar dentro del rango de la reserva"
+        },
+        "promotion": {
+            "applied": "Promoción aplicada",
+            "discount": "{{type}} de descuento",
+            "savings": "Ahorro",
+            "percentage": "{{value}}%",
+            "fixedAmount": "₡{{value}}"
+        }
     },
-    "payment": {
-        "title": "Método de Pago",
-        "total": "Total a pagar",
-        "method": {
-            "title": "Seleccione método de pago",
-            "card": "Tarjeta de crédito/débito",
-            "cash": "Efectivo"
+    "facturacion": {
+        "titulo": "Facturación",
+        "seleccionarTodas": "Seleccionar todas",
+        "sinReservas": "No tienes reservaciones pendientes de facturar.",
+        "procederPago": "Proceder al pago",
+        "errorAutenticacion": "Debes iniciar sesión para acceder a facturación",
+        "errorSeleccionarReserva": "Selecciona al menos una reservación para facturar",
+        "errorCargandoReservas": "Error al cargar las reservaciones",
+        "resumen": {
+            "titulo": "Resumen de Facturación",
+            "articulosSeleccionados": "Artículos seleccionados",
+            "totalPagar": "Total a pagar"
         },
-        "card": {
-            "number": "Número de tarjeta",
-            "holder": "Nombre del titular",
-            "expiry": "Fecha de expiración (MM/AA)",
-            "cvv": "CVV"
+        "tabla": {
+            "seleccionar": "Seleccionar",
+            "alojamiento": "Alojamiento",
+            "fechas": "Fechas",
+            "noches": "Noches",
+            "precioAlojamiento": "Precio Alojamiento",
+            "servicios": "Servicios",
+            "subtotal": "Subtotal",
+            "impuesto": "Impuesto (13%)",
+            "total": "Total",
+            "estado": "Estado",
+            "detalles": "Detalles"
         },
-        "cash": {
-            "amount": "Monto recibido",
-            "change": "Vuelto"
-        },
-        "validation": {
-            "incomplete": "Por favor complete todos los campos correctamente",
-            "card": {
-                "number": {
-                    "required": "Número de tarjeta es requerido",
-                    "format": "Debe tener 16 dígitos",
-                    "invalid": "Número de tarjeta inválido"
+        "promocionAplicada": "Promoción aplicada",
+        "codigo": "Código",
+        "sinServicios": "Sin servicios",
+        "promocion": "Promoción",
+        "verServicios": "Ver servicios",
+        "fecha": "Fecha",
+        "metodoPago": {
+            "titulo": "Método de Pago",
+            "totalPagar": "Total a pagar",
+            "seleccionarMetodo": "Seleccione método de pago",
+            "tarjeta": "Tarjeta de crédito/débito",
+            "efectivo": "Efectivo",
+            "tarjeta": {
+                "numero": "Número de tarjeta",
+                "titular": "Nombre del titular",
+                "expiracion": "Fecha de expiración (MM/AA)",
+                "cvv": "CVV"
+            },
+            "efectivo": {
+                "montoRecibido": "Monto recibido",
+                "vuelto": "Vuelto"
+            },
+            "validacion": {
+                "camposIncompletos": "Por favor complete todos los campos correctamente",
+                "tarjeta": {
+                    "numeroRequerido": "Número de tarjeta es requerido",
+                    "formatoNumero": "Debe tener 16 dígitos",
+                    "numeroInvalido": "Número de tarjeta inválido",
+                    "expiracionRequerida": "Fecha de expiración es requerida",
+                    "formatoExpiracion": "Formato MM/AA",
+                    "fechaFutura": "La fecha debe ser futura",
+                    "cvvRequerido": "CVV es requerido",
+                    "formatoCvv": "3 o 4 dígitos",
+                    "titularRequerido": "Nombre del titular es requerido",
+                    "titularMinimo": "Mínimo 3 caracteres"
                 },
-                "expiry": {
-                    "required": "Fecha de expiración es requerida",
-                    "format": "Formato MM/AA",
-                    "future": "La fecha debe ser futura"
-                },
-                "cvv": {
-                    "required": "CVV es requerido",
-                    "format": "3 o 4 dígitos"
-                },
-                "holder": {
-                    "required": "Nombre del titular es requerido",
-                    "min": "Mínimo 3 caracteres"
+                "efectivo": {
+                    "montoTipo": "Debe ser un número",
+                    "montoRequerido": "Monto es requerido",
+                    "montoPositivo": "Debe ser positivo",
+                    "montoMinimo": "Debe ser mayor o igual al total"
                 }
             },
-            "cash": {
-                "amount": {
-                    "type": "Debe ser un número",
-                    "required": "Monto es requerido",
-                    "positive": "Debe ser positivo",
-                    "min": "Debe ser mayor o igual al total"
-                }
+            "confirmar": "Confirmar pago",
+            "cancelar": "Cancelar",
+            "procesando": "Procesando pago...",
+            "exitoso": "Pago realizado con éxito",
+            "error": "Error al procesar el pago"
+        },
+        "success": {
+            "title": "¡Reserva Confirmada!",
+            "message": "Tu reserva se ha creado exitosamente. A continuación encontrarás los detalles.",
+            "details": "Detalles de la reserva",
+            "reservationId": "Número de reserva",
+            "generateInvoice": "Generar Factura",
+            "total": "Total"
+        }
+    },
+    "carrito": {
+        "title": "Tu Carrito",
+        "loading": "Cargando carrito…",
+        "empty": "No hay ítems en tu carrito.",
+        "back": "Volver",
+        "buttons": {
+            "reserveAll": "Reservar todos",
+            "clear": "Vaciar Carrito",
+            "reserve": "Reservar"
+        },
+        "toast": {
+            "delete": "Ítem eliminado del carrito",
+            "clear": "Carrito vaciado",
+            "error": "Acción fallida",
+            "reserveAll": "Todos los ítems reservados",
+            "reserve": "Ítem reservado"
+        }
+    },
+    "usuarios": {
+        "fields": {
+            "nombre": "Nombre",
+            "apellido": "Apellido",
+            "correo": "Correo electrónico",
+            "rol": "Rol",
+            "estado": "Estado",
+            "acciones": "Acciones",
+            "roles": {
+                "inactivo": "Inactivo",
+                "cliente": "Cliente"
             }
         },
-        "confirm": "Confirmar pago",
-        "cancel": "Cancelar",
-        "processing": "Procesando pago...",
-        "success": "Pago realizado con éxito",
-        "error": "Error al procesar el pago"
-    },
-    "errors": {
-        "auth": "Debes iniciar sesión para acceder a facturación",
-        "selectReservation": "Selecciona al menos una reservación para facturar",
-        "loadReservations": "Error al cargar las reservaciones"
-    }
-},
-"reserva": {
-    "title": "Crear Reserva",
-    "dateSelection": "Selección de Fechas",
-    "fechaInicio": "Fecha de Inicio",
-    "fechaFin": "Fecha de Fin",
-    "summary": "Resumen de la Reserva",
-    "accommodation": "Alojamiento",
-    "dates": "Fechas",
-    "nights": "Noches",
-    "pricePerNight": "Precio por noche",
-    "subtotal": "Subtotal",
-    "total": "Total",
-    "selectedServices": "Servicios seleccionados",
-    "createReservation": "Crear Reserva",
-    "images": "Imágenes del alojamiento",
-    
-    "success": {
-      "title": "¡Reserva Confirmada!",
-      "message": "Tu reserva se ha creado exitosamente. A continuación encontrarás los detalles.",
-      "details": "Detalles de la reserva",
-      "reservationId": "Número de reserva",
-      "generateInvoice": "Generar Factura",
-      "created": "¡Reserva creada exitosamente!"
-    },
-
-    
- "availableServices": "Servicios Disponibles",
-    "optional": "Opcional",
-    "selectService": "Seleccionar Servicio",
-    "fechaServicio": "Fecha del Servicio",
-
-    "serviceTypes": {
-      "transport": "Transporte",
-      "tour": "Tour",
-      "food": "Alimentación",
-      "other": "Otro"
-    },
-
-    "serviceLabels": {
-      "price": "Precio",
-      "rating": "Valoración"
-    },
-
-
-    
-    "errors": {
-      "userNotAuthenticated": "Debes iniciar sesión para crear una reserva",
-      "pleaseLogin": "Por favor inicia sesión para continuar con tu reserva",
-      "alojamientoNotFound": "No se encontró el alojamiento solicitado",
-      "loadAlojamiento": "Error al cargar los datos del alojamiento",
-      "create": "Error al crear la reserva",
-      "fechaInicioRequired": "La fecha de inicio es requerida",
-      "fechaInicioPast": "La fecha de inicio no puede ser anterior a hoy",
-      "fechaFinRequired": "La fecha de fin es requerida",
-      "fechaFinAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio",
-      "servicioFueraRango": "Las fechas de los servicios deben estar dentro del rango de la reserva"
-    },
-    
-    "promotion": {
-      "applied": "Promoción aplicada",
-      "discount": "{{type}} de descuento",
-      "savings": "Ahorro",
-      "percentage": "{{value}}%",
-      "fixedAmount": "₡{{value}}"
-    }
-  },
-
-  
-  "facturacion": {
-    "titulo": "Facturación",
-    "seleccionarTodas": "Seleccionar todas",
-    "sinReservas": "No tienes reservaciones pendientes de facturar.",
-    "procederPago": "Proceder al pago",
-    "errorAutenticacion": "Debes iniciar sesión para acceder a facturación",
-    "errorSeleccionarReserva": "Selecciona al menos una reservación para facturar",
-    "errorCargandoReservas": "Error al cargar las reservaciones",
-    
-    "resumen": {
-      "titulo": "Resumen de Facturación",
-      "articulosSeleccionados": "Artículos seleccionados",
-      "totalPagar": "Total a pagar"
-    },
-    
-    "tabla": {
-      "seleccionar": "Seleccionar",
-      "alojamiento": "Alojamiento",
-      "fechas": "Fechas",
-      "noches": "Noches",
-      "precioAlojamiento": "Precio Alojamiento",
-      "servicios": "Servicios",
-      "subtotal": "Subtotal",
-      "impuesto": "Impuesto (13%)",
-      "total": "Total",
-      "estado": "Estado",
-      "detalles": "Detalles"
-    },
-    
-    "promocionAplicada": "Promoción aplicada",
-    "codigo": "Código",
-    "sinServicios": "Sin servicios",
-    "promocion": "Promoción",
-    "verServicios": "Ver servicios",
-    "fecha": "Fecha",
-    
-    "metodoPago": {
-      "titulo": "Método de Pago",
-      "totalPagar": "Total a pagar",
-      "seleccionarMetodo": "Seleccione método de pago",
-      "tarjeta": "Tarjeta de crédito/débito",
-      "efectivo": "Efectivo",
-      
-      "tarjeta": {
-        "numero": "Número de tarjeta",
-        "titular": "Nombre del titular",
-        "expiracion": "Fecha de expiración (MM/AA)",
-        "cvv": "CVV"
-      },
-      
-      "efectivo": {
-        "montoRecibido": "Monto recibido",
-        "vuelto": "Vuelto"
-      },
-      
-      "validacion": {
-        "camposIncompletos": "Por favor complete todos los campos correctamente",
-        "tarjeta": {
-          "numeroRequerido": "Número de tarjeta es requerido",
-          "formatoNumero": "Debe tener 16 dígitos",
-          "numeroInvalido": "Número de tarjeta inválido",
-          "expiracionRequerida": "Fecha de expiración es requerida",
-          "formatoExpiracion": "Formato MM/AA",
-          "fechaFutura": "La fecha debe ser futura",
-          "cvvRequerido": "CVV es requerido",
-          "formatoCvv": "3 o 4 dígitos",
-          "titularRequerido": "Nombre del titular es requerido",
-          "titularMinimo": "Mínimo 3 caracteres"
+        "mantenimiento": {
+            "title": "Gestión de usuarios",
+            "search": "Buscar por nombre",
+            "actions": "Acción",
+            "back": "Volver",
+            "dialog": {
+                "title": "Confirmar acción",
+                "subtitle": "Cambiar estado/rol de {{name}}:",
+                "selectLabel": "Selecciona estado o rol",
+                "options": {
+                    "inactivo": "Bloqueado / Inactivo",
+                    "cliente": "Cliente",
+                    "admin": "Administrador"
+                },
+                "cancel": "Cancelar",
+                "confirm": "Confirmar"
+            },
+            "toast": {
+                "updated": "Usuario actualizado",
+                "error": "Operación fallida"
+            }
         },
-        "efectivo": {
-          "montoTipo": "Debe ser un número",
-          "montoRequerido": "Monto es requerido",
-          "montoPositivo": "Debe ser positivo",
-          "montoMinimo": "Debe ser mayor o igual al total"
+        "userInfo": {
+            "title": "Detalles de usuario",
+            "description": "Estos son los datos de tu cuenta obtenidos del servidor.",
+            "email": "Correo electrónico",
+            "username": "Nombre de usuario",
+            "firstName": "Nombre",
+            "lastName": "Apellido",
+            "role": "Rol",
+            "changePasswordButton": "Cambiar contraseña",
+            "loginWarning": "Debes iniciar sesión para ver tu perfil",
+            "loginButton": "Ir a Login",
+            "loading": "Cargando información de usuario..."
+        },
+        "changePassword": {
+            "title": "Cambiar Contraseña",
+            "newPassword": "Nueva Contraseña",
+            "confirmPassword": "Confirmar Contraseña",
+            "submit": "Actualizar Contraseña"
         }
-      },
-      
-      "confirmar": "Confirmar pago",
-      "cancelar": "Cancelar",
-      "procesando": "Procesando pago...",
-      "exitoso": "Pago realizado con éxito",
-      "error": "Error al procesar el pago"
     },
-   "success": {
-      "title": "¡Reserva Confirmada!",
-      "message": "Tu reserva se ha creado exitosamente. A continuación encontrarás los detalles.",
-      "details": "Detalles de la reserva",
-      "reservationId": "Número de reserva",
-      "generateInvoice": "Generar Factura",
-      "total": "Total"
+    "servicio": {
+        "mantenimiento": {
+            "titulo": "Mantenimiento de Servicios",
+            "nuevo": "Nuevo Servicio",
+            "editar": "Editar",
+            "eliminar": "Eliminar",
+            "guardar": "Guardar",
+            "cancelar": "Cancelar"
+        },
+        "id": "ID",
+        "nombre": "Nombre",
+        "tipo": "Tipo",
+        "precio": "Precio",
+        "descripcion": "Descripción",
+        "confirmDelete": "¿Confirma eliminación del servicio?",
+        "notificacion": {
+            "creado": "Servicio creado correctamente",
+            "idNotFound": "ID de servicio no encontrado",
+            "actualizado": "Servicio actualizado correctamente",
+            "eliminado": "Servicio eliminado correctamente",
+            "error": "Error al procesar la solicitud"
+        },
+        "create": {
+            "title": "Crear Servicio",
+            "labels": {
+                "nombre": "Nombre",
+                "descripcion": "Descripción",
+                "tipo": "Tipo",
+                "valoracion": "Valoración",
+                "precio": "Precio",
+                "imagen": "Imagen"
+            },
+            "errors": {
+                "nombreRequired": "El nombre es obligatorio",
+                "descripcionRequired": "La descripción es obligatoria",
+                "tipoRequired": "El tipo es obligatorio",
+                "precioRequired": "El precio es obligatorio"
+            },
+            "buttons": {
+                "save": "Guardar Servicio"
+            },
+            "saving": "Guardando servicio...",
+            "success": "Servicio creado correctamente",
+            "error": "Error al crear el servicio"
+        }
     }
-    
-  }
 }
-

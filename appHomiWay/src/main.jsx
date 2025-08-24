@@ -24,7 +24,7 @@ import { PageNotFound } from "./components/Home/PageNotFound";
 
 import { ListAlojamiento } from "./components/Alojamiento/ListAlojamiento";
 import { DetailAlojamiento } from "./components/Alojamiento/DetailAlojamiento";
-import CreateAlojamiento from "./components/Alojamiento/CreateAlojamiento"; 
+import CreateAlojamiento from "./components/Alojamiento/CreateAlojamiento";
 import TableAlojamiento from "./components/Alojamiento/TableAlojamiento";
 import GetAlojamiento from "./components/Alojamiento/GetAlojamiento";
 import UpdateAlojamiento from "./components/Alojamiento/UpdateAlojamiento";
@@ -37,8 +37,8 @@ import { GetUbicacion } from "./components/Ubicacion/Ubicacion";
 
 import Promotion from "./components/Promotion/Promotion";
 import ProductosConPromociones from "./components/Promotion/ListProductPromotion";
-import CreatePromotion from "./components/Promotion/CreatePromotion"; 
-import PromotionDetail from "./components/Promotion/PromotionDetail"; 
+import CreatePromotion from "./components/Promotion/CreatePromotion";
+import PromotionDetail from "./components/Promotion/PromotionDetail";
 
 import ListResena from "./components/Resena/ListResena";
 import ResenaAlojamiento from './components/Resena/ResenaAlojamiento';
@@ -51,9 +51,22 @@ import DetailPedido from "./components/Pedido/DetailPedido";
 
 
 
-import  Facturacion  from "./components/Factura/Facturacion";
+import Facturacion from "./components/Factura/Facturacion";
 
 import { CreateResena } from "./components/Resena/CreateResena";
+import Carrito from "./components/Carrito/Carrito"
+
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+import MantenimientoUsuarios from "./components/User/MantenimientoUsuarios";
+import UserInfo from "./components/User/UserInfo";
+
+import ServicioMantenimeinto from "./components/Servicios/ServicioMantenimiento";
+import CreateServicio from "./components/Servicios/CreateServicio";
+import UpdateServicio from "./components/Servicios/UpdateServicio";
 
 const rutas = createBrowserRouter([
   {
@@ -77,7 +90,7 @@ const rutas = createBrowserRouter([
           },
           {
             path: '/promociones/crear',
-            element: <CreatePromotion /> // Ruta protegida para crear promociones
+            element: <CreatePromotion />
           }
         ]
       },
@@ -85,23 +98,22 @@ const rutas = createBrowserRouter([
         path: '/alojamientos',
         element: <ListAlojamiento />
       },
-      { 
-        path: "/alojamiento",            
-        element: <GetAlojamiento /> 
+      {
+        path: "/alojamiento",
+        element: <GetAlojamiento />
       },
       {
         path: '/alojamiento/:id',
         element: <DetailAlojamiento />
       },
-      { 
-        path: "/alojamiento/crear", 
-        element: <CreateAlojamiento /> 
+      {
+        path: "/alojamiento/crear",
+        element: <CreateAlojamiento />
       },
       {
-       path: "/alojamiento/editar/:id",
-        element: <UpdateAlojamiento /> 
+        path: "/alojamiento/editar/:id",
+        element: <UpdateAlojamiento />
       },
-      // ========= NUEVA RUTA PARA CREAR RESERVAS =========
       {
         path: '/reserva/crear/:id',
         element: <CreateReserva />
@@ -131,18 +143,19 @@ const rutas = createBrowserRouter([
         element: <DetailPedido />
       },
 
-{
-  path: '/facturacion',
-  element: <Facturacion />,
-},
+      {
+        path: '/facturacion',
+        element: <Facturacion />,
+      },
 
       {
         path: '/resenas',
         element: <ListResena />
       },
-      { 
-        path:"/resena/alojamiento/:id",
-         element: <ResenaAlojamiento />},
+      {
+        path: "/resena/alojamiento/:id",
+        element: <ResenaAlojamiento />
+      },
 
       {
         path: '/ubicacion/:id',
@@ -179,6 +192,30 @@ const rutas = createBrowserRouter([
       {
         path: '/user/create',
         element: <Signup />
+      },
+      {
+        path: '/carrito',
+        element: <Carrito />
+      },
+      {
+        path: "user/mantenimiento",
+        element: <MantenimientoUsuarios />
+      },
+      {
+        path: "/user/UserInfo",
+        element: <UserInfo />
+      },
+      {
+        path: '/servicios/mantenimiento',
+        element: <ServicioMantenimeinto />
+      },
+      {
+        path: "/servicios/create",
+        element: <CreateServicio />
+      },
+      {
+        path: "/servicios/update/:id",
+        element: <UpdateServicio />
       }
     ]
   }
@@ -189,6 +226,11 @@ createRoot(document.getElementById("root")).render(
     <I18nextProvider i18n={i18n}>
       <UserProvider>
         <RouterProvider router={rutas} />
+        <ToastContainer
+          position="bottom-right"
+          hideProgressBar
+          autoClose={3000}
+        />
       </UserProvider>
     </I18nextProvider>
   </StrictMode>

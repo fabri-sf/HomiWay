@@ -1,23 +1,53 @@
-import { useParams } from 'react-router-dom';
+// src/components/Resena/CreateResena.jsx
+
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ResenaService from '../../services/ResenaService';
-import { jwtDecode } from 'jwt-decode';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
+import {
+  Container,
+  Card,
+  CardContent,
+  Divider,
+  Stack,
+  Box,
+  TextField,
+  Typography,
+  Button,
+  FormControl,
+  Grid
+} from '@mui/material';
 import toast, { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+
+// Minimal JWT decoder
+function jwtDecode(token) {
+  try {
+    const [, payload] = token.split('.');
+    const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(
+      decodeURIComponent(
+        json
+          .split('')
+          .map(ch => '%' + ch.charCodeAt(0).toString(16).padStart(2, '0'))
+          .join('')
+      )
+    );
+  } catch {
+    return null;
+  }
+}
+
 export function CreateResena() {
   const { idAlojamiento } = useParams();
-  const alojamientoID = parseInt(idAlojamiento);
-  const token = localStorage.getItem('user')?.replace(/^"|"$/g, '');
-  const userData = token ? jwtDecode(token) : null;
+  const navigate = useNavigate();
+  const alojamientoID = parseInt(idAlojamiento, 10);
 
+  const rawToken = localStorage.getItem('user')?.replace(/^"|"$/g, '');
+  const userData = rawToken ? jwtDecode(rawToken) : null;
   const idUsuario = userData?.id;
+
   const { t } = useTranslation();
 
   const schema = yup.object({
@@ -36,19 +66,17 @@ export function CreateResena() {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      Comentario: '',
-      Calificacion: '',
-    },
+    defaultValues: { Comentario: '', Calificacion: '' },
     resolver: yupResolver(schema),
   });
-    if (!idUsuario || !alojamientoID) {
+
+  if (!idUsuario || !alojamientoID) {
     return (
-      <div style={{ padding: '2rem' }}>
-        <Typography variant="h6" color="error">
+      <Container maxWidth="sm" sx={{ mt: 6 }}>
+        <Typography variant="h6" color="error" align="center">
           {t('reviews.form.errors.auth')}
         </Typography>
-      </div>
+      </Container>
     );
   }
 
@@ -63,69 +91,97 @@ export function CreateResena() {
       .then(() => {
         toast.success(t('reviews.form.toast.success'));
         reset();
+        // Redirige al listado de alojamientos (ListCardAlojamiento.jsx)
+        navigate('/alojamientos');
       })
       .catch(() => {
         toast.error(t('reviews.form.toast.error'));
       });
   };
 
-  const onError = () => toast.error(t('reviews.form.errors.incomplete'));
-    return (
+  const onError = () => {
+    toast.error(t('reviews.form.errors.incomplete'));
+  };
+
+  return (
     <>
-      <Toaster />
-      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
-        <Grid container spacing={2}>
-          <Grid size={12}>
-            <Typography variant="h6" gutterBottom>
-              {t('reviews.form.title')}
-            </Typography>
-          </Grid>
+      <Toaster position="top-center" />
 
-          <Grid size={12}>
-            <FormControl fullWidth>
-              <Controller
-                name="Comentario"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label={t('reviews.form.fields.comment')}
-                    multiline
-                    rows={3}
-                    error={!!errors.Comentario}
-                    helperText={errors.Comentario?.message || ' '}
-                  />
-                )}
-              />
-            </FormControl>
-          </Grid>
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Card elevation={4}>
+          <CardContent sx={{ p: 4 }}>
+            <Stack spacing={2}>
+              <Typography variant="h5" align="center">
+                {t('reviews.form.title')}
+              </Typography>
 
-          <Grid size={12} sm={6}>
-            <FormControl fullWidth>
-              <Controller
-                name="Calificacion"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label={t('reviews.form.fields.rating')}
-                    type="number"
-                    inputProps={{ min: 1, max: 5 }}
-                    error={!!errors.Calificacion}
-                    helperText={errors.Calificacion?.message || ' '}
-                  />
-                )}
-              />
-            </FormControl>
-          </Grid>
+              <Divider />
 
-          <Grid size={12}>
-            <Button type="submit" variant="contained" color="secondary">
-              {t('reviews.form.buttons.submit')}
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+              <Box
+                component="form"
+                onSubmit={handleSubmit(onSubmit, onError)}
+                noValidate
+              >
+                <Stack spacing={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <FormControl fullWidth>
+                        <Controller
+                          name="Comentario"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label={t('reviews.form.fields.comment')}
+                              variant="outlined"
+                              multiline
+                              rows={4}
+                              error={!!errors.Comentario}
+                              helperText={errors.Comentario?.message || ' '}
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth>
+                        <Controller
+                          name="Calificacion"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label={t('reviews.form.fields.rating')}
+                              variant="outlined"
+                              type="number"
+                              inputProps={{ min: 1, max: 5 }}
+                              error={!!errors.Calificacion}
+                              helperText={errors.Calificacion?.message || ' '}
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+
+                  <Box textAlign="center">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="secondary"
+                      size="large"
+                      sx={{ px: 6 }}
+                    >
+                      {t('reviews.form.buttons.submit')}
+                    </Button>
+                  </Box>
+                </Stack>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Container>
     </>
   );
 }
