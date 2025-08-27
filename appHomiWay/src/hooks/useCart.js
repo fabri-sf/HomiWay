@@ -1,13 +1,10 @@
-// src/hooks/useCart.js
-import { useContext } from 'react';
-import { CartContext } from '../context/CartContext';
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart debe usarse dentro de CartProvider');
+  if (!context) {
+    throw new Error("useCart debe usarse dentro de CartProvider");
   }
   return context;
 };
-
-//yaaaaaaaaaaa
