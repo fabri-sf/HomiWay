@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { useTranslation } from 'react-i18next'; // Añadir esta importación
+import { useTranslation } from 'react-i18next'; 
 
 
 const StyledContainer = styled(Container)(({ theme }) => ({
