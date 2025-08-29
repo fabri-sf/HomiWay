@@ -1,8 +1,8 @@
 // src/components/User/MantenimientoUsuarios.jsx
 
-import React, { useState, useEffect } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Paper,
@@ -23,56 +23,55 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+  MenuItem,
+  TableContainer,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import UsuarioService from '../../services/UsuarioService';
-import RolService from '../../services/RolService';
+import UsuarioService from "../../services/UsuarioService";
+import RolService from "../../services/RolService";
 
 export default function MantenimientoUsuarios() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [usuarios, setUsuarios]       = useState([]);
-  const [roles, setRoles]             = useState([]);
-  const [busqueda, setBusqueda]       = useState('');
-  const [modalOpen, setModalOpen]     = useState(false);
+  const [usuarios, setUsuarios] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedRoleId, setSelectedRoleId] = useState(null);
 
-  // 1) Carga usuarios y roles, y enriquece cada usuario con su objeto rol
   useEffect(() => {
-    Promise.all([
-      UsuarioService.getUsuarios(),
-      RolService.getRoles()
-    ])
+    Promise.all([UsuarioService.getUsuarios(), RolService.getRoles()])
       .then(([resUsers, resRoles]) => {
         const rolesData = resRoles.data || [];
         setRoles(rolesData);
 
         const usersData = resUsers.data || [];
-        const enriched = usersData.map(u => ({
+        const enriched = usersData.map((u) => ({
           ...u,
-          rol: rolesData.find(r => r.ID === u.ID_Rol) || null
+          rol: rolesData.find((r) => r.ID === u.ID_Rol) || null,
         }));
         setUsuarios(enriched);
       })
       .catch(console.error);
   }, []);
 
-  // 2) Filtrado por nombre+apellido
-  const filtrados = usuarios.filter(u =>
+  const filtrados = usuarios.filter((u) =>
     `${u.Nombre} ${u.Apellido}`
       .toLowerCase()
       .includes(busqueda.toLowerCase())
   );
 
-  // 3) Abrir modal, precargar ID del rol (0 = inactivo)
-  const handleOpenModal = u => {
+  const handleOpenModal = (u) => {
     setCurrentUser(u);
-    setSelectedRoleId(u.Estado === 0 ? 0 : (u.ID_Rol || 0));
+    setSelectedRoleId(u.Estado === 0 ? 0 : u.ID_Rol || 0);
     setModalOpen(true);
   };
 
@@ -81,34 +80,29 @@ export default function MantenimientoUsuarios() {
     setCurrentUser(null);
   };
 
-  // 4) Confirmar cambio: post a /usuario (update), refrescar la fila
   const handleConfirm = async () => {
     try {
-      const body = selectedRoleId === 0
-        ? { Estado: 0 }
-        : { ID_Rol: selectedRoleId };
+      const body =
+        selectedRoleId === 0 ? { Estado: 0 } : { ID_Rol: selectedRoleId };
 
       const { data: updatedUser } = await UsuarioService.updateRol(
         currentUser.ID,
         body
       );
 
-      // Vuelve a enrriquecer con el objeto rol completo
       const fullUpdated = {
         ...updatedUser,
-        rol: roles.find(r => r.ID === updatedUser.ID_Rol) || null
+        rol: roles.find((r) => r.ID === updatedUser.ID_Rol) || null,
       };
 
-      setUsuarios(list =>
-        list.map(u =>
-          u.ID === fullUpdated.ID ? fullUpdated : u
-        )
+      setUsuarios((list) =>
+        list.map((u) => (u.ID === fullUpdated.ID ? fullUpdated : u))
       );
 
-      toast.success(t('usuarios.mantenimiento.toast.updated'));
+      toast.success(t("usuarios.mantenimiento.toast.updated"));
     } catch (err) {
       console.error(err);
-      toast.error(t('usuarios.mantenimiento.toast.error'));
+      toast.error(t("usuarios.mantenimiento.toast.error"));
     } finally {
       handleCloseModal();
     }
@@ -116,58 +110,77 @@ export default function MantenimientoUsuarios() {
 
   return (
     <Box sx={{ p: 3 }}>
-
+      <Toaster />
       <IconButton onClick={() => window.history.back()} sx={{ mb: 2 }}>
         <ArrowBackIcon />
         <Typography sx={{ ml: 1 }}>
-          {t('usuarios.mantenimiento.back')}
+          {t("usuarios.mantenimiento.back")}
         </Typography>
       </IconButton>
 
       <Typography variant="h4" gutterBottom>
-        {t('usuarios.mantenimiento.title')}
+        {t("usuarios.mantenimiento.title")}
       </Typography>
 
       <Paper
         component="form"
-        onSubmit={e => e.preventDefault()}
-        sx={{ p: 2, mb: 3, display: 'flex', alignItems: 'center' }}
+        onSubmit={(e) => e.preventDefault()}
+        sx={{ p: 2, mb: 3, display: "flex", alignItems: "center" }}
       >
         <SearchIcon sx={{ mr: 1 }} />
         <TextField
           fullWidth
           variant="standard"
-          placeholder={t('usuarios.mantenimiento.search')}
+          placeholder={t("usuarios.mantenimiento.search")}
           value={busqueda}
-          onChange={e => setBusqueda(e.target.value)}
+          onChange={(e) => setBusqueda(e.target.value)}
         />
       </Paper>
 
-      <Paper>
-        <Table>
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxHeight: "60vh",
+          overflowY: "auto",
+          mb: 2,
+        }}
+      >
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>{t('usuarios.fields.nombre')}</TableCell>
-              <TableCell>{t('usuarios.fields.apellido')}</TableCell>
-              <TableCell>{t('usuarios.fields.correo')}</TableCell>
-              <TableCell>{t('usuarios.fields.rol')}</TableCell>
-              <TableCell>{t('usuarios.fields.estado')}</TableCell>
+              <TableCell>{t("usuarios.fields.nombre")}</TableCell>
+              <TableCell>{t("usuarios.fields.apellido")}</TableCell>
+              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                {t("usuarios.fields.correo")}
+              </TableCell>
+              <TableCell sx={{ display: { xs: "none", md: "table-cell" } }}>
+                {t("usuarios.fields.rol")}
+              </TableCell>
+              <TableCell>{t("usuarios.fields.estado")}</TableCell>
               <TableCell align="right">
-                {t('usuarios.fields.acciones')}
+                {t("usuarios.fields.acciones")}
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filtrados.map(u => (
+            {filtrados.map((u) => (
               <TableRow key={u.ID}>
                 <TableCell>{u.Nombre}</TableCell>
                 <TableCell>{u.Apellido}</TableCell>
-                <TableCell>{u.Correo}</TableCell>
-                <TableCell>{u.rol?.Rol || '—'}</TableCell>
+                <TableCell
+                  sx={{ display: { xs: "none", sm: "table-cell" } }}
+                >
+                  {u.Correo}
+                </TableCell>
+                <TableCell
+                  sx={{ display: { xs: "none", md: "table-cell" } }}
+                >
+                  {u.rol?.Rol || "—"}
+                </TableCell>
                 <TableCell>
-                  {u.Estado === 1
-                    ? t('usuarios.fields.roles.cliente')
-                    : t('usuarios.fields.roles.inactivo')}
+                  {u.Estado == 1
+                    ? t("usuarios.fields.roles.activo")
+                    : t("usuarios.fields.roles.inactivo")}
                 </TableCell>
                 <TableCell align="right">
                   <Button
@@ -176,37 +189,43 @@ export default function MantenimientoUsuarios() {
                     startIcon={<AdminPanelSettingsIcon />}
                     onClick={() => handleOpenModal(u)}
                   >
-                    {t('usuarios.mantenimiento.actions')}
+                    {t("usuarios.mantenimiento.actions")}
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </Paper>
+      </TableContainer>
 
-      <Dialog open={modalOpen} onClose={handleCloseModal}>
-        <DialogTitle>{t('usuarios.mantenimiento.dialog.title')}</DialogTitle>
+      <Dialog
+        open={modalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="xs"
+        fullScreen={fullScreen}
+      >
+        <DialogTitle>{t("usuarios.mantenimiento.dialog.title")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t('usuarios.mantenimiento.dialog.subtitle', {
-              name: currentUser?.Nombre
+            {t("usuarios.mantenimiento.dialog.subtitle", {
+              name: currentUser?.Nombre,
             })}
           </DialogContentText>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel id="select-role-label">
-              {t('usuarios.mantenimiento.dialog.selectLabel')}
+              {t("usuarios.mantenimiento.dialog.selectLabel")}
             </InputLabel>
             <Select
               labelId="select-role-label"
               value={selectedRoleId}
-              label={t('usuarios.mantenimiento.dialog.selectLabel')}
-              onChange={e => setSelectedRoleId(e.target.value)}
+              label={t("usuarios.mantenimiento.dialog.selectLabel")}
+              onChange={(e) => setSelectedRoleId(e.target.value)}
             >
               <MenuItem value={0}>
-                {t('usuarios.mantenimiento.dialog.options.inactivo')}
+                {t("usuarios.mantenimiento.dialog.options.inactivo")}
               </MenuItem>
-              {roles.map(r => (
+              {roles.map((r) => (
                 <MenuItem key={r.ID} value={r.ID}>
                   {r.Rol}
                 </MenuItem>
@@ -216,10 +235,10 @@ export default function MantenimientoUsuarios() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal}>
-            {t('usuarios.mantenimiento.dialog.cancel')}
+            {t("usuarios.mantenimiento.dialog.cancel")}
           </Button>
           <Button variant="contained" onClick={handleConfirm}>
-            {t('usuarios.mantenimiento.dialog.confirm')}
+            {t("usuarios.mantenimiento.dialog.confirm")}
           </Button>
         </DialogActions>
       </Dialog>
