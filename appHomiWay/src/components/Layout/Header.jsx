@@ -255,16 +255,6 @@ export default function Header() {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <IconButton color="inherit" component={Link} to="/carrito">
-              <Badge badgeContent={cartCount} color="primary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-            <IconButton color="inherit">
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
             <IconButton
               color="inherit"
               onClick={() => i18n.changeLanguage(i18n.language === "es" ? "en" : "es")}
